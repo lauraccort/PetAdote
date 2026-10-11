@@ -2,13 +2,13 @@ package br.com.petadote.model;
 
 import java.time.LocalDate;
 
-public class Outro extends Animal {
+public class OutraEspecie extends Animal {
     private String especie;
 
-    public Outro() {
+    public OutraEspecie() {
     }
 
-    public Outro(String nome, LocalDate dataNascimento, String especie) {
+    public OutraEspecie(String nome, LocalDate dataNascimento, String especie) {
         super(nome, dataNascimento);
         this.especie = especie;
     }
