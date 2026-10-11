@@ -61,7 +61,7 @@ Requisito bônus (opcional, fora da contagem oficial): gerar uma página HTML es
 
 ## Diagrama de classes em UML
 
- ![Diagrama de Classes](diagrama/PetAdote-Pagina-1.drawio.png) 
+ ![Diagrama de Classes](diagrama/PetAdote-Página-1.drawio.png) 
 
 
  ## Link
