@@ -63,6 +63,10 @@ Requisito bônus (opcional, fora da contagem oficial): gerar uma página HTML es
 
  ![Diagrama de Classes](diagrama/PetAdote-Página-1.drawio.png) 
 
+ ## Modelo navegacional
+
+ ![Modelo Navegacional](modelo_navegacional_petadote)
+
 
  ## Link
 
