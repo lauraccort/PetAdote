@@ -65,7 +65,7 @@ Requisito bônus (opcional, fora da contagem oficial): gerar uma página HTML es
 
  ## Modelo navegacional
 
- ![Modelo Navegacional](PetAdote/modelo_navegacional_petadote_final.pdf)
+ ![Modelo Navegacional](modelo_navegacional_petadote_final.pdf)
 
 
  ## Link
