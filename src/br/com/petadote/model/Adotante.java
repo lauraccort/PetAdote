@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Adotante {
+public class Adotante extends Entidade {
     private String nome;
     private String cpf;
     private String endereco;
