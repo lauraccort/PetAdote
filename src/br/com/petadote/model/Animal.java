@@ -2,7 +2,7 @@ package br.com.petadote.model;
 
 import java.time.LocalDate;
 
-public abstract class Animal {
+public abstract class Animal extends Entidade {
     private String nome;
     private LocalDate dataNascimento;
     private StatusAnimal status;
