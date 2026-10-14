@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Abrigo {
+public class Abrigo extends Entidade {
     private String nome;
     private String endereco;
     private int capacidade;
