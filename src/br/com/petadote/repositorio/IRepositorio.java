@@ -1,11 +1,11 @@
-package br.com.petadote.repository; // pacote da camada de persistência
+package br.com.petadote.repositorio; // pacote da camada de persistência
 
 import br.com.petadote.model.Entidade; // restrição: só aceita entidades
 import java.util.List;     // retorno da listagem
 import java.util.Optional; // evita retornar null nas buscas
 
 // Interface GENÉRICA: <T extends Entidade> aceita Abrigo, Animal, Adotante etc.
-public interface IRepository<T extends Entidade> {
+public interface IRepositorio<T extends Entidade> {
 
     T salvar(T entidade);              // insere (id nulo) ou atualiza (id preenchido)
 
