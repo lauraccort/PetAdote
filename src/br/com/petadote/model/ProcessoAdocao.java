@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ProcessoAdocao {
+public class ProcessoAdocao extends Entidade {
     private static final int MIN_VISITAS_POS_ADOCAO = 2;
     private static final int PERIODO_VISITAS_DIAS = 90;
 
