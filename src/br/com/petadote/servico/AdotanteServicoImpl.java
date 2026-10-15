@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class AdotanteServicoImpl implements IAdotanteServico {
-
     private final IRepositorio<Adotante> repositorio; 
 
     public AdotanteServicoImpl(IRepositorio<Adotante> repositorio) {
