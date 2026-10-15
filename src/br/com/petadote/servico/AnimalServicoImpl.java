@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AnimalServicoImpl implements IAnimalServico {
-
     private final IRepositorio<Animal> repositorio; 
 
     public AnimalServicoImpl(IRepositorio<Animal> repositorio) {
