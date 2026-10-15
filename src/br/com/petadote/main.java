@@ -21,9 +21,9 @@ public class main {
         ProcessoAdocaoControle processoControle = new ProcessoAdocaoControle(
                 new ProcessoAdocaoServicoImpl(processoRepo, animalRepo, adotanteRepo));
 
-        abrigoControle.criar("Abrigo Central", "Rua das Flores, 123", 10);          // CREATE abrigo
-        animalControle.criarCao("Rex", "10/05/2022", "Vira-lata");                  // CREATE animal
-        adotanteControle.criar("Maria Silva", "12345678900", "Av. Brasil, 456", 0); // CREATE adotante
+        abrigoControle.criar("Abrigo Central", "Rua das Flores, 123", 10);
+        animalControle.criarCao("Rex", "10/05/2022", "Vira-lata");
+        adotanteControle.criar("Maria Silva", "12345678900", "Av. Brasil, 456", 0);
 
         abrigoControle.listar();
         animalControle.listar();
