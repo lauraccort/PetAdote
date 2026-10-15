@@ -1,7 +1,7 @@
 package br.com.petadote.controle;
 
 import br.com.petadote.model.Abrigo;
-import br.com.petadote.service.IAbrigoServico;
+import br.com.petadote.servico.IAbrigoServico;
 import java.util.List;
 
 public class AbrigoControle {
