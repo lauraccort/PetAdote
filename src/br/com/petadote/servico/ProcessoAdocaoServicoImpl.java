@@ -4,22 +4,22 @@ import br.com.petadote.model.Avaliacao;
 import br.com.petadote.model.Adotante;
 import br.com.petadote.model.Animal;
 import br.com.petadote.model.ProcessoAdocao;
-import br.com.petadote.model.StatusProcesso; // enum usado nos relatórios
+import br.com.petadote.model.StatusProcesso; 
 import br.com.petadote.model.Visita;
 import br.com.petadote.repositorio.IRepositorio;
-import java.time.LocalDate; // cálculo dos 15 dias
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors; // usado nos filtros
+import java.util.stream.Collectors; 
 
-// Orquestra Animal + Adotante + Processo: é o service mais "rico"
+
 public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
 
-    private final IRepositorio<ProcessoAdocao> processoRepositorio; // persiste processos
-    private final IRepositorio<Animal> animalRepositorio;           // busca o animal
-    private final IRepositorio<Adotante> adotanteRepositorio;       // busca o adotante
+    private final IRepositorio<ProcessoAdocao> processoRepositorio; 
+    private final IRepositorio<Animal> animalRepositorio;           
+    private final IRepositorio<Adotante> adotanteRepositorio;       
 
-    // As três dependências são injetadas pelo construtor
+
     public ProcessoAdocaoServicoImpl(IRepositorio<ProcessoAdocao> processoRepositorio,
                                      IRepositorio<Animal> animalRepositorio,
                                      IRepositorio<Adotante> adotanteRepositorio) {
@@ -30,19 +30,17 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
 
     @Override
     public ProcessoAdocao iniciar(Long idAnimal, Long idAdotante) {
-        // Busca o animal pelo id; erro se não existir
         Animal animal = animalRepositorio.buscarPorId(idAnimal)
                 .orElseThrow(() -> new IllegalArgumentException("Animal não encontrado."));
-        // Busca o adotante pelo id; erro se não existir
         Adotante adotante = adotanteRepositorio.buscarPorId(idAdotante)
                 .orElseThrow(() -> new IllegalArgumentException("Adotante não encontrado."));
 
-        ProcessoAdocao processo = new ProcessoAdocao(animal, adotante); // monta o processo
+        ProcessoAdocao processo = new ProcessoAdocao(animal, adotante);
         // REQ06+14+16: valida animal disponível e limite de 3 processos ativos do adotante
         if (!processo.abrirProcesso()) {
             throw new IllegalStateException("Não foi possível abrir: animal indisponível ou adotante no limite de 3 processos ativos.");
         }
-        return processoRepositorio.salvar(processo); // persiste o processo aberto
+        return processoRepositorio.salvar(processo);
     }
 
     @Override
@@ -57,28 +55,24 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
 
     @Override
     public List<ProcessoAdocao> listarPorAdotante(Long idAdotante) {
-        // Perfil Adotante: "listar meus processos" — filtra pelo id do adotante
         return processoRepositorio.listarTodos().stream()
-                .filter(p -> p.getAdotante().getId().equals(idAdotante)) // só processos deste adotante
+                .filter(p -> p.getAdotante().getId().equals(idAdotante)) 
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ProcessoAdocao> listarConcluidos() {
-        // Relatório do Administrador: adoções concluídas
         return processoRepositorio.listarTodos().stream()
-                .filter(p -> p.getStatus() == StatusProcesso.CONCLUIDO) // só finalizados
+                .filter(p -> p.getStatus() == StatusProcesso.CONCLUIDO)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ProcessoAdocao> listarPendentesHa15Dias() {
-        // Relatório do Administrador: processos "pendentes" (ainda EM_AVALIACAO)
-        // abertos há 15 dias ou mais
-        LocalDate limite = LocalDate.now().minusDays(15); // data de corte: 15 dias atrás
+        LocalDate limite = LocalDate.now().minusDays(15);
         return processoRepositorio.listarTodos().stream()
-                .filter(p -> p.getStatus() == StatusProcesso.EM_AVALIACAO) // pendente = aguardando avaliação
-                .filter(p -> !p.getDataAbertura().isAfter(limite)) // abertura no limite ou antes (= 15+ dias)
+                .filter(p -> p.getStatus() == StatusProcesso.EM_AVALIACAO) 
+                .filter(p -> !p.getDataAbertura().isAfter(limite))
                 .collect(Collectors.toList());
     }
 
@@ -104,8 +98,7 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         // REQ07+15: só aprova se estiver EM_AVALIACAO e com parecer favorável
         return processoRepositorio.buscarPorId(idProcesso)
                 .map(ProcessoAdocao::aprovarProcesso)
-                .orElse(false); // processo inexistente = falha
-    }
+                .orElse(false); 
 
     @Override
     public boolean concluir(Long idProcesso) {
