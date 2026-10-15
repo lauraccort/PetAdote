@@ -4,16 +4,16 @@ import br.com.petadote.model.Adotante;
 import java.util.List;
 import java.util.Optional;
 
-// Contrato de negócio da entidade Adotante
+
 public interface IAdotanteServico {
 
-    Adotante cadastrar(Adotante adotante);   // C
+    Adotante cadastrar(Adotante adotante);   
 
-    Optional<Adotante> buscarPorId(Long id); // R
+    Optional<Adotante> buscarPorId(Long id); 
 
-    List<Adotante> listarTodos();            // R
+    List<Adotante> listarTodos();            
 
-    Adotante atualizar(Long id, String nome, String endereco); // U
+    Adotante atualizar(Long id, String nome, String endereco); 
 
-    boolean excluir(Long id);                // D
+    boolean excluir(Long id);                
 }
