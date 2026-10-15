@@ -1,7 +1,7 @@
 package br.com.petadote.controle;
 
 import br.com.petadote.model.Abrigo;
-import br.com.petadote.service.IAbrigoServico;
+import br.com.petadote.servico.IAbrigoServico;
 import java.util.List;
 
 public class AbrigoControle {
@@ -41,7 +41,7 @@ public class AbrigoControle {
     }
 
     public void excluir(Long id) {
-        System.out.println(service.excluir(id)
+        System.out.println(servico.excluir(id)
                 ? "Abrigo excluído com sucesso."
                 : "Não foi possível excluir: abrigo inexistente ou possui animais vinculados.");
     }

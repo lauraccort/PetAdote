@@ -56,7 +56,7 @@ public class ProcessoAdocaoControle {
 
     public void relatorioPendentes15Dias() {
         System.out.println("--- Relatório: processos pendentes há 15+ dias ---");
-        service.listarPendentesHa15Dias().forEach(p -> System.out.println(
+        servico.listarPendentesHa15Dias().forEach(p -> System.out.println(
                 p.getId() + " - Animal id " + p.getAnimal().getId()
                         + " | Aberto em: " + p.getDataAbertura() + " | " + p.getStatus()));
     }
@@ -87,7 +87,7 @@ public class ProcessoAdocaoControle {
     }
 
     public void concluir(Long id) {
-        System.out.println(service.concluir(id)
+        System.out.println(servico.concluir(id)
                 ? "Adoção concluída! Animal agora está ADOTADO."
                 : "Não foi possível concluir: verifique aprovação, parecer, saúde do animal e 2 visitas mínimas.");
     }
