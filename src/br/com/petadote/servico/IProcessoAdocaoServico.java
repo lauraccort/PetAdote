@@ -12,15 +12,15 @@ public interface IProcessoAdocaoServico {
 
     ProcessoAdocao iniciar(Long idAnimal, Long idAdotante); // abre processo (REQ06/14/16)
 
-    Optional<ProcessoAdocao> buscarPorId(Long id); // R
+    Optional<ProcessoAdocao> buscarPorId(Long id); 
 
-    List<ProcessoAdocao> listarTodos();            // R
+    List<ProcessoAdocao> listarTodos();           
 
-    List<ProcessoAdocao> listarPorAdotante(Long idAdotante); // "meus processos" (perfil Adotante)
+    List<ProcessoAdocao> listarPorAdotante(Long idAdotante); 
 
-    List<ProcessoAdocao> listarConcluidos();       // relatório Admin — adoções concluídas
+    List<ProcessoAdocao> listarConcluidos(); 
 
-    List<ProcessoAdocao> listarPendentesHa15Dias(); // relatório Admin — pendentes há 15+ dias
+    List<ProcessoAdocao> listarPendentesHa15Dias(); 
 
     void registrarAvaliacao(Long idProcesso, Avaliacao avaliacao); // REQ07
 
