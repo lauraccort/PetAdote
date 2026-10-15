@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors; 
 
-
 public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
 
     private final IRepositorio<ProcessoAdocao> processoRepositorio; 
