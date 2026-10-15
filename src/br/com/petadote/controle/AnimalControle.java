@@ -55,7 +55,7 @@ public class AnimalControle {
     }
 
     public void excluir(Long id) {
-        System.out.println(service.excluir(id)
+        System.out.println(servico.excluir(id)
                 ? "Animal excluído com sucesso."
                 : "Não foi possível excluir: inexistente, sem status DISPONIVEL ou vinculado a abrigo.");
     }
