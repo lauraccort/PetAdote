@@ -41,7 +41,7 @@ public class AbrigoControle {
     }
 
     public void excluir(Long id) {
-        System.out.println(service.excluir(id)
+        System.out.println(servico.excluir(id)
                 ? "Abrigo excluído com sucesso."
                 : "Não foi possível excluir: abrigo inexistente ou possui animais vinculados.");
     }
