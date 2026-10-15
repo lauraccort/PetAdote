@@ -1,17 +1,16 @@
-package br.com.petadote.repositorio; // pacote da camada de persistência
+package br.com.petadote.repositorio; 
 
-import br.com.petadote.model.Entidade; // restrição: só aceita entidades
-import java.util.List;     // retorno da listagem
-import java.util.Optional; // evita retornar null nas buscas
+import br.com.petadote.model.Entidade; 
+import java.util.List;     
+import java.util.Optional; 
 
-// Interface GENÉRICA: <T extends Entidade> aceita Abrigo, Animal, Adotante etc.
 public interface IRepositorio<T extends Entidade> {
 
-    T salvar(T entidade);              // insere (id nulo) ou atualiza (id preenchido)
+    T salvar(T entidade);              
 
-    Optional<T> buscarPorId(Long id);  // busca pelo id; Optional indica que pode não achar
+    Optional<T> buscarPorId(Long id);  
 
-    List<T> listarTodos();             // retorna todos os registros
+    List<T> listarTodos();             
 
-    boolean excluirPorId(Long id);     // exclui pelo id; true se excluiu algo
+    boolean excluirPorId(Long id);    
 }
