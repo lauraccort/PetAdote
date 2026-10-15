@@ -1,13 +1,12 @@
 package br.com.petadote.servico;
 
-import br.com.petadote.model.Avaliacao; // parecer do responsável do abrigo
+import br.com.petadote.model.Avaliacao; 
 import br.com.petadote.model.ProcessoAdocao;
-import br.com.petadote.model.Visita;    // visita de acompanhamento
+import br.com.petadote.model.Visita;    
 import java.util.List;
 import java.util.Optional;
 
 // Contrato de negócio do fluxo de adoção (REQ06 a REQ18).
-// Não há excluir: processo é registro histórico do fluxo.
 public interface IProcessoAdocaoServico {
 
     ProcessoAdocao iniciar(Long idAnimal, Long idAdotante); // abre processo (REQ06/14/16)
