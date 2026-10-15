@@ -66,6 +66,17 @@ public class ProcessoAdocao extends Entidade {
         return true;
     }
 
+    public boolean negarProcesso() {
+    if (status != StatusProcesso.EM_AVALIACAO && status != StatusProcesso.APROVADO) {
+        return false;
+    }
+    this.status = StatusProcesso.NEGADO;
+    if (animal.getStatus() == StatusAnimal.EM_AVALIACAO) {
+        animal.setStatus(StatusAnimal.DISPONIVEL);
+    }
+    return true;
+}
+
     /** REQ09: agenda visita de acompanhamento pós-adoção. */
     public void agendarVisita(Visita visita) {
         visitas.add(visita);
