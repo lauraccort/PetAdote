@@ -1,6 +1,6 @@
 package br.com.petadote.repositorio;
 
-import br.com.petadote.model.Animal; // tipo abstrato: guarda Cao, Gato e OutraEspecie
+import br.com.petadote.model.Animal;
 
-public class AnimalRepositorio extends RepositorioBase<Animal> { // mesmo molde, sem repetir código
+public class AnimalRepositorio extends RepositorioBase<Animal> { 
 }
