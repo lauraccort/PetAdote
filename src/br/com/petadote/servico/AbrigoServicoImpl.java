@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class AbrigoServicoImpl implements IAbrigoServico {
-
     private final IRepositorio<Abrigo> repositorio;
 
     public AbrigoServicoImpl(IRepositorio<Abrigo> repositorio) {
