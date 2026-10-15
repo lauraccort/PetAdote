@@ -98,7 +98,8 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         return processoRepositorio.buscarPorId(idProcesso)
                 .map(ProcessoAdocao::aprovarProcesso)
                 .orElse(false); 
-
+    }
+    
     @Override
     public boolean concluir(Long idProcesso) {
         Optional<ProcessoAdocao> processo = processoRepositorio.buscarPorId(idProcesso);
