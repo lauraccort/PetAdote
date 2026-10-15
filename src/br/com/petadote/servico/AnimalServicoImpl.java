@@ -49,12 +49,12 @@ public class AnimalServicoImpl implements IAnimalServico {
                 .orElseThrow(() -> new IllegalArgumentException("Animal não encontrado."));
         animal.setNome(nome);                     
         animal.setDataNascimento(dataNascimento); 
-        return repository.salvar(animal);         
+        return repositorio.salvar(animal);         
     }
 
     @Override
     public boolean excluir(Long id) {
-        Optional<Animal> animal = repository.buscarPorId(id);
+        Optional<Animal> animal = repositorio.buscarPorId(id);
         if (animal.isEmpty()
                 || animal.get().getStatus() != StatusAnimal.DISPONIVEL
                 || animal.get().getAbrigo() != null) {
