@@ -5,7 +5,6 @@ import br.com.petadote.model.Abrigo;
 import java.util.List;
 import java.util.Optional;
 
-
 public interface IAbrigoServico {
 
     Abrigo cadastrar(Abrigo abrigo);           
