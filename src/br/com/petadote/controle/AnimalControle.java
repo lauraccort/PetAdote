@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AnimalControle {
 
-    private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy"); // padrão de data
+    private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy"); 
 
     private final IAnimalServico servico;
 
@@ -29,7 +29,7 @@ public class AnimalControle {
     }
 
     public void listar() {
-        List<Animal> animais = service.listarTodos();
+        List<Animal> animais = servico.listarTodos();
         if (animais.isEmpty()) {
             System.out.println("Nenhum animal cadastrado.");
             return;
