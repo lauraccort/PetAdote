@@ -4,7 +4,6 @@ import br.com.petadote.model.Adotante;
 import java.util.List;
 import java.util.Optional;
 
-
 public interface IAdotanteServico {
 
     Adotante cadastrar(Adotante adotante);   
