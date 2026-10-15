@@ -1,20 +1,20 @@
 package br.com.petadote.servico;
 
-import br.com.petadote.model.Animal; // usado ao vincular animal ao abrigo
+import br.com.petadote.model.Animal; 
 import br.com.petadote.model.Abrigo;
 import java.util.List;
 import java.util.Optional;
 
-// Contrato de NEGÓCIO do Abrigo — a Controller só enxerga esta interface
+
 public interface IAbrigoServico {
 
-    Abrigo cadastrar(Abrigo abrigo);           // C: cria com validações
+    Abrigo cadastrar(Abrigo abrigo);           
 
-    Optional<Abrigo> buscarPorId(Long id);     // R: consulta um
+    Optional<Abrigo> buscarPorId(Long id);    
 
-    List<Abrigo> listarTodos();                // R: consulta todos
+    List<Abrigo> listarTodos();               
 
-    Abrigo atualizar(Long id, String nome, String endereco, int capacidade); // U: edita
+    Abrigo atualizar(Long id, String nome, String endereco, int capacidade); 
 
     boolean adicionarAnimal(Long idAbrigo, Animal animal); // vincula animal (REQ19)
 
