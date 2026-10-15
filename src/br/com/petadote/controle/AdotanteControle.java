@@ -41,7 +41,7 @@ public class AdotanteControle {
     }
 
     public void excluir(Long id) {
-        System.out.println(service.excluir(id)
+        System.out.println(servico.excluir(id)
                 ? "Adotante excluído com sucesso."
                 : "Não foi possível excluir: inexistente ou possui histórico de processos.");
     }
