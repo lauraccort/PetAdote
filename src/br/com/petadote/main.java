@@ -8,7 +8,7 @@ import br.com.petadote.repositorio.*;   // pacote renomeado (era: repository)
 import br.com.petadote.servico.*;       // pacote renomeado (era: service)
 import java.time.LocalDate;
 
-public class main {
+public class Main {
     public static void main(String[] args) {
         // 1. Cria os repositórios UMA vez (todos herdam o CRUD do RepositorioBase)
         AbrigoRepositorio abrigoRepo = new AbrigoRepositorio();
