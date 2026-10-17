@@ -8,11 +8,12 @@ import br.com.petadote.repositorio.*;
 import br.com.petadote.servico.*;
 import java.time.LocalDate;
 
-public class main {
+public class Main {
     public static void main(String[] args) {
         AbrigoRepositorio abrigoRepo = new AbrigoRepositorio();
         AnimalRepositorio animalRepo = new AnimalRepositorio();
         AdotanteRepositorio adotanteRepo = new AdotanteRepositorio();
+
         ProcessoAdocaoRepositorio processoRepo = new ProcessoAdocaoRepositorio();
 
         AbrigoControle abrigoControle = new AbrigoControle(new AbrigoServicoImpl(abrigoRepo));
