@@ -23,9 +23,7 @@ public abstract class Animal extends Entidade {
      * O status EM_AVALIACAO já impede novo processo concorrente
      * e ADOTADO impede reabertura.
      */
-    public boolean podeIniciarProcesso() {
-        return status == StatusAnimal.DISPONIVEL;
-    }
+    public boolean podeIniciarProcesso() { return status == StatusAnimal.DISPONIVEL; }
 
     /**
      * REQ17: bloqueia conclusão de adoção de animal
