@@ -4,11 +4,13 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="560.0" prefWidth="720.0" style="-fx-background-color: #f4efe9;"
+<StackPane prefHeight="560.0" prefWidth="720.0" style="-fx-background-color: #f7efe6;"
            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="br.com.petadote.gui.TelaPrincipalAbrigoController">
    <children>
@@ -18,19 +20,24 @@
             <Insets bottom="28.0" left="32.0" right="32.0" top="28.0" />
          </padding>
          <children>
-            <Label text="PetAdote" textFill="#d9733a">
+            <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../imagens/abrigo.png" />
+               </image>
+            </ImageView>
+            <Label text="PetAdote" textFill="#9c4f2a">
                <font>
                   <Font name="System Bold" size="28.0" />
                </font>
             </Label>
-            <Label text="Painel do abrigo" textFill="#7a716a">
+            <Label text="Painel do abrigo" textFill="#8a6a58">
                <VBox.margin>
                   <Insets bottom="12.0" />
                </VBox.margin>
             </Label>
 
             <Button maxWidth="1.7976931348623157E308" onAction="#abrirListarAnimaisAbrigo"
-                    style="-fx-background-color: #d9733a; -fx-background-radius: 6; -fx-cursor: hand;"
+                    style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;"
                     text="Animais do abrigo" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
@@ -40,7 +47,7 @@
                </padding>
             </Button>
             <Button maxWidth="1.7976931348623157E308" onAction="#abrirListarAdotantes"
-                    style="-fx-background-color: #d9733a; -fx-background-radius: 6; -fx-cursor: hand;"
+                    style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;"
                     text="Adotantes" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
@@ -50,7 +57,7 @@
                </padding>
             </Button>
             <Button maxWidth="1.7976931348623157E308" onAction="#abrirListarProcessosAdocao"
-                    style="-fx-background-color: #d9733a; -fx-background-radius: 6; -fx-cursor: hand;"
+                    style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;"
                     text="Processos de adoção" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
@@ -60,7 +67,7 @@
                </padding>
             </Button>
             <Button maxWidth="1.7976931348623157E308" onAction="#abrirListarVisitas"
-                    style="-fx-background-color: #d9733a; -fx-background-radius: 6; -fx-cursor: hand;"
+                    style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;"
                     text="Visitas" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />

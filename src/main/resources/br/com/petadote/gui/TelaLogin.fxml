@@ -7,11 +7,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="560.0" prefWidth="720.0" style="-fx-background-color: #f4efe9;"
+<StackPane prefHeight="560.0" prefWidth="720.0" style="-fx-background-color: #f7efe6;"
            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="br.com.petadote.gui.TelaLoginController">
    <children>
@@ -21,12 +23,17 @@
             <Insets bottom="28.0" left="32.0" right="32.0" top="28.0" />
          </padding>
          <children>
-            <Label text="PetAdote" textFill="#d9733a">
+            <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../imagens/petadote.png" />
+               </image>
+            </ImageView>
+            <Label text="PetAdote" textFill="#9c4f2a">
                <font>
                   <Font name="System Bold" size="28.0" />
                </font>
             </Label>
-            <Label text="Entre na sua conta para continuar" textFill="#7a716a">
+            <Label text="Entre na sua conta para continuar" textFill="#8a6a58">
                <VBox.margin>
                   <Insets bottom="12.0" />
                </VBox.margin>
@@ -52,7 +59,7 @@
             <Label fx:id="mensagem" textFill="#c0392b" wrapText="true" />
 
             <Button defaultButton="true" maxWidth="1.7976931348623157E308" onAction="#entrar"
-                    style="-fx-background-color: #d9733a; -fx-background-radius: 6; -fx-cursor: hand;"
+                    style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;"
                     text="Entrar" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />

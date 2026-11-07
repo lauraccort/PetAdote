@@ -7,6 +7,9 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -18,11 +21,18 @@
       <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
    </padding>
 
-   <Label text="PetAdote — Animais">
-      <font>
-         <Font size="20.0" />
-      </font>
-   </Label>
+   <HBox alignment="CENTER_LEFT" spacing="12.0">
+      <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imagens/petadote.png" />
+         </image>
+      </ImageView>
+      <Label text="PetAdote — Animais">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+   </HBox>
 
    <GridPane hgap="8.0" vgap="8.0">
       <Label text="Nome:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
