@@ -1,5 +1,6 @@
 package br.com.petadote.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,10 +11,13 @@ public class Abrigo extends Entidade {
     private int capacidade;
     private String email;
     private String senha;
+    private StatusAbrigo status;
+    private LocalDate dataPedido;
     private List<Animal> animais;
 
     public Abrigo() {
         this.animais = new ArrayList<>();
+        this.status = StatusAbrigo.PENDENTE; // novo cadastro aguarda aprovação do administrador
     }
 
     public Abrigo(String nome, String endereco, int capacidade) {
@@ -21,6 +25,24 @@ public class Abrigo extends Entidade {
         this.nome = nome;
         this.endereco = endereco;
         this.capacidade = capacidade;
+    }
+
+    /** Aprova o pedido de cadastro; só vale para pedidos pendentes. */
+    public boolean aprovar() {
+        if (status != StatusAbrigo.PENDENTE) {
+            return false;
+        }
+        status = StatusAbrigo.APROVADO;
+        return true;
+    }
+
+    /** Nega o pedido de cadastro; só vale para pedidos pendentes. */
+    public boolean negar() {
+        if (status != StatusAbrigo.PENDENTE) {
+            return false;
+        }
+        status = StatusAbrigo.NEGADO;
+        return true;
     }
 
     public boolean temVaga() {
@@ -106,5 +128,21 @@ public class Abrigo extends Entidade {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public StatusAbrigo getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusAbrigo status) {
+        this.status = status;
+    }
+
+    public LocalDate getDataPedido() {
+        return dataPedido;
+    }
+
+    public void setDataPedido(LocalDate dataPedido) {
+        this.dataPedido = dataPedido;
     }
 }

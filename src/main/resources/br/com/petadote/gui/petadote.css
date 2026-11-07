@@ -70,3 +70,15 @@
 .rolagem-transparente > .viewport {
     -fx-background-color: transparent;
 }
+
+/* Botão para a ação secundária/negativa (ex.: "Negar"): contorno terracota, fundo branco */
+.button.botao-secundario {
+    -fx-background-color: white;
+    -fx-border-color: -pa-primaria;
+    -fx-border-radius: 6;
+    -fx-text-fill: -pa-primaria;
+}
+
+.button.botao-secundario:hover {
+    -fx-background-color: #f3e4d8;
+}

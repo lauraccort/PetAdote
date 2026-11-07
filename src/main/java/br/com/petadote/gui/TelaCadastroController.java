@@ -86,14 +86,15 @@ public class TelaCadastroController {
                 novo.setEmail(email);
                 novo.setSenha(senha);
                 Adotante adotante = adotanteServico.cadastrar(novo);
-                sucesso("Adotante cadastrado: " + adotante.getNome() + " (id " + adotante.getId() + ").");
+                sucesso("Adotante cadastrado: " + adotante.getNome() + " (id " + adotante.getId() + ").", true);
             } else {
                 int capacidade = lerNumero(campoCapacidade, "Capacidade de animais", null);
                 Abrigo novo = new Abrigo(campoNome.getText().trim(), campoEndereco.getText().trim(), capacidade);
                 novo.setEmail(email);
                 novo.setSenha(senha);
                 Abrigo abrigo = abrigoServico.cadastrar(novo);
-                sucesso("Abrigo cadastrado: " + abrigo.getNome() + " (id " + abrigo.getId() + ").");
+                sucesso("Pedido de cadastro do abrigo " + abrigo.getNome()
+                        + " enviado. Aguarde a aprovação do administrador para entrar.", false);
             }
         } catch (IllegalArgumentException e) {
             // Erros de validação (nome vazio, CPF inválido, e-mail repetido, senha curta...)
@@ -124,9 +125,9 @@ public class TelaCadastroController {
         }
     }
 
-    private void sucesso(String texto) {
+    private void sucesso(String texto, boolean podeEntrar) {
         mensagem.setTextFill(COR_SUCESSO);
-        mensagem.setText(texto + " Volte e faça login.");
+        mensagem.setText(podeEntrar ? texto + " Volte e faça login." : texto);
         for (TextField campo : new TextField[] {campoNome, campoEndereco, campoEmail, campoSenha,
                 campoConfirmarSenha, campoCpf, campoQuantAnimais, campoCapacidade}) {
             campo.clear();

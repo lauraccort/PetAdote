@@ -20,5 +20,14 @@ public interface IAbrigoServico {
     boolean excluir(Long id);
 
     /** Login: devolve o abrigo se o e-mail e a senha conferem. */
-    Optional<Abrigo> autenticar(String email, String senha);                  // D: exclui com regra (REQ20)
+    Optional<Abrigo> autenticar(String email, String senha);
+
+    /** Pedidos de cadastro aguardando o administrador, do mais antigo ao mais novo. */
+    List<Abrigo> listarPendentes();
+
+    /** Administrador aprova o pedido; o abrigo passa a poder entrar no sistema. */
+    boolean aprovar(Long id);
+
+    /** Administrador nega o pedido. */
+    boolean negar(Long id);                  // D: exclui com regra (REQ20)
 }

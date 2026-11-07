@@ -2,8 +2,11 @@ package br.com.petadote.servico;
 
 import br.com.petadote.model.Animal;
 import br.com.petadote.model.Abrigo;
+import br.com.petadote.model.StatusAbrigo;
 import br.com.petadote.repositorio.IRepositorio;
 import br.com.petadote.repositorio.AbrigoRepositorio;
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +32,9 @@ public class AbrigoServicoImpl implements IAbrigoServico {
         }
         ValidadorAcesso.validar(abrigo.getEmail(), abrigo.getSenha(),
                 repositorio.listarTodos().stream().map(Abrigo::getEmail));
+        // Todo cadastro novo entra como pedido pendente de aprovação
+        abrigo.setStatus(StatusAbrigo.PENDENTE);
+        abrigo.setDataPedido(LocalDate.now());
         return repositorio.salvar(abrigo);
     }
 
@@ -76,5 +82,23 @@ public class AbrigoServicoImpl implements IAbrigoServico {
                 .filter(c -> c.getEmail() != null && c.getEmail().equalsIgnoreCase(email))
                 .filter(c -> c.getSenha() != null && c.getSenha().equals(senha))
                 .findFirst();
+    }
+
+    @Override
+    public List<Abrigo> listarPendentes() {
+        return repositorio.listarTodos().stream()
+                .filter(a -> a.getStatus() == StatusAbrigo.PENDENTE)
+                .sorted(Comparator.comparing(Abrigo::getDataPedido, Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
+    }
+
+    @Override
+    public boolean aprovar(Long id) {
+        return repositorio.buscarPorId(id).map(Abrigo::aprovar).orElse(false);
+    }
+
+    @Override
+    public boolean negar(Long id) {
+        return repositorio.buscarPorId(id).map(Abrigo::negar).orElse(false);
     }
 }

@@ -1,5 +1,7 @@
 package br.com.petadote.gui;
 
+import br.com.petadote.model.Abrigo;
+import br.com.petadote.model.StatusAbrigo;
 import br.com.petadote.servico.ContaAdministrador;
 import br.com.petadote.servico.IAbrigoServico;
 import br.com.petadote.servico.IAdotanteServico;
@@ -8,6 +10,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import java.util.Optional;
 
 /**
  * Controller da TelaLogin.fxml (Login).
@@ -56,6 +59,16 @@ public class TelaLoginController {
         }
 
         String perfil = campoPerfil.getValue();
+        if (ABRIGO.equals(perfil)) {
+            // Abrigo só entra depois que o administrador aprovar o cadastro
+            Optional<Abrigo> abrigo = abrigoServico.autenticar(email, senha);
+            if (abrigo.isPresent() && abrigo.get().getStatus() != StatusAbrigo.APROVADO) {
+                mensagem.setText(abrigo.get().getStatus() == StatusAbrigo.PENDENTE
+                        ? "Cadastro do abrigo aguardando aprovação do administrador."
+                        : "O cadastro deste abrigo foi negado pelo administrador.");
+                return;
+            }
+        }
         if (!credenciaisConferem(perfil, email, senha)) {
             mensagem.setText("E-mail ou senha incorretos para o perfil " + perfil + ".");
             campoSenha.clear();
