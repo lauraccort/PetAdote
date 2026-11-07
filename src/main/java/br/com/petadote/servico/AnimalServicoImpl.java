@@ -3,16 +3,22 @@ package br.com.petadote.servico;
 import br.com.petadote.model.Animal;
 import br.com.petadote.model.StatusAnimal;
 import br.com.petadote.repositorio.IRepositorio;
+import br.com.petadote.repositorio.AnimalRepositorio;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AnimalServicoImpl implements IAnimalServico {
-    private final IRepositorio<Animal> repositorio; 
+    private static final AnimalServicoImpl INSTANCIA = new AnimalServicoImpl();
 
-    public AnimalServicoImpl(IRepositorio<Animal> repositorio) {
-        this.repositorio = repositorio;
+    private final IRepositorio<Animal> repositorio = AnimalRepositorio.getInstance();
+
+    private AnimalServicoImpl() {
+    }
+
+    public static AnimalServicoImpl getInstance() {
+        return INSTANCIA;
     }
 
     @Override
@@ -47,9 +53,9 @@ public class AnimalServicoImpl implements IAnimalServico {
     public Animal atualizar(Long id, String nome, LocalDate dataNascimento) {
         Animal animal = repositorio.buscarPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Animal não encontrado."));
-        animal.setNome(nome);                     
-        animal.setDataNascimento(dataNascimento); 
-        return repositorio.salvar(animal);         
+        animal.setNome(nome);
+        animal.setDataNascimento(dataNascimento);
+        return repositorio.salvar(animal);
     }
 
     @Override

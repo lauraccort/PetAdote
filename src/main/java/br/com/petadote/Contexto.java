@@ -1,9 +1,5 @@
 package br.com.petadote;
 
-import br.com.petadote.repositorio.AbrigoRepositorio;
-import br.com.petadote.repositorio.AdotanteRepositorio;
-import br.com.petadote.repositorio.AnimalRepositorio;
-import br.com.petadote.repositorio.ProcessoAdocaoRepositorio;
 import br.com.petadote.servico.AbrigoServicoImpl;
 import br.com.petadote.servico.AdotanteServicoImpl;
 import br.com.petadote.servico.AnimalServicoImpl;
@@ -14,8 +10,8 @@ import br.com.petadote.servico.IProcessoAdocaoServico;
 import br.com.petadote.servico.ProcessoAdocaoServicoImpl;
 
 /**
- * Único lugar que cria repositórios e serviços. Existe uma só instância (singleton),
- * então todas as telas usam os mesmos repositórios e enxergam os mesmos dados.
+ * Ponto de acesso aos serviços. Cada serviço é singleton (getInstance) e já busca
+ * o próprio repositório singleton, então todas as telas enxergam os mesmos dados.
  */
 public final class Contexto {
 
@@ -25,16 +21,10 @@ public final class Contexto {
         return INSTANCIA;
     }
 
-    private final AbrigoRepositorio abrigoRepo = new AbrigoRepositorio();
-    private final AnimalRepositorio animalRepo = new AnimalRepositorio();
-    private final AdotanteRepositorio adotanteRepo = new AdotanteRepositorio();
-    private final ProcessoAdocaoRepositorio processoRepo = new ProcessoAdocaoRepositorio();
-
-    private final IAbrigoServico abrigoServico = new AbrigoServicoImpl(abrigoRepo);
-    private final IAnimalServico animalServico = new AnimalServicoImpl(animalRepo);
-    private final IAdotanteServico adotanteServico = new AdotanteServicoImpl(adotanteRepo);
-    private final IProcessoAdocaoServico processoServico =
-            new ProcessoAdocaoServicoImpl(processoRepo, animalRepo, adotanteRepo);
+    private final IAbrigoServico abrigoServico = AbrigoServicoImpl.getInstance();
+    private final IAnimalServico animalServico = AnimalServicoImpl.getInstance();
+    private final IAdotanteServico adotanteServico = AdotanteServicoImpl.getInstance();
+    private final IProcessoAdocaoServico processoServico = ProcessoAdocaoServicoImpl.getInstance();
 
     private Contexto() {
     }
@@ -55,3 +45,4 @@ public final class Contexto {
         return processoServico;
     }
 }
+

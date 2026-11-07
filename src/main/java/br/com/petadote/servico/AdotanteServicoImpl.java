@@ -2,14 +2,20 @@ package br.com.petadote.servico;
 
 import br.com.petadote.model.Adotante;
 import br.com.petadote.repositorio.IRepositorio;
+import br.com.petadote.repositorio.AdotanteRepositorio;
 import java.util.List;
 import java.util.Optional;
 
 public class AdotanteServicoImpl implements IAdotanteServico {
-    private final IRepositorio<Adotante> repositorio; 
+    private static final AdotanteServicoImpl INSTANCIA = new AdotanteServicoImpl();
 
-    public AdotanteServicoImpl(IRepositorio<Adotante> repositorio) {
-        this.repositorio = repositorio;
+    private final IRepositorio<Adotante> repositorio = AdotanteRepositorio.getInstance();
+
+    private AdotanteServicoImpl() {
+    }
+
+    public static AdotanteServicoImpl getInstance() {
+        return INSTANCIA;
     }
 
     @Override
@@ -38,9 +44,9 @@ public class AdotanteServicoImpl implements IAdotanteServico {
     public Adotante atualizar(Long id, String nome, String endereco) {
         Adotante adotante = repositorio.buscarPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Adotante não encontrado."));
-        adotante.setNome(nome);             
-        adotante.setEndereco(endereco);     
-        return repositorio.salvar(adotante); 
+        adotante.setNome(nome);
+        adotante.setEndereco(endereco);
+        return repositorio.salvar(adotante);
     }
 
     @Override

@@ -4,27 +4,30 @@ import br.com.petadote.model.Avaliacao;
 import br.com.petadote.model.Adotante;
 import br.com.petadote.model.Animal;
 import br.com.petadote.model.ProcessoAdocao;
-import br.com.petadote.model.StatusProcesso; 
+import br.com.petadote.model.StatusProcesso;
 import br.com.petadote.model.Visita;
 import br.com.petadote.repositorio.IRepositorio;
+import br.com.petadote.repositorio.ProcessoAdocaoRepositorio;
+import br.com.petadote.repositorio.AnimalRepositorio;
+import br.com.petadote.repositorio.AdotanteRepositorio;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors; 
+import java.util.stream.Collectors;
 
 public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
 
-    private final IRepositorio<ProcessoAdocao> processoRepositorio; 
-    private final IRepositorio<Animal> animalRepositorio;           
-    private final IRepositorio<Adotante> adotanteRepositorio;       
+    private static final ProcessoAdocaoServicoImpl INSTANCIA = new ProcessoAdocaoServicoImpl();
 
+    private final IRepositorio<ProcessoAdocao> processoRepositorio = ProcessoAdocaoRepositorio.getInstance();
+    private final IRepositorio<Animal> animalRepositorio = AnimalRepositorio.getInstance();
+    private final IRepositorio<Adotante> adotanteRepositorio = AdotanteRepositorio.getInstance();
 
-    public ProcessoAdocaoServicoImpl(IRepositorio<ProcessoAdocao> processoRepositorio,
-                                     IRepositorio<Animal> animalRepositorio,
-                                     IRepositorio<Adotante> adotanteRepositorio) {
-        this.processoRepositorio = processoRepositorio;
-        this.animalRepositorio = animalRepositorio;
-        this.adotanteRepositorio= adotanteRepositorio;
+    private ProcessoAdocaoServicoImpl() {
+    }
+
+    public static ProcessoAdocaoServicoImpl getInstance() {
+        return INSTANCIA;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
     @Override
     public List<ProcessoAdocao> listarPorAdotante(Long idAdotante) {
         return processoRepositorio.listarTodos().stream()
-                .filter(p -> p.getAdotante().getId().equals(idAdotante)) 
+                .filter(p -> p.getAdotante().getId().equals(idAdotante))
                 .collect(Collectors.toList());
     }
 
@@ -70,11 +73,10 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
     public List<ProcessoAdocao> listarPendentesHa15Dias() {
         LocalDate limite = LocalDate.now().minusDays(15);
         return processoRepositorio.listarTodos().stream()
-                .filter(p -> p.getStatus() == StatusProcesso.EM_AVALIACAO) 
+                .filter(p -> p.getStatus() == StatusProcesso.EM_AVALIACAO)
                 .filter(p -> !p.getDataAbertura().isAfter(limite))
                 .collect(Collectors.toList());
     }
-
 
     @Override
     public void registrarAvaliacao(Long idProcesso, Avaliacao avaliacao) {
@@ -97,9 +99,9 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         // REQ07+15: só aprova se estiver EM_AVALIACAO e com parecer favorável
         return processoRepositorio.buscarPorId(idProcesso)
                 .map(ProcessoAdocao::aprovarProcesso)
-                .orElse(false); 
+                .orElse(false);
     }
-    
+
     @Override
     public boolean concluir(Long idProcesso) {
         Optional<ProcessoAdocao> processo = processoRepositorio.buscarPorId(idProcesso);
