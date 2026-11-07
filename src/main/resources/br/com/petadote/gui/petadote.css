@@ -59,6 +59,11 @@
     -fx-background-color: -pa-primaria;
 }
 
+/* texto branco na linha selecionada, para ler sobre o terracota */
+.table-row-cell:selected .table-cell, .list-view .list-cell:selected, .combo-box-popup .list-cell:selected {
+    -fx-text-fill: white;
+}
+
 /* Área com rolagem sem fundo próprio (usada no cadastro). Não usar -fx-background
    inline: isso apaga o textFill dos rótulos dentro dela. */
 .rolagem-transparente,

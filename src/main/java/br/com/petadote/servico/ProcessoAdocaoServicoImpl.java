@@ -89,9 +89,18 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
     @Override
     public void agendarVisita(Long idProcesso, Visita visita) {
         // Localiza o processo e agenda a visita pós-adoção (REQ09)
-        processoRepositorio.buscarPorId(idProcesso)
-                .orElseThrow(() -> new IllegalArgumentException("Processo não encontrado."))
-                .agendarVisita(visita);
+        ProcessoAdocao processo = processoRepositorio.buscarPorId(idProcesso)
+                .orElseThrow(() -> new IllegalArgumentException("Processo não encontrado."));
+        if (processo.getStatus() != StatusProcesso.APROVADO && processo.getStatus() != StatusProcesso.CONCLUIDO) {
+            throw new IllegalStateException("Só é possível agendar visitas para processos aprovados ou concluídos.");
+        }
+        if (visita.getData() == null) {
+            throw new IllegalArgumentException("Informe a data da visita.");
+        }
+        if (visita.getData().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("A data da visita não pode estar no passado.");
+        }
+        processo.agendarVisita(visita);
     }
 
     @Override

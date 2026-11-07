@@ -96,13 +96,21 @@ public class ProcessoAdocao extends Entidade {
     }
 
     /** REQ18: ao menos 2 visitas agendadas nos 90 dias seguintes. */
-    private boolean temVisitasSuficientes() {
+    public boolean temVisitasSuficientes() {
+        return contarVisitasNoPeriodo() >= MIN_VISITAS_POS_ADOCAO;
+    }
+
+    /** REQ18: quantas visitas estão agendadas de hoje até 90 dias à frente. */
+    public long contarVisitasNoPeriodo() {
         LocalDate hoje = LocalDate.now();
-        long agendadas = visitas.stream()
+        return visitas.stream()
                 .filter(v -> !v.getData().isBefore(hoje)
                         && v.getData().isBefore(hoje.plusDays(PERIODO_VISITAS_DIAS)))
                 .count();
-        return agendadas >= MIN_VISITAS_POS_ADOCAO;
+    }
+
+    public static int getMinVisitasPosAdocao() {
+        return MIN_VISITAS_POS_ADOCAO;
     }
 
     public Animal getAnimal() {
