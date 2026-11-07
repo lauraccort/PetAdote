@@ -6,6 +6,7 @@ import br.com.petadote.servico.AdotanteServicoImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -24,15 +25,17 @@ public class TelaListarAdotantesController {
     private TableColumn<Adotante, String> colunaTelefone;
     @FXML
     private TableColumn<Adotante, String> colunaCpf;
+    @FXML
+    private Label mensagem;
 
     public TelaListarAdotantesController(Navegador navegador) {
         this.navegador = navegador;
-        // Obtém a instância única pelo Singleton (se o seu método for em português, altere para getInstancia())
         this.adotanteServico = AdotanteServicoImpl.getInstance();
     }
 
     @FXML
     private void initialize() {
+        // Vincula as colunas aos atributos da classe Adotante (getId, getNome, getTelefone, getCpf)
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colunaTelefone.setCellValueFactory(new PropertyValueFactory<>("telefone"));
@@ -48,7 +51,9 @@ public class TelaListarAdotantesController {
                 tabelaAdotantes.setItems(lista);
             }
         } catch (Exception e) {
-            System.err.println("Erro ao carregar adotantes: " + e.getMessage());
+            if (mensagem != null) {
+                mensagem.setText("Erro ao carregar adotantes: " + e.getMessage());
+            }
         }
     }
 
@@ -56,7 +61,12 @@ public class TelaListarAdotantesController {
     private void abrirHistoricoAdotante() {
         Adotante selecionado = tabelaAdotantes.getSelectionModel().getSelectedItem();
         if (selecionado != null) {
+            if (mensagem != null) mensagem.setText("");
             this.navegador.ir("TelaHistoricoAdotante.fxml");
+        } else {
+            if (mensagem != null) {
+                mensagem.setText("Selecione um adotante na tabela.");
+            }
         }
     }
 
