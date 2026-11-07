@@ -14,6 +14,7 @@ public class ProcessoAdocao extends Entidade {
     private StatusProcesso status;
     private LocalDate dataAbertura;
     private LocalDate dataConclusao;
+    private String observacaoFinal;
     private List<Visita> visitas;
     private List<Avaliacao> avaliacoes;
 
@@ -171,5 +172,14 @@ public class ProcessoAdocao extends Entidade {
 
     public List<Avaliacao> getAvaliacoes() {
         return Collections.unmodifiableList(avaliacoes);
+    }
+
+    /** Observações registradas ao finalizar o processo. */
+    public String getObservacaoFinal() {
+        return observacaoFinal;
+    }
+
+    public void setObservacaoFinal(String observacaoFinal) {
+        this.observacaoFinal = observacaoFinal;
     }
 }
