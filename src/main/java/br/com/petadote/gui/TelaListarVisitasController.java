@@ -1,30 +1,99 @@
 package br.com.petadote.gui;
 
+import br.com.petadote.model.ProcessoAdocao;
+import br.com.petadote.model.Visita;
+import br.com.petadote.servico.IProcessoAdocaoServico;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 
 /**
- * Controller da TelaListarVisitas.fxml (Visitas).
+ * Controller da TelaListarVisitas.fxml (Painel de visitas).
+ * Lista as visitas de acompanhamento de todos os processos, por data.
  */
 public class TelaListarVisitasController {
 
-    private final Navegador navegador;
+    private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public TelaListarVisitasController(Navegador navegador) {
+    /** Uma linha da tabela: a visita e o processo a que ela pertence. */
+    public record VisitaDoProcesso(ProcessoAdocao processo, Visita visita) {
+
+        /** Realizada, agendada ou atrasada (data passou sem registro do resultado). */
+        public String status() {
+            if (visita.isConcluida()) {
+                return "Realizada";
+            }
+            return visita.getData().isBefore(LocalDate.now()) ? "Atrasada" : "Agendada";
+        }
+    }
+
+    private final Navegador navegador;
+    private final IProcessoAdocaoServico processoServico;
+
+    @FXML private TableView<VisitaDoProcesso> tabelaVisitas;
+    @FXML private TableColumn<VisitaDoProcesso, String> colunaDataHora;
+    @FXML private TableColumn<VisitaDoProcesso, String> colunaAnimal;
+    @FXML private TableColumn<VisitaDoProcesso, String> colunaAdotante;
+    @FXML private TableColumn<VisitaDoProcesso, String> colunaStatus;
+    @FXML private Label mensagem;
+
+    public TelaListarVisitasController(Navegador navegador, IProcessoAdocaoServico processoServico) {
         this.navegador = navegador;
+        this.processoServico = processoServico;
+    }
+
+    @FXML
+    private void initialize() {
+        colunaDataHora.setCellValueFactory(c -> texto(c.getValue().visita().getData().format(FORMATO)));
+        colunaAnimal.setCellValueFactory(c -> texto(c.getValue().processo().getAnimal().getNome()));
+        colunaAdotante.setCellValueFactory(c -> texto(c.getValue().processo().getAdotante().getNome()));
+        colunaStatus.setCellValueFactory(c -> texto(c.getValue().status()));
+
+        tabelaVisitas.setItems(FXCollections.observableArrayList(
+                processoServico.listarTodos().stream()
+                        .flatMap(p -> p.getVisitas().stream().map(v -> new VisitaDoProcesso(p, v)))
+                        .sorted(Comparator.comparing(l -> l.visita().getData()))
+                        .toList()));
+
+        // Some com o aviso "Selecione uma visita" assim que algo é selecionado
+        tabelaVisitas.getSelectionModel().selectedItemProperty()
+                .addListener((obs, anterior, atual) -> mensagem.setText(""));
     }
 
     @FXML
     private void abrirAvaliarVisita() {
-        navegador.ir("TelaAvaliarVisita.fxml");
+        if (temSelecao()) {
+            navegador.ir("TelaAvaliarVisita.fxml");
+        }
     }
 
     @FXML
     private void abrirConfirmarAgendamentoVisita() {
-        navegador.ir("TelaConfirmarAgendamentoVisita.fxml");
+        if (temSelecao()) {
+            navegador.ir("TelaConfirmarAgendamentoVisita.fxml");
+        }
     }
 
     @FXML
     private void voltar() {
         navegador.voltar();
+    }
+
+    private boolean temSelecao() {
+        if (tabelaVisitas.getSelectionModel().getSelectedItem() == null) {
+            mensagem.setText("Selecione uma visita na tabela.");
+            return false;
+        }
+        return true;
+    }
+
+    private static SimpleStringProperty texto(Object valor) {
+        return new SimpleStringProperty(valor == null ? "" : valor.toString());
     }
 }

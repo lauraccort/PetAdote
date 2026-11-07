@@ -89,6 +89,7 @@
                   <Label text="Não há visitas agendadas no momento." textFill="#8a6a58" />
                </placeholder>
             </TableView>
+            <Label fx:id="mensagem" textFill="#c0392b" wrapText="true" />
          </children>
       </VBox>
    </center>
