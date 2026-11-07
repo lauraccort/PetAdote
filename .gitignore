@@ -31,3 +31,4 @@ bin/
 ### IntelliJ (configurações locais) ###
 .idea/
 *.iml
+target/
