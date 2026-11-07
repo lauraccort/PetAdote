@@ -61,7 +61,7 @@ public class TelaAcompanharPosAdocaoController {
         colunaProcessoId.setCellValueFactory(c -> texto(c.getValue().getId()));
         colunaAnimal.setCellValueFactory(c -> texto(c.getValue().getAnimal().getNome()));
         colunaAdotante.setCellValueFactory(c -> texto(c.getValue().getAdotante().getNome()));
-        colunaStatus.setCellValueFactory(c -> texto(nomeStatus(c.getValue().getStatus())));
+        colunaStatus.setCellValueFactory(c -> texto(c.getValue().getStatus().getDescricao()));
         colunaVisitasPeriodo.setCellValueFactory(c -> texto(
                 c.getValue().contarVisitasNoPeriodo() + " de " + ProcessoAdocao.getMinVisitasPosAdocao()));
 
@@ -155,15 +155,6 @@ public class TelaAcompanharPosAdocaoController {
     private void sucesso(String texto) {
         mensagem.setTextFill(COR_SUCESSO);
         mensagem.setText(texto);
-    }
-
-    private static String nomeStatus(StatusProcesso status) {
-        return switch (status) {
-            case APROVADO -> "Aprovado";
-            case CONCLUIDO -> "Concluído";
-            case EM_AVALIACAO -> "Em avaliação";
-            case NEGADO -> "Negado";
-        };
     }
 
     private static SimpleStringProperty texto(Object valor) {
