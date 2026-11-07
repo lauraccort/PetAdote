@@ -69,6 +69,7 @@ public class Navegador {
 
     /** Volta para o login, descartando o histórico. */
     public void sair() {
+        contexto.encerrarSessao();
         historico.clear();
         ir(TELA_INICIAL);
     }
@@ -104,7 +105,7 @@ public class Navegador {
             return new TelaPrincipalController(contexto.animalServico());
         }
         if (tipo == TelaLoginController.class) {
-            return new TelaLoginController(this, contexto.adotanteServico(), contexto.abrigoServico());
+            return new TelaLoginController(this, contexto);
         }
         if (tipo == TelaAcompanharPosAdocaoController.class) {
             return new TelaAcompanharPosAdocaoController(this, contexto.processoServico());
@@ -141,6 +142,9 @@ public class Navegador {
         }
         if (tipo == TelaListarAnimaisDisponiveisController.class) {
             return new TelaListarAnimaisDisponiveisController(this, contexto.animalServico());
+        }
+        if (tipo == TelaListarMeusProcessosController.class) {
+            return new TelaListarMeusProcessosController(this, contexto);
         }
         if (tipo == TelaCadastroController.class) {
             return new TelaCadastroController(this, contexto.adotanteServico(), contexto.abrigoServico());

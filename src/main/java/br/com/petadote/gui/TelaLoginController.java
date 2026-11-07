@@ -1,10 +1,10 @@
 package br.com.petadote.gui;
 
+import br.com.petadote.Contexto;
 import br.com.petadote.model.Abrigo;
+import br.com.petadote.model.Adotante;
 import br.com.petadote.model.StatusAbrigo;
 import br.com.petadote.servico.ContaAdministrador;
-import br.com.petadote.servico.IAbrigoServico;
-import br.com.petadote.servico.IAdotanteServico;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -14,6 +14,7 @@ import java.util.Optional;
 
 /**
  * Controller da TelaLogin.fxml (Login).
+ * Confere e-mail e senha no perfil escolhido e guarda no Contexto quem entrou.
  */
 public class TelaLoginController {
 
@@ -22,18 +23,16 @@ public class TelaLoginController {
     private static final String ADMINISTRADOR = "Administrador";
 
     private final Navegador navegador;
-    private final IAdotanteServico adotanteServico;
-    private final IAbrigoServico abrigoServico;
+    private final Contexto contexto;
 
     @FXML private TextField campoEmail;
     @FXML private PasswordField campoSenha;
     @FXML private ComboBox<String> campoPerfil;
     @FXML private Label mensagem;
 
-    public TelaLoginController(Navegador navegador, IAdotanteServico adotanteServico, IAbrigoServico abrigoServico) {
+    public TelaLoginController(Navegador navegador, Contexto contexto) {
         this.navegador = navegador;
-        this.adotanteServico = adotanteServico;
-        this.abrigoServico = abrigoServico;
+        this.contexto = contexto;
     }
 
     @FXML
@@ -59,23 +58,14 @@ public class TelaLoginController {
         }
 
         String perfil = campoPerfil.getValue();
-        if (ABRIGO.equals(perfil)) {
-            // Abrigo só entra depois que o administrador aprovar o cadastro
-            Optional<Abrigo> abrigo = abrigoServico.autenticar(email, senha);
-            if (abrigo.isPresent() && abrigo.get().getStatus() != StatusAbrigo.APROVADO) {
-                mensagem.setText(abrigo.get().getStatus() == StatusAbrigo.PENDENTE
-                        ? "Cadastro do abrigo aguardando aprovação do administrador."
-                        : "O cadastro deste abrigo foi negado pelo administrador.");
-                return;
-            }
-        }
-        if (!credenciaisConferem(perfil, email, senha)) {
-            mensagem.setText("E-mail ou senha incorretos para o perfil " + perfil + ".");
-            campoSenha.clear();
-            campoSenha.requestFocus();
+        boolean entrou = switch (perfil) {
+            case ABRIGO -> entrarComoAbrigo(email, senha);
+            case ADMINISTRADOR -> entrarComoAdministrador(email, senha);
+            default -> entrarComoAdotante(email, senha);
+        };
+        if (!entrou) {
             return;
         }
-
         mensagem.setText("");
         navegador.ir(telaPrincipalDo(perfil));
     }
@@ -85,13 +75,46 @@ public class TelaLoginController {
         navegador.ir("TelaCadastro.fxml");
     }
 
-    /** Procura o cadastro só no perfil escolhido. */
-    private boolean credenciaisConferem(String perfil, String email, String senha) {
-        return switch (perfil) {
-            case ABRIGO -> abrigoServico.autenticar(email, senha).isPresent();
-            case ADMINISTRADOR -> ContaAdministrador.confere(email, senha);
-            default -> adotanteServico.autenticar(email, senha).isPresent();
-        };
+    private boolean entrarComoAdotante(String email, String senha) {
+        Optional<Adotante> adotante = contexto.adotanteServico().autenticar(email, senha);
+        if (adotante.isEmpty()) {
+            credenciaisIncorretas(ADOTANTE);
+            return false;
+        }
+        contexto.entrarComoAdotante(adotante.get());
+        return true;
+    }
+
+    private boolean entrarComoAbrigo(String email, String senha) {
+        Optional<Abrigo> abrigo = contexto.abrigoServico().autenticar(email, senha);
+        if (abrigo.isEmpty()) {
+            credenciaisIncorretas(ABRIGO);
+            return false;
+        }
+        // Abrigo só entra depois que o administrador aprovar o cadastro
+        if (abrigo.get().getStatus() != StatusAbrigo.APROVADO) {
+            mensagem.setText(abrigo.get().getStatus() == StatusAbrigo.PENDENTE
+                    ? "Cadastro do abrigo aguardando aprovação do administrador."
+                    : "O cadastro deste abrigo foi negado pelo administrador.");
+            return false;
+        }
+        contexto.entrarComoAbrigo(abrigo.get());
+        return true;
+    }
+
+    private boolean entrarComoAdministrador(String email, String senha) {
+        if (!ContaAdministrador.confere(email, senha)) {
+            credenciaisIncorretas(ADMINISTRADOR);
+            return false;
+        }
+        contexto.encerrarSessao(); // administrador não tem cadastro de adotante/abrigo
+        return true;
+    }
+
+    private void credenciaisIncorretas(String perfil) {
+        mensagem.setText("E-mail ou senha incorretos para o perfil " + perfil + ".");
+        campoSenha.clear();
+        campoSenha.requestFocus();
     }
 
     private static String telaPrincipalDo(String perfil) {
