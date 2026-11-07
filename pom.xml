@@ -41,7 +41,7 @@
                 <version>0.0.8</version>
                 <configuration>
                     <!-- Executar a GUI: mvn javafx:run -->
-                    <mainClass>br.com.petadote/br.com.petadote.gui.App</mainClass>
+                    <mainClass>br.com.petadote.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>
