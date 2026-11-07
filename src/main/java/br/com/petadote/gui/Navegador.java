@@ -35,6 +35,16 @@ public class Navegador {
      * ou para o login), volta até ela em vez de empilhar de novo.
      */
     public void ir(String fxml) {
+        ir(fxml, null); // sem item: não deixa a seleção de uma navegação anterior para trás
+    }
+
+    /**
+     * Abre a tela levando o item escolhido na tela atual (ex.: o animal selecionado
+     * na tabela). A próxima tela o recupera com {@link #selecionado(Class)}.
+     * O item continua disponível ao voltar para esta tela com o botão "Voltar".
+     */
+    public void ir(String fxml, Object selecionado) {
+        this.selecionado = selecionado;
         if (historico.contains(fxml)) {
             while (!historico.peek().equals(fxml)) {
                 historico.pop();
@@ -45,16 +55,7 @@ public class Navegador {
         mostrar(fxml);
     }
 
-    /**
-     * Abre a tela levando o item escolhido na tela atual (ex.: o animal selecionado
-     * na tabela). A próxima tela o recupera com {@link #selecionado(Class)}.
-     */
-    public void ir(String fxml, Object selecionado) {
-        this.selecionado = selecionado;
-        ir(fxml);
-    }
-
-    /** Item levado pela última chamada de {@link #ir(String, Object)}, se for do tipo pedido. */
+    /** Item levado pela última navegação, se for do tipo pedido. */
     public <T> Optional<T> selecionado(Class<T> tipo) {
         return tipo.isInstance(selecionado) ? Optional.of(tipo.cast(selecionado)) : Optional.empty();
     }
@@ -148,6 +149,12 @@ public class Navegador {
         }
         if (tipo == TelaListarMinhasVisitasController.class) {
             return new TelaListarMinhasVisitasController(this, contexto);
+        }
+        if (tipo == TelaListarAbrigosController.class) {
+            return new TelaListarAbrigosController(this, contexto.abrigoServico());
+        }
+        if (tipo == TelaExcluirAbrigoController.class) {
+            return new TelaExcluirAbrigoController(this, contexto.abrigoServico());
         }
         if (tipo == TelaCadastroController.class) {
             return new TelaCadastroController(this, contexto.adotanteServico(), contexto.abrigoServico());
