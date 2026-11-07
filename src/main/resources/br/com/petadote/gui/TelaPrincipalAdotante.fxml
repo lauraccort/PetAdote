@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -9,11 +11,18 @@
    <padding>
       <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
    </padding>
-   <Label text="Principal - Adotante">
-      <font>
-         <Font size="20.0" />
-      </font>
-   </Label>
+   <HBox alignment="CENTER_LEFT" spacing="12.0">
+      <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imagens/petadote.png" />
+         </image>
+      </ImageView>
+      <Label text="Principal - Adotante">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+   </HBox>
    <VBox spacing="8.0">
       <Button onAction="#abrirListarAnimaisDisponiveis" prefWidth="280.0" text="Animais disponíveis" />
       <Button onAction="#abrirListarMeusProcessos" prefWidth="280.0" text="Meus processos" />

@@ -5,24 +5,35 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="560.0" prefWidth="720.0" style="-fx-background-color: #f4efe9;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.petadote.gui.TelaCadastroController">
+<StackPane prefHeight="560.0" prefWidth="720.0" style="-fx-background-color: #f7efe6;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.petadote.gui.TelaCadastroController">
    <children>
       <VBox maxHeight="-Infinity" maxWidth="380.0" spacing="6.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4);">
          <padding>
             <Insets bottom="24.0" left="32.0" right="32.0" top="24.0" />
          </padding>
          <children>
-            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Cadastro" textFill="#d9733a">
+            <HBox alignment="CENTER">
+               <children>
+                  <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../imagens/petadote.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
+            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Cadastro" textFill="#9c4f2a">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Crie sua conta no PetAdote" textFill="#7a716a">
+            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Crie sua conta no PetAdote" textFill="#8a6a58">
                <VBox.margin>
                   <Insets bottom="10.0" />
                </VBox.margin>
@@ -83,7 +94,7 @@
 
             <Label fx:id="mensagem" textFill="#c0392b" wrapText="true" />
 
-            <Button fx:id="botaoCadastrar" defaultButton="true" maxWidth="1.7976931348623157E308" onAction="#cadastrar" style="-fx-background-color: #d9733a; -fx-background-radius: 6; -fx-cursor: hand;" text="Cadastrar" textFill="WHITE">
+            <Button fx:id="botaoCadastrar" defaultButton="true" maxWidth="1.7976931348623157E308" onAction="#cadastrar" style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;" text="Cadastrar" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>

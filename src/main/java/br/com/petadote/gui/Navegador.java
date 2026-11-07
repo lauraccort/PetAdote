@@ -67,7 +67,9 @@ public class Navegador {
         try {
             Parent raiz = loader.load();
             if (stage.getScene() == null) {
-                stage.setScene(new Scene(raiz));
+                Scene cena = new Scene(raiz);
+                cena.getStylesheets().add(Navegador.class.getResource("petadote.css").toExternalForm());
+                stage.setScene(cena);
             } else {
                 stage.getScene().setRoot(raiz); // mantém o tamanho da janela
             }
