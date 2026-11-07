@@ -27,6 +27,8 @@ public class AdotanteServicoImpl implements IAdotanteServico {
         if (cpf.length() != 11) {
             throw new IllegalArgumentException("CPF deve conter 11 dígitos.");
         }
+        ValidadorAcesso.validar(adotante.getEmail(), adotante.getSenha(),
+                repositorio.listarTodos().stream().map(Adotante::getEmail));
         return repositorio.salvar(adotante);
     }
 
@@ -57,5 +59,13 @@ public class AdotanteServicoImpl implements IAdotanteServico {
             return false;
         }
         return repositorio.excluirPorId(id);
+    }
+
+    @Override
+    public Optional<Adotante> autenticar(String email, String senha) {
+        return repositorio.listarTodos().stream()
+                .filter(c -> c.getEmail() != null && c.getEmail().equalsIgnoreCase(email))
+                .filter(c -> c.getSenha() != null && c.getSenha().equals(senha))
+                .findFirst();
     }
 }

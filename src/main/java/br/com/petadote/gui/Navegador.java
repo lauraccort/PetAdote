@@ -87,6 +87,9 @@ public class Navegador {
         if (tipo == TelaPrincipalController.class) {
             return new TelaPrincipalController(contexto.animalServico());
         }
+        if (tipo == TelaLoginController.class) {
+            return new TelaLoginController(this, contexto.adotanteServico(), contexto.abrigoServico());
+        }
         if (tipo == TelaCadastroController.class) {
             return new TelaCadastroController(this, contexto.adotanteServico(), contexto.abrigoServico());
         }
