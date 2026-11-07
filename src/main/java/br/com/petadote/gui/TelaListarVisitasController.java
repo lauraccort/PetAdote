@@ -55,14 +55,14 @@ public class TelaListarVisitasController {
     @FXML
     private void abrirAvaliarVisita() {
         if (temSelecao()) {
-            navegador.ir("TelaAvaliarVisita.fxml");
+            navegador.ir("TelaAvaliarVisita.fxml", tabelaVisitas.getSelectionModel().getSelectedItem());
         }
     }
 
     @FXML
     private void abrirConfirmarAgendamentoVisita() {
         if (temSelecao()) {
-            navegador.ir("TelaConfirmarAgendamentoVisita.fxml");
+            navegador.ir("TelaConfirmarAgendamentoVisita.fxml", tabelaVisitas.getSelectionModel().getSelectedItem());
         }
     }
 

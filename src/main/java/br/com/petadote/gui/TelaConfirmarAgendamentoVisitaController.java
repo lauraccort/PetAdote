@@ -53,6 +53,10 @@ public class TelaConfirmarAgendamentoVisitaController {
         grupoNovaData.visibleProperty().bind(campoStatusVisita.valueProperty().isEqualTo(REAGENDADA));
 
         campoIdVisita.textProperty().addListener((obs, anterior, texto) -> mostrarInfo());
+        // Vindo do painel de visitas com uma visita selecionada, o número já vem preenchido
+        navegador.selecionado(VisitaDoProcesso.class)
+                .filter(vp -> vp.visita().getId() != null)
+                .ifPresent(vp -> campoIdVisita.setText(String.valueOf(vp.visita().getId())));
         mostrarInfo();
     }
 
