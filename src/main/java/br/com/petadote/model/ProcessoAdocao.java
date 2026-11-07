@@ -15,6 +15,7 @@ public class ProcessoAdocao extends Entidade {
     private LocalDate dataAbertura;
     private LocalDate dataConclusao;
     private String observacaoFinal;
+    private String justificativaAdotante;
     private List<Visita> visitas;
     private List<Avaliacao> avaliacoes;
 
@@ -182,5 +183,14 @@ public class ProcessoAdocao extends Entidade {
 
     public void setObservacaoFinal(String observacaoFinal) {
         this.observacaoFinal = observacaoFinal;
+    }
+
+    /** O que o adotante escreveu ao pedir a adoção (ambiente, motivação). */
+    public String getJustificativaAdotante() {
+        return justificativaAdotante;
+    }
+
+    public void setJustificativaAdotante(String justificativaAdotante) {
+        this.justificativaAdotante = justificativaAdotante;
     }
 }

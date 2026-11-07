@@ -156,6 +156,9 @@ public class Navegador {
         if (tipo == TelaExcluirAbrigoController.class) {
             return new TelaExcluirAbrigoController(this, contexto.abrigoServico());
         }
+        if (tipo == TelaIniciarProcessoAdocaoController.class) {
+            return new TelaIniciarProcessoAdocaoController(this, contexto);
+        }
         if (tipo == TelaCadastroController.class) {
             return new TelaCadastroController(this, contexto.adotanteServico(), contexto.abrigoServico());
         }
