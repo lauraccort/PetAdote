@@ -24,12 +24,18 @@ public class TelaListarVisitasController {
     /** Uma linha da tabela: a visita e o processo a que ela pertence. */
     public record VisitaDoProcesso(ProcessoAdocao processo, Visita visita) {
 
-        /** Realizada, agendada ou atrasada (data passou sem registro do resultado). */
+        /** Realizada, cancelada, atrasada (data passou sem resultado) ou a situação do agendamento. */
         public String status() {
             if (visita.isConcluida()) {
                 return "Realizada";
             }
-            return visita.getData().isBefore(LocalDate.now()) ? "Atrasada" : "Agendada";
+            if (visita.isCancelada()) {
+                return "Cancelada";
+            }
+            if (visita.getData().isBefore(LocalDate.now())) {
+                return "Atrasada";
+            }
+            return visita.getStatusAgendamento().getDescricao();
         }
     }
 
@@ -37,6 +43,7 @@ public class TelaListarVisitasController {
     private final IProcessoAdocaoServico processoServico;
 
     @FXML private TableView<VisitaDoProcesso> tabelaVisitas;
+    @FXML private TableColumn<VisitaDoProcesso, String> colunaNumero;
     @FXML private TableColumn<VisitaDoProcesso, String> colunaDataHora;
     @FXML private TableColumn<VisitaDoProcesso, String> colunaAnimal;
     @FXML private TableColumn<VisitaDoProcesso, String> colunaAdotante;
@@ -50,6 +57,7 @@ public class TelaListarVisitasController {
 
     @FXML
     private void initialize() {
+        colunaNumero.setCellValueFactory(c -> texto(c.getValue().visita().getId()));
         colunaDataHora.setCellValueFactory(c -> texto(c.getValue().visita().getData().format(FORMATO)));
         colunaAnimal.setCellValueFactory(c -> texto(c.getValue().processo().getAnimal().getNome()));
         colunaAdotante.setCellValueFactory(c -> texto(c.getValue().processo().getAdotante().getNome()));

@@ -13,6 +13,7 @@ import br.com.petadote.repositorio.AdotanteRepositorio;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
@@ -22,6 +23,7 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
     private final IRepositorio<ProcessoAdocao> processoRepositorio = ProcessoAdocaoRepositorio.getInstance();
     private final IRepositorio<Animal> animalRepositorio = AnimalRepositorio.getInstance();
     private final IRepositorio<Adotante> adotanteRepositorio = AdotanteRepositorio.getInstance();
+    private final AtomicLong proximoIdVisita = new AtomicLong(1); // número de cada visita agendada
 
     private ProcessoAdocaoServicoImpl() {
     }
@@ -100,6 +102,7 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         if (visita.getData().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("A data da visita não pode estar no passado.");
         }
+        visita.setId(proximoIdVisita.getAndIncrement());
         processo.agendarVisita(visita);
     }
 

@@ -117,6 +117,7 @@ public class ProcessoAdocao extends Entidade {
     public long contarVisitasNoPeriodo() {
         LocalDate hoje = LocalDate.now();
         return visitas.stream()
+                .filter(v -> !v.isCancelada())
                 .filter(v -> !v.getData().isBefore(hoje)
                         && v.getData().isBefore(hoje.plusDays(PERIODO_VISITAS_DIAS)))
                 .count();
