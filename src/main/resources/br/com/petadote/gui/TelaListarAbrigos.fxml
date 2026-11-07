@@ -1,57 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="560.0" prefWidth="720.0" style="-fx-background-color: #f4efe9;"
-           xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="br.com.petadote.gui.TelaListarAbrigosController">
-   <children>
-      <VBox maxHeight="-Infinity" maxWidth="340.0" spacing="8.0"
-            style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4);">
+<BorderPane prefHeight="560.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="br.com.petadote.gui.TelaListarAbrigosController">
+   <stylesheets>
+      <URL value="@petadote.css" />
+   </stylesheets>
+   <padding>
+      <Insets bottom="24.0" left="28.0" right="28.0" top="24.0" />
+   </padding>
+   <top>
+      <HBox alignment="CENTER_LEFT" spacing="14.0">
+         <BorderPane.margin>
+            <Insets bottom="16.0" />
+         </BorderPane.margin>
+         <children>
+            <ImageView fitHeight="56.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../imagens/relatorios.png" />
+               </image>
+            </ImageView>
+            <VBox spacing="2.0">
+               <children>
+                  <Label text="PetAdote" textFill="#9c4f2a">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <Label text="Abrigos" textFill="#4a2a1a">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <VBox spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4);">
          <padding>
-            <Insets bottom="28.0" left="32.0" right="32.0" top="28.0" />
+            <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
          </padding>
          <children>
-            <Label text="PetAdote" textFill="#d9733a">
-               <font>
-                  <Font name="System Bold" size="28.0" />
-               </font>
-            </Label>
-            <Label text="Abrigos" textFill="#7a716a">
-               <VBox.margin>
-                  <Insets bottom="12.0" />
-               </VBox.margin>
-            </Label>
-
-            <Button maxWidth="1.7976931348623157E308" onAction="#abrirAprovarCadastroAbrigo"
-                    style="-fx-background-color: #d9733a; -fx-background-radius: 6; -fx-cursor: hand;"
-                    text="Aprovar cadastro de abrigo" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-               <padding>
-                  <Insets bottom="8.0" top="8.0" />
-               </padding>
-            </Button>
-            <Button maxWidth="1.7976931348623157E308" onAction="#abrirExcluirAbrigo"
-                    style="-fx-background-color: #d9733a; -fx-background-radius: 6; -fx-cursor: hand;"
-                    text="Excluir abrigo" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-               <padding>
-                  <Insets bottom="8.0" top="8.0" />
-               </padding>
-            </Button>
-
-            <Hyperlink onAction="#voltar" text="Voltar" />
+            <TableView fx:id="tabela" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="colId" prefWidth="50.0" text="Id" />
+                  <TableColumn fx:id="colNome" prefWidth="170.0" text="Nome" />
+                  <TableColumn fx:id="colEndereco" prefWidth="250.0" text="Endereço" />
+                  <TableColumn fx:id="colCapacidade" prefWidth="90.0" text="Capacidade" />
+                  <TableColumn fx:id="colAnimais" prefWidth="70.0" text="Animais" />
+                  <TableColumn fx:id="colVagas" prefWidth="70.0" text="Vagas" />
+               </columns>
+            </TableView>
+            <Label fx:id="total" textFill="#8a6a58" />
          </children>
       </VBox>
-   </children>
-</StackPane>
+   </center>
+   <bottom>
+      <HBox alignment="CENTER_LEFT" spacing="12.0">
+         <BorderPane.margin>
+            <Insets top="16.0" />
+         </BorderPane.margin>
+         <children>
+            <Hyperlink onAction="#voltar" text="Voltar" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button onAction="#abrirAprovarCadastroAbrigo" prefWidth="200.0" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 14 10 14;" text="Aprovar cadastro" />
+            <Button onAction="#abrirExcluirAbrigo" prefWidth="200.0" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 14 10 14;" text="Excluir abrigo" />
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>

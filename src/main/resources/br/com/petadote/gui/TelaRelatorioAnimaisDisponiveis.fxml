@@ -1,34 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="480.0" prefWidth="640.0" spacing="12.0"
-      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="br.com.petadote.gui.TelaRelatorioAnimaisDisponiveisController">
+<BorderPane prefHeight="560.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="br.com.petadote.gui.TelaRelatorioAnimaisDisponiveisController">
+   <stylesheets>
+      <URL value="@petadote.css" />
+   </stylesheets>
    <padding>
-      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+      <Insets bottom="24.0" left="28.0" right="28.0" top="24.0" />
    </padding>
-   <HBox alignment="CENTER_LEFT" spacing="12.0">
-      <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../imagens/relatorios.png" />
-         </image>
-      </ImageView>
-      <Label text="Relatório de animais disponíveis">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-   </HBox>
-   <!-- espaço vazio que empurra o rodapé para baixo; o conteúdo da tela entra acima -->
-   <Region VBox.vgrow="ALWAYS" />
-   <Button text="Voltar" onAction="#voltar" />
-</VBox>
+   <top>
+      <HBox alignment="CENTER_LEFT" spacing="14.0">
+         <BorderPane.margin>
+            <Insets bottom="16.0" />
+         </BorderPane.margin>
+         <children>
+            <ImageView fitHeight="56.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../imagens/relatorios.png" />
+               </image>
+            </ImageView>
+            <VBox spacing="2.0">
+               <children>
+                  <Label text="PetAdote" textFill="#9c4f2a">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <Label text="Relatório de animais disponíveis" textFill="#4a2a1a" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <VBox spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4);">
+         <padding>
+            <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+         </padding>
+         <children>
+            <TableView fx:id="tabela" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="colId" prefWidth="50.0" text="Id" />
+                  <TableColumn fx:id="colNome" prefWidth="110.0" text="Nome" />
+                  <TableColumn fx:id="colEspecie" prefWidth="80.0" text="Espécie" />
+                  <TableColumn fx:id="colRaca" prefWidth="120.0" text="Raça" />
+                  <TableColumn fx:id="colNascimento" prefWidth="90.0" text="Nascimento" />
+                  <TableColumn fx:id="colIdade" prefWidth="80.0" text="Idade" />
+                  <TableColumn fx:id="colStatus" prefWidth="100.0" text="Status" />
+                  <TableColumn fx:id="colAbrigo" prefWidth="130.0" text="Abrigo" />
+                  <TableColumn fx:id="colEnderecoAbrigo" prefWidth="190.0" text="Endereço do abrigo" />
+                  <TableColumn fx:id="colPorte" prefWidth="80.0" text="Porte" />
+                  <TableColumn fx:id="colPeso" prefWidth="110.0" text="Peso médio (kg)" />
+                  <TableColumn fx:id="colTemperamento" prefWidth="180.0" text="Temperamento" />
+               </columns>
+            </TableView>
+            <HBox alignment="CENTER_LEFT" spacing="12.0">
+               <children>
+                  <Label fx:id="total" textFill="#8a6a58" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+   <bottom>
+      <HBox alignment="CENTER_LEFT" spacing="12.0">
+         <BorderPane.margin>
+            <Insets top="16.0" />
+         </BorderPane.margin>
+         <children>
+            <Hyperlink onAction="#voltar" text="Voltar" />
+            <Region HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>
+
