@@ -4,22 +4,99 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="560.0" prefWidth="720.0" spacing="12.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.petadote.gui.TelaCadastroController">
-   <padding>
-      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-   </padding>
-   <Label alignment="CENTER" prefHeight="0.0" prefWidth="660.0" text="Cadastro" textFill="#d9733a">
-      <font>
-         <Font name="System Bold" size="36.0" />
-      </font>
-   </Label>
-   <VBox prefHeight="442.0" prefWidth="688.0">
-      <children>
-         <ComboBox prefHeight="26.0" prefWidth="222.0" promptText="Tipo de perfil" />
-      </children>
-   </VBox>
-   <Button alignment="BASELINE_LEFT" onAction="#voltar" prefHeight="10.0" text="Voltar" />
-</VBox>
+<StackPane prefHeight="560.0" prefWidth="720.0" style="-fx-background-color: #f4efe9;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.petadote.gui.TelaCadastroController">
+   <children>
+      <VBox maxHeight="-Infinity" maxWidth="380.0" spacing="6.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4);">
+         <padding>
+            <Insets bottom="24.0" left="32.0" right="32.0" top="24.0" />
+         </padding>
+         <children>
+            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Cadastro" textFill="#d9733a">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Crie sua conta no PetAdote" textFill="#7a716a">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </Label>
+
+            <Label text="Tipo de perfil" />
+            <ComboBox fx:id="campoPerfil" maxWidth="1.7976931348623157E308" promptText="Tipo de perfil" />
+
+            <!-- Campos de todos os perfis -->
+            <VBox fx:id="camposComuns" spacing="6.0">
+               <children>
+                  <Label text="Nome">
+                     <VBox.margin>
+                        <Insets top="4.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="campoNome" promptText="Nome" />
+                  <Label text="Endereço">
+                     <VBox.margin>
+                        <Insets top="4.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="campoEndereco" promptText="Rua, número, bairro" />
+               </children>
+            </VBox>
+
+            <!-- Só para Adotante -->
+            <HBox fx:id="camposAdotante" spacing="10.0">
+               <children>
+                  <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="CPF" />
+                        <TextField fx:id="campoCpf" promptText="000.000.000-00" />
+                     </children>
+                  </VBox>
+                  <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="Animais que já possui" />
+                        <TextField fx:id="campoQuantAnimais" promptText="0" />
+                     </children>
+                  </VBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="4.0" />
+               </VBox.margin>
+            </HBox>
+
+            <!-- Só para Abrigo -->
+            <VBox fx:id="camposAbrigo" spacing="6.0">
+               <children>
+                  <Label text="Capacidade de animais" />
+                  <TextField fx:id="campoCapacidade" promptText="Ex.: 20" />
+               </children>
+               <VBox.margin>
+                  <Insets top="4.0" />
+               </VBox.margin>
+            </VBox>
+
+            <Label fx:id="mensagem" textFill="#c0392b" wrapText="true" />
+
+            <Button fx:id="botaoCadastrar" defaultButton="true" maxWidth="1.7976931348623157E308" onAction="#cadastrar" style="-fx-background-color: #d9733a; -fx-background-radius: 6; -fx-cursor: hand;" text="Cadastrar" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets bottom="8.0" top="8.0" />
+               </padding>
+            </Button>
+            <Button maxWidth="1.7976931348623157E308" onAction="#voltar" text="Voltar">
+               <padding>
+                  <Insets bottom="6.0" top="6.0" />
+               </padding>
+            </Button>
+         </children>
+      </VBox>
+   </children>
+</StackPane>
