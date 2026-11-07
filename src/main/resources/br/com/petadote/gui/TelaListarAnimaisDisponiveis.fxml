@@ -5,29 +5,41 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="560.0" prefWidth="720.0" style="-fx-background-color: #f4efe9;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.petadote.gui.TelaListarAnimaisDisponiveisController">
+<StackPane prefHeight="560.0" prefWidth="720.0" style="-fx-background-color: #f7efe6;" stylesheets="@petadote.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.petadote.gui.TelaListarAnimaisDisponiveisController">
    <children>
       <VBox maxHeight="-Infinity" maxWidth="660.0" spacing="12.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4);">
          <padding>
             <Insets bottom="24.0" left="28.0" right="28.0" top="24.0" />
          </padding>
          <children>
-            <Label text="Animais Disponíveis" textFill="#d9733a">
-               <font>
-                  <Font name="System Bold" size="28.0" />
-               </font>
-            </Label>
-            <Label text="Conheça os animais que estão à espera de um lar" textFill="#7a716a">
+            <HBox alignment="CENTER_LEFT" spacing="12.0">
+               <children>
+                  <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../imagens/petadote.png" />
+                     </image>
+                  </ImageView>
+                  <Label text="Animais Disponíveis" textFill="#9c4f2a">
+                     <font>
+                        <Font name="System Bold" size="28.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <Label text="Conheça os animais que estão à espera de um lar" textFill="#8a6a58">
                <VBox.margin>
                   <Insets bottom="4.0" />
                </VBox.margin>
             </Label>
 
-            <TableView fx:id="tabelaAnimais" prefHeight="280.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tabelaAnimais" prefHeight="230.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn fx:id="colunaId" prefWidth="65.0" style="-fx-font-weight: bold;" text="ID" />
                   <TableColumn fx:id="colunaNome" prefWidth="200.0" style="-fx-font-weight: bold;" text="Nome" />
@@ -37,11 +49,14 @@
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
+               <placeholder>
+                  <Label text="Nenhum animal disponível para adoção no momento." />
+               </placeholder>
             </TableView>
 
             <Label fx:id="mensagem" textFill="#c0392b" wrapText="true" />
 
-            <Button fx:id="btnDetalhes" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#abrirDetalhesAnimal" style="-fx-background-color: #d9733a; -fx-background-radius: 6; -fx-cursor: hand;" text="Detalhes do animal" textFill="WHITE">
+            <Button fx:id="btnDetalhes" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#abrirDetalhesAnimal" style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;" text="Detalhes do animal" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
