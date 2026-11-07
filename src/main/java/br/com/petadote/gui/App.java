@@ -1,29 +1,20 @@
 package br.com.petadote.gui;
 
-import br.com.petadote.repositorio.AnimalRepositorio;
-import br.com.petadote.servico.AnimalServicoImpl;
-import br.com.petadote.servico.IAnimalServico;
+import br.com.petadote.Contexto;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * Ponto de entrada da GUI. Monta as camadas gui -> servico -> repositorio
- * e entrega o serviço ao controller da tela.
+ * Ponto de entrada da GUI. Cria o Navegador (com os serviços do Contexto)
+ * e abre a tela de login.
  */
 public class App extends Application {
 
     @Override
-    public void start(Stage stage) throws Exception {
-        IAnimalServico animalServico = new AnimalServicoImpl(new AnimalRepositorio());
-
-        FXMLLoader loader = new FXMLLoader(App.class.getResource("TelaPrincipal.fxml"));
-        // Cria o controller passando o serviço (a tela não conhece o repositório).
-        loader.setControllerFactory(tipo -> new TelaPrincipalController(animalServico));
-
+    public void start(Stage stage) {
+        Navegador navegador = new Navegador(stage, Contexto.get());
         stage.setTitle("PetAdote");
-        stage.setScene(new Scene(loader.load()));
+        navegador.ir(Navegador.TELA_INICIAL);
         stage.show();
     }
 
