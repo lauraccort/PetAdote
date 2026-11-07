@@ -27,5 +27,7 @@ public interface IProcessoAdocaoServico {
 
     boolean aprovar(Long idProcesso);  // REQ07/15: aprova se houver parecer favorável
 
+    boolean negar(Long idProcesso);    // parecer desfavorável: nega e libera o animal
+
     boolean concluir(Long idProcesso); // REQ08/15/17/18: finaliza adoção
 }

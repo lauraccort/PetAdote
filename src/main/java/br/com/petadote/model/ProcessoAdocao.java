@@ -66,6 +66,18 @@ public class ProcessoAdocao extends Entidade {
         return true;
     }
 
+    /**
+     * Nega o processo após avaliação desfavorável: o animal volta a
+     * ficar disponível para outros adotantes.
+     */
+    public boolean negarProcesso() {
+        if (status != StatusProcesso.EM_AVALIACAO) {
+            return false;
+        }
+        this.status = StatusProcesso.NEGADO;
+        this.animal.setStatus(StatusAnimal.DISPONIVEL);
+        return true;
+    }
 
     /** REQ09: agenda visita de acompanhamento pós-adoção. */
     public void agendarVisita(Visita visita) {

@@ -112,6 +112,13 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
     }
 
     @Override
+    public boolean negar(Long idProcesso) {
+        return processoRepositorio.buscarPorId(idProcesso)
+                .map(ProcessoAdocao::negarProcesso)
+                .orElse(false);
+    }
+
+    @Override
     public boolean concluir(Long idProcesso) {
         Optional<ProcessoAdocao> processo = processoRepositorio.buscarPorId(idProcesso);
         // REQ08+15+17+18: valida aprovação, parecer, saúde do animal e visitas mínimas
