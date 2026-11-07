@@ -102,9 +102,6 @@ public class Navegador {
      * As demais só recebem o Navegador pelo construtor.
      */
     private Object criarController(Class<?> tipo) {
-        if (tipo == TelaPrincipalController.class) {
-            return new TelaPrincipalController(contexto.animalServico());
-        }
         if (tipo == TelaLoginController.class) {
             return new TelaLoginController(this, contexto);
         }
