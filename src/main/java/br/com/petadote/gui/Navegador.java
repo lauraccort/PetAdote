@@ -102,6 +102,9 @@ public class Navegador {
         if (tipo == TelaRelatorioAdocoesConcluidasController.class) {
             return new TelaRelatorioAdocoesConcluidasController(this, contexto.processoServico());
         }
+        if (tipo == TelaListarSolicitacoesPendentesController.class) {
+            return new TelaListarSolicitacoesPendentesController(this, contexto.processoServico());
+        }
         if (tipo == TelaCadastroController.class) {
             return new TelaCadastroController(this, contexto.adotanteServico(), contexto.abrigoServico());
         }
