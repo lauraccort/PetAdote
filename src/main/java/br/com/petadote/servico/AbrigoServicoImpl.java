@@ -27,6 +27,8 @@ public class AbrigoServicoImpl implements IAbrigoServico {
         if (abrigo.getCapacidade() <= 0) {
             throw new IllegalArgumentException("Capacidade deve ser maior que zero.");
         }
+        ValidadorAcesso.validar(abrigo.getEmail(), abrigo.getSenha(),
+                repositorio.listarTodos().stream().map(Abrigo::getEmail));
         return repositorio.salvar(abrigo);
     }
 
@@ -66,5 +68,13 @@ public class AbrigoServicoImpl implements IAbrigoServico {
             return false;
         }
         return repositorio.excluirPorId(id);
+    }
+
+    @Override
+    public Optional<Abrigo> autenticar(String email, String senha) {
+        return repositorio.listarTodos().stream()
+                .filter(c -> c.getEmail() != null && c.getEmail().equalsIgnoreCase(email))
+                .filter(c -> c.getSenha() != null && c.getSenha().equals(senha))
+                .findFirst();
     }
 }

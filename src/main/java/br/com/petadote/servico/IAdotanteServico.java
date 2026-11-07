@@ -14,5 +14,8 @@ public interface IAdotanteServico {
 
     Adotante atualizar(Long id, String nome, String endereco); 
 
-    boolean excluir(Long id);                
+    boolean excluir(Long id);
+
+    /** Login: devolve o adotante se o e-mail e a senha conferem. */
+    Optional<Adotante> autenticar(String email, String senha);                
 }

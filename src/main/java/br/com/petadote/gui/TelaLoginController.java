@@ -1,5 +1,8 @@
 package br.com.petadote.gui;
 
+import br.com.petadote.servico.ContaAdministrador;
+import br.com.petadote.servico.IAbrigoServico;
+import br.com.petadote.servico.IAdotanteServico;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -16,14 +19,18 @@ public class TelaLoginController {
     private static final String ADMINISTRADOR = "Administrador";
 
     private final Navegador navegador;
+    private final IAdotanteServico adotanteServico;
+    private final IAbrigoServico abrigoServico;
 
     @FXML private TextField campoEmail;
     @FXML private PasswordField campoSenha;
     @FXML private ComboBox<String> campoPerfil;
     @FXML private Label mensagem;
 
-    public TelaLoginController(Navegador navegador) {
+    public TelaLoginController(Navegador navegador, IAdotanteServico adotanteServico, IAbrigoServico abrigoServico) {
         this.navegador = navegador;
+        this.adotanteServico = adotanteServico;
+        this.abrigoServico = abrigoServico;
     }
 
     @FXML
@@ -48,14 +55,30 @@ public class TelaLoginController {
             return;
         }
 
-        // TODO: conferir e-mail e senha quando existir cadastro de usuários.
+        String perfil = campoPerfil.getValue();
+        if (!credenciaisConferem(perfil, email, senha)) {
+            mensagem.setText("E-mail ou senha incorretos para o perfil " + perfil + ".");
+            campoSenha.clear();
+            campoSenha.requestFocus();
+            return;
+        }
+
         mensagem.setText("");
-        navegador.ir(telaPrincipalDo(campoPerfil.getValue()));
+        navegador.ir(telaPrincipalDo(perfil));
     }
 
     @FXML
     private void abrirCadastro() {
         navegador.ir("TelaCadastro.fxml");
+    }
+
+    /** Procura o cadastro só no perfil escolhido. */
+    private boolean credenciaisConferem(String perfil, String email, String senha) {
+        return switch (perfil) {
+            case ABRIGO -> abrigoServico.autenticar(email, senha).isPresent();
+            case ADMINISTRADOR -> ContaAdministrador.confere(email, senha);
+            default -> adotanteServico.autenticar(email, senha).isPresent();
+        };
     }
 
     private static String telaPrincipalDo(String perfil) {
