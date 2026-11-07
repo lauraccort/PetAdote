@@ -8,6 +8,8 @@ public class Abrigo extends Entidade {
     private String nome;
     private String endereco;
     private int capacidade;
+    private String email;
+    private String senha;
     private List<Animal> animais;
 
     public Abrigo() {
@@ -88,5 +90,21 @@ public class Abrigo extends Entidade {
 
     public void setCapacidade(int capacidade) {
         this.capacidade = capacidade;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }

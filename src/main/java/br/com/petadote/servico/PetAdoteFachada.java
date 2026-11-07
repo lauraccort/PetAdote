@@ -30,8 +30,11 @@ public class PetAdoteFachada {
     }
 
     // ---------- Abrigo ----------
-    public Abrigo cadastrarAbrigo(String nome, String endereco, int capacidade) {
-        return abrigoServico.cadastrar(new Abrigo(nome, endereco, capacidade));
+    public Abrigo cadastrarAbrigo(String nome, String endereco, int capacidade, String email, String senha) {
+        Abrigo abrigo = new Abrigo(nome, endereco, capacidade);
+        abrigo.setEmail(email);
+        abrigo.setSenha(senha);
+        return abrigoServico.cadastrar(abrigo);
     }
 
     public Optional<Abrigo> buscarAbrigo(Long id) {

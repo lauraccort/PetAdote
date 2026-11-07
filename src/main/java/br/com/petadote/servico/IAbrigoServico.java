@@ -17,5 +17,8 @@ public interface IAbrigoServico {
 
     boolean adicionarAnimal(Long idAbrigo, Animal animal); // vincula animal (REQ19)
 
-    boolean excluir(Long id);                  // D: exclui com regra (REQ20)
+    boolean excluir(Long id);
+
+    /** Login: devolve o abrigo se o e-mail e a senha conferem. */
+    Optional<Abrigo> autenticar(String email, String senha);                  // D: exclui com regra (REQ20)
 }

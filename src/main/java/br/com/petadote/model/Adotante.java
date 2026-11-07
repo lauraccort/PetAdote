@@ -9,6 +9,8 @@ public class Adotante extends Entidade {
     private String cpf;
     private String endereco;
     private int quantAnimal;
+    private String email;
+    private String senha;
     private List<ProcessoAdocao> processos;
 
     public Adotante() {
@@ -81,5 +83,21 @@ public class Adotante extends Entidade {
 
     public void setQuantAnimal(int quantAnimal) {
         this.quantAnimal = quantAnimal;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }

@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 
@@ -33,6 +34,9 @@ public class TelaCadastroController {
     @FXML private Node camposAbrigo;
     @FXML private TextField campoNome;
     @FXML private TextField campoEndereco;
+    @FXML private TextField campoEmail;
+    @FXML private PasswordField campoSenha;
+    @FXML private PasswordField campoConfirmarSenha;
     @FXML private TextField campoCpf;
     @FXML private TextField campoQuantAnimais;
     @FXML private TextField campoCapacidade;
@@ -69,20 +73,30 @@ public class TelaCadastroController {
     @FXML
     private void cadastrar() {
         try {
+            String email = campoEmail.getText().trim();
+            String senha = campoSenha.getText();
+            if (!senha.equals(campoConfirmarSenha.getText())) {
+                throw new IllegalArgumentException("As senhas não conferem.");
+            }
             if (ADOTANTE.equals(campoPerfil.getValue())) {
                 int quantAnimais = lerNumero(campoQuantAnimais, "Animais que já possui", 0);
-                Adotante adotante = adotanteServico.cadastrar(new Adotante(
+                Adotante novo = new Adotante(
                         campoNome.getText().trim(), campoCpf.getText().trim(),
-                        campoEndereco.getText().trim(), quantAnimais));
+                        campoEndereco.getText().trim(), quantAnimais);
+                novo.setEmail(email);
+                novo.setSenha(senha);
+                Adotante adotante = adotanteServico.cadastrar(novo);
                 sucesso("Adotante cadastrado: " + adotante.getNome() + " (id " + adotante.getId() + ").");
             } else {
                 int capacidade = lerNumero(campoCapacidade, "Capacidade de animais", null);
-                Abrigo abrigo = abrigoServico.cadastrar(new Abrigo(
-                        campoNome.getText().trim(), campoEndereco.getText().trim(), capacidade));
+                Abrigo novo = new Abrigo(campoNome.getText().trim(), campoEndereco.getText().trim(), capacidade);
+                novo.setEmail(email);
+                novo.setSenha(senha);
+                Abrigo abrigo = abrigoServico.cadastrar(novo);
                 sucesso("Abrigo cadastrado: " + abrigo.getNome() + " (id " + abrigo.getId() + ").");
             }
         } catch (IllegalArgumentException e) {
-            // Erros de validação dos serviços (nome vazio, CPF inválido, capacidade <= 0...)
+            // Erros de validação (nome vazio, CPF inválido, e-mail repetido, senha curta...)
             mensagem.setTextFill(COR_ERRO);
             mensagem.setText(e.getMessage());
         }
@@ -113,7 +127,8 @@ public class TelaCadastroController {
     private void sucesso(String texto) {
         mensagem.setTextFill(COR_SUCESSO);
         mensagem.setText(texto + " Volte e faça login.");
-        for (TextField campo : new TextField[] {campoNome, campoEndereco, campoCpf, campoQuantAnimais, campoCapacidade}) {
+        for (TextField campo : new TextField[] {campoNome, campoEndereco, campoEmail, campoSenha,
+                campoConfirmarSenha, campoCpf, campoQuantAnimais, campoCapacidade}) {
             campo.clear();
         }
     }
