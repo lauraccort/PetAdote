@@ -22,7 +22,7 @@ public class TelaListarAdotantesController {
     @FXML
     private TableColumn<Adotante, String> colunaNome;
     @FXML
-    private TableColumn<Adotante, String> colunaTelefone;
+    private TableColumn<Adotante, String> colunaEmail;
     @FXML
     private TableColumn<Adotante, String> colunaCpf;
     @FXML
@@ -35,11 +35,15 @@ public class TelaListarAdotantesController {
 
     @FXML
     private void initialize() {
-        // Vincula as colunas aos atributos da classe Adotante (getId, getNome, getTelefone, getCpf)
+        // Vincula as colunas aos atributos da classe Adotante (getId, getNome, getEmail, getCpf)
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        colunaTelefone.setCellValueFactory(new PropertyValueFactory<>("telefone"));
+        colunaEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colunaCpf.setCellValueFactory(new PropertyValueFactory<>("cpf"));
+
+        // Some com o aviso "Selecione um adotante" assim que alguém é selecionado
+        tabelaAdotantes.getSelectionModel().selectedItemProperty()
+                .addListener((obs, anterior, atual) -> mensagem.setText(""));
 
         carregarAdotantes();
     }
