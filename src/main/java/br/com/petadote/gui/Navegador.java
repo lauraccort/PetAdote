@@ -10,6 +10,7 @@ import java.io.UncheckedIOException;
 import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Optional;
 
 /**
  * Troca as telas da janela principal e cria os controllers.
@@ -22,6 +23,7 @@ public class Navegador {
     private final Stage stage;
     private final Contexto contexto;
     private final Deque<String> historico = new ArrayDeque<>();
+    private Object selecionado; // item levado de uma tela para a próxima
 
     public Navegador(Stage stage, Contexto contexto) {
         this.stage = stage;
@@ -41,6 +43,20 @@ public class Navegador {
             historico.push(fxml);
         }
         mostrar(fxml);
+    }
+
+    /**
+     * Abre a tela levando o item escolhido na tela atual (ex.: o animal selecionado
+     * na tabela). A próxima tela o recupera com {@link #selecionado(Class)}.
+     */
+    public void ir(String fxml, Object selecionado) {
+        this.selecionado = selecionado;
+        ir(fxml);
+    }
+
+    /** Item levado pela última chamada de {@link #ir(String, Object)}, se for do tipo pedido. */
+    public <T> Optional<T> selecionado(Class<T> tipo) {
+        return tipo.isInstance(selecionado) ? Optional.of(tipo.cast(selecionado)) : Optional.empty();
     }
 
     /** Volta para a tela anterior do histórico. */
@@ -122,6 +138,9 @@ public class Navegador {
         }
         if (tipo == TelaListarAnimaisAbrigoController.class) {
             return new TelaListarAnimaisAbrigoController(this, contexto.animalServico(), contexto.abrigoServico());
+        }
+        if (tipo == TelaListarAnimaisDisponiveisController.class) {
+            return new TelaListarAnimaisDisponiveisController(this, contexto.animalServico());
         }
         if (tipo == TelaCadastroController.class) {
             return new TelaCadastroController(this, contexto.adotanteServico(), contexto.abrigoServico());

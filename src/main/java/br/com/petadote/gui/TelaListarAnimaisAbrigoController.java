@@ -2,9 +2,6 @@ package br.com.petadote.gui;
 
 import br.com.petadote.model.Abrigo;
 import br.com.petadote.model.Animal;
-import br.com.petadote.model.Cao;
-import br.com.petadote.model.Gato;
-import br.com.petadote.model.OutraEspecie;
 import br.com.petadote.model.StatusAbrigo;
 import br.com.petadote.model.StatusAnimal;
 import br.com.petadote.servico.IAbrigoServico;
@@ -19,8 +16,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
-import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.function.Function;
@@ -31,9 +26,6 @@ import java.util.function.Function;
  */
 public class TelaListarAnimaisAbrigoController {
 
-    private static final String CAO = "Cão";
-    private static final String GATO = "Gato";
-    private static final String OUTRA = "Outra";
     private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final Color COR_ERRO = Color.web("#c0392b");
     private static final Color COR_INFO = Color.web("#4a2a1a");
@@ -65,9 +57,9 @@ public class TelaListarAnimaisAbrigoController {
     private void initialize() {
         coluna(colunaId, Animal::getId);
         coluna(colunaNome, Animal::getNome);
-        coluna(colunaEspecie, TelaListarAnimaisAbrigoController::especie);
-        coluna(colunaRaca, TelaListarAnimaisAbrigoController::raca);
-        coluna(colunaIdade, a -> idade(a.getDataNascimento()));
+        coluna(colunaEspecie, TextoAnimal::especie);
+        coluna(colunaRaca, TextoAnimal::raca);
+        coluna(colunaIdade, a -> TextoAnimal.idade(a.getDataNascimento()));
         coluna(colunaStatus, a -> a.getStatus().getDescricao());
 
         filtroAbrigo.getItems().setAll(abrigoServico.listarTodos().stream()
@@ -75,7 +67,7 @@ public class TelaListarAnimaisAbrigoController {
                 .sorted(Comparator.comparing(Abrigo::getNome))
                 .toList());
         filtroAbrigo.setConverter(conversor(Abrigo::getNome));
-        filtroEspecie.getItems().addAll(CAO, GATO, OUTRA);
+        filtroEspecie.getItems().addAll(TextoAnimal.CAO, TextoAnimal.GATO, TextoAnimal.OUTRA);
         filtroStatus.getItems().addAll(StatusAnimal.values());
         filtroStatus.setConverter(conversor(StatusAnimal::getDescricao));
 
@@ -110,12 +102,12 @@ public class TelaListarAnimaisAbrigoController {
             mensagem.setText("Selecione um animal na tabela.");
             return;
         }
-        String raca = raca(animal);
+        String raca = TextoAnimal.raca(animal);
         mensagem.setTextFill(COR_INFO);
-        mensagem.setText(animal.getNome() + " · " + especie(animal)
+        mensagem.setText(animal.getNome() + " · " + TextoAnimal.especie(animal)
                 + (raca == null || raca.isBlank() ? "" : " (" + raca + ")")
                 + " · nascido em " + (animal.getDataNascimento() == null ? "?" : animal.getDataNascimento().format(FORMATO))
-                + " (" + idade(animal.getDataNascimento()) + ")"
+                + " (" + TextoAnimal.idade(animal.getDataNascimento()) + ")"
                 + " · abrigo " + (animal.getAbrigo() == null ? "sem abrigo" : animal.getAbrigo().getNome())
                 + " · " + animal.getStatus().getDescricao());
     }
@@ -138,44 +130,12 @@ public class TelaListarAnimaisAbrigoController {
 
         tabelaAnimais.setItems(FXCollections.observableArrayList(animalServico.listarTodos().stream()
                 .filter(a -> abrigo == null || a.getAbrigo() == abrigo)
-                .filter(a -> especie == null || especie.equals(grupoEspecie(a)))
+                .filter(a -> especie == null || especie.equals(TextoAnimal.grupoEspecie(a)))
                 .filter(a -> status == null || a.getStatus() == status)
                 .filter(a -> busca.isEmpty() || (a.getNome() != null && a.getNome().toLowerCase().contains(busca)))
                 .sorted(Comparator.comparing(Animal::getNome, String.CASE_INSENSITIVE_ORDER))
                 .toList()));
         mensagem.setText("");
-    }
-
-    /** Cão, Gato ou Outra (para o filtro). */
-    private static String grupoEspecie(Animal animal) {
-        if (animal instanceof Cao) {
-            return CAO;
-        }
-        return animal instanceof Gato ? GATO : OUTRA;
-    }
-
-    /** Para "Outra", mostra a espécie cadastrada (ex.: Coelho). */
-    private static String especie(Animal animal) {
-        return animal instanceof OutraEspecie outra ? outra.getEspecie() : grupoEspecie(animal);
-    }
-
-    private static String raca(Animal animal) {
-        if (animal instanceof Cao cao) {
-            return cao.getRaca();
-        }
-        return animal instanceof Gato gato ? gato.getRaca() : null;
-    }
-
-    /** "3 anos", "1 ano" ou "5 meses". */
-    private static String idade(LocalDate nascimento) {
-        if (nascimento == null) {
-            return "";
-        }
-        Period p = Period.between(nascimento, LocalDate.now());
-        if (p.getYears() > 0) {
-            return p.getYears() + (p.getYears() == 1 ? " ano" : " anos");
-        }
-        return p.getMonths() + (p.getMonths() == 1 ? " mês" : " meses");
     }
 
     private static void coluna(TableColumn<Animal, String> coluna, Function<Animal, Object> valor) {

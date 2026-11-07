@@ -1,9 +1,5 @@
 package br.com.petadote.gui;
 
-import br.com.petadote.model.Animal;
-import br.com.petadote.model.Cao;
-import br.com.petadote.model.Gato;
-import br.com.petadote.model.OutraEspecie;
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.Visita;
 import br.com.petadote.servico.IProcessoAdocaoServico;
@@ -61,8 +57,8 @@ public class TelaRelatorioAdocoesConcluidasController {
         coluna(colAbertura, p -> data(p.getDataAbertura()));
         coluna(colConclusao, p -> data(p.getDataConclusao()));
         coluna(colAnimal, p -> p.getAnimal().getNome());
-        coluna(colEspecie, p -> especie(p.getAnimal()));
-        coluna(colRaca, p -> raca(p.getAnimal()));
+        coluna(colEspecie, p -> TextoAnimal.especie(p.getAnimal()));
+        coluna(colRaca, p -> TextoAnimal.raca(p.getAnimal()));
         coluna(colNascimentoAnimal, p -> data(p.getAnimal().getDataNascimento()));
         coluna(colAbrigo, p -> p.getAnimal().getAbrigo() == null ? null : p.getAnimal().getAbrigo().getNome());
         coluna(colAdotante, p -> p.getAdotante().getNome());
@@ -118,28 +114,5 @@ public class TelaRelatorioAdocoesConcluidasController {
 
     private static String data(LocalDate data) {
         return data == null ? null : data.format(FORMATO);
-    }
-
-    private static String especie(Animal animal) {
-        if (animal instanceof Cao) {
-            return "Cão";
-        }
-        if (animal instanceof Gato) {
-            return "Gato";
-        }
-        if (animal instanceof OutraEspecie outra) {
-            return outra.getEspecie();
-        }
-        return null;
-    }
-
-    private static String raca(Animal animal) {
-        if (animal instanceof Cao cao) {
-            return cao.getRaca();
-        }
-        if (animal instanceof Gato gato) {
-            return gato.getRaca();
-        }
-        return null;
     }
 }
