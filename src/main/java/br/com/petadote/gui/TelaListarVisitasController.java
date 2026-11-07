@@ -1,7 +1,5 @@
 package br.com.petadote.gui;
 
-import br.com.petadote.model.ProcessoAdocao;
-import br.com.petadote.model.Visita;
 import br.com.petadote.servico.IProcessoAdocaoServico;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -9,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
@@ -20,24 +17,6 @@ import java.util.Comparator;
 public class TelaListarVisitasController {
 
     private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-    /** Uma linha da tabela: a visita e o processo a que ela pertence. */
-    public record VisitaDoProcesso(ProcessoAdocao processo, Visita visita) {
-
-        /** Realizada, cancelada, atrasada (data passou sem resultado) ou a situação do agendamento. */
-        public String status() {
-            if (visita.isConcluida()) {
-                return "Realizada";
-            }
-            if (visita.isCancelada()) {
-                return "Cancelada";
-            }
-            if (visita.getData().isBefore(LocalDate.now())) {
-                return "Atrasada";
-            }
-            return visita.getStatusAgendamento().getDescricao();
-        }
-    }
 
     private final Navegador navegador;
     private final IProcessoAdocaoServico processoServico;
@@ -64,8 +43,7 @@ public class TelaListarVisitasController {
         colunaStatus.setCellValueFactory(c -> texto(c.getValue().status()));
 
         tabelaVisitas.setItems(FXCollections.observableArrayList(
-                processoServico.listarTodos().stream()
-                        .flatMap(p -> p.getVisitas().stream().map(v -> new VisitaDoProcesso(p, v)))
+                VisitaDoProcesso.de(processoServico.listarTodos())
                         .sorted(Comparator.comparing(l -> l.visita().getData()))
                         .toList()));
 

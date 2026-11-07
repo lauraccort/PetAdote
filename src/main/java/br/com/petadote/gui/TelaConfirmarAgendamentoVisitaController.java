@@ -27,10 +27,6 @@ public class TelaConfirmarAgendamentoVisitaController {
     private static final Color COR_ERRO = Color.web("#c0392b");
     private static final Color COR_SUCESSO = Color.web("#2e7d32");
 
-    /** A visita encontrada e o processo a que ela pertence. */
-    private record VisitaDoProcesso(ProcessoAdocao processo, Visita visita) {
-    }
-
     private final Navegador navegador;
     private final IProcessoAdocaoServico processoServico;
 
@@ -142,8 +138,7 @@ public class TelaConfirmarAgendamentoVisitaController {
         } catch (NumberFormatException e) {
             return Optional.empty();
         }
-        return processoServico.listarTodos().stream()
-                .flatMap(p -> p.getVisitas().stream().map(v -> new VisitaDoProcesso(p, v)))
+        return VisitaDoProcesso.de(processoServico.listarTodos())
                 .filter(vp -> vp.visita().getId() != null && vp.visita().getId() == id)
                 .findFirst();
     }
