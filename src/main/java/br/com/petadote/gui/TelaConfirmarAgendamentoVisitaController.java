@@ -50,6 +50,7 @@ public class TelaConfirmarAgendamentoVisitaController {
     @FXML
     private void initialize() {
         campoStatusVisita.getItems().addAll(CONFIRMADA, REAGENDADA, CANCELADA);
+        Combos.mostrarDicaQuandoVazio(campoStatusVisita);
 
         // "Nova data" só aparece (e só ocupa espaço) quando a visita vai ser reagendada
         grupoNovaData.managedProperty().bind(grupoNovaData.visibleProperty());

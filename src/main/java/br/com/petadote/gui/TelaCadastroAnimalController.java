@@ -58,11 +58,14 @@ public class TelaCadastroAnimalController {
 
         // No cadastro o animal entra disponível ou em tratamento; os outros status vêm do processo de adoção
         campoStatus.getItems().addAll(StatusAnimal.DISPONIVEL, StatusAnimal.EM_TRATAMENTO_VETERINARIO);
-        campoStatus.setConverter(conversor(s -> s == StatusAnimal.DISPONIVEL ? "Disponível" : "Em tratamento veterinário"));
+        campoStatus.setConverter(conversor(StatusAnimal::getDescricao));
         campoStatus.setValue(StatusAnimal.DISPONIVEL);
 
         campoAbrigo.setConverter(conversor(a -> a.getNome() + " (" + a.getQuantidadeAnimais() + "/" + a.getCapacidade() + ")"));
         carregarAbrigos();
+
+        Combos.mostrarDicaQuandoVazio(campoEspecie);
+        Combos.mostrarDicaQuandoVazio(campoAbrigo);
     }
 
     @FXML

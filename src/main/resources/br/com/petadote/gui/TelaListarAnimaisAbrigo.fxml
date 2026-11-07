@@ -11,11 +11,10 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="560.0" prefWidth="720.0" spacing="12.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.petadote.gui.TelaListarAnimaisAbrigoController">
+<VBox prefHeight="560.0" prefWidth="720.0" spacing="12.0" style="-fx-background-color: #f7efe6;" stylesheets="@petadote.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.petadote.gui.TelaListarAnimaisAbrigoController">
    <padding>
       <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
    </padding>
@@ -33,71 +32,69 @@
                      <Font name="System Bold" size="26.0" />
                   </font>
                </Label>
-               <Label prefHeight="17.0" prefWidth="222.0" text="Selecione um abrigo para ver os animais" textFill="#7a716a">
-                  <padding>
-                     <Insets bottom="6.0" />
-                  </padding>
-               </Label>
+               <Label text="Selecione um abrigo para ver os animais" textFill="#8a6a58" />
             </children>
          </VBox>
       </children>
    </HBox>
-   <VBox spacing="8.0" />
-   <StackPane onDragDetected="#abrirCadastroAnimal" prefHeight="338.0" prefWidth="608.0" style="-fx-background-color: #f4efe9;">
+
+   <VBox spacing="10.0" style="-fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4); -fx-background-color: white;" VBox.vgrow="ALWAYS">
+      <padding>
+         <Insets bottom="20.0" left="24.0" right="24.0" top="20.0" />
+      </padding>
       <children>
-         <VBox maxHeight="1.7976931348623157E308" maxWidth="640.0" prefHeight="336.0" prefWidth="608.0" spacing="10.0" style="-fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4); -fx-background-color: white;">
-            <padding>
-               <Insets bottom="24.0" left="28.0" right="28.0" top="24.0" />
-            </padding>
+         <!-- Filtros -->
+         <HBox alignment="CENTER_LEFT" spacing="8.0">
             <children>
-               <HBox prefHeight="100.0" prefWidth="200.0" spacing="8.0">
-                  <children>
-                     <ComboBox prefWidth="220.0" promptText="Abrigo" />
-                     <ComboBox prefWidth="130.0" promptText="Espécie" />
-                     <ComboBox prefWidth="170.0" promptText="Status" />
-                     <Region prefHeight="32.0" prefWidth="40.0" HBox.hgrow="ALWAYS" />
-                     <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Limpar" />
-                  </children>
-               </HBox>
-               <TextField text="Buscar por nome do animal..." />
-               <TableView prefHeight="300.0" prefWidth="570.0" VBox.vgrow="ALWAYS">
-                  <columns>
-                     <TableColumn prefWidth="50.0" text="ID" />
-                     <TableColumn prefWidth="150.0" text="Nome" />
-                     <TableColumn prefWidth="90.0" text="Espécie" />
-                     <TableColumn prefWidth="130.0" text="Raça" />
-                     <TableColumn text="Idade" />
-                     <TableColumn prefWidth="140.0" text="Status" />
-                  </columns>
-                  <columnResizePolicy>
-                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                  </columnResizePolicy>
-               </TableView>
-               <Label prefHeight="17.0" prefWidth="541.0" textFill="#c0392b" wrapText="true" />
-               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="8.0">
-                  <children>
-                     <Button mnemonicParsing="false" onAction="#abrirCadastroAnimal" style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;" text="Novo animal" textFill="WHITE">
-                        <font>
-                           <Font name="System Bold" size="13.0" />
-                        </font>
-                        <padding>
-                           <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
-                        </padding>
-                     </Button>
-                     <Button mnemonicParsing="false" text="Ver detalhes">
-                        <padding>
-                           <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
-                        </padding>
-                        <font>
-                           <Font size="13.0" />
-                        </font>
-                     </Button>
-                     <Region prefHeight="35.0" prefWidth="142.0" HBox.hgrow="ALWAYS" />
-                     <Button alignment="BOTTOM_RIGHT" onAction="#voltar" text="Voltar" textAlignment="CENTER" />
-                  </children>
-               </HBox>
+               <ComboBox fx:id="filtroAbrigo" prefWidth="220.0" promptText="Abrigo" />
+               <ComboBox fx:id="filtroEspecie" prefWidth="130.0" promptText="Espécie" />
+               <ComboBox fx:id="filtroStatus" prefWidth="170.0" promptText="Status" />
+               <Region HBox.hgrow="ALWAYS" />
+               <Button mnemonicParsing="false" onAction="#limparFiltros" prefWidth="90.0" styleClass="botao-secundario" text="Limpar" />
             </children>
-         </VBox>
+         </HBox>
+         <TextField fx:id="campoBusca" promptText="Buscar por nome do animal..." />
+
+         <TableView fx:id="tabelaAnimais" VBox.vgrow="ALWAYS">
+            <columns>
+               <TableColumn fx:id="colunaId" prefWidth="50.0" text="ID" />
+               <TableColumn fx:id="colunaNome" prefWidth="150.0" text="Nome" />
+               <TableColumn fx:id="colunaEspecie" prefWidth="90.0" text="Espécie" />
+               <TableColumn fx:id="colunaRaca" prefWidth="130.0" text="Raça" />
+               <TableColumn fx:id="colunaIdade" prefWidth="80.0" text="Idade" />
+               <TableColumn fx:id="colunaStatus" prefWidth="140.0" text="Status" />
+            </columns>
+            <columnResizePolicy>
+               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+            <placeholder>
+               <Label text="Nenhum animal encontrado." />
+            </placeholder>
+         </TableView>
+         <Label fx:id="mensagem" textFill="#c0392b" wrapText="true" />
+
+         <HBox alignment="CENTER_LEFT" spacing="8.0">
+            <children>
+               <Button mnemonicParsing="false" onAction="#abrirCadastroAnimal" style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;" text="Novo animal" textFill="WHITE">
+                  <font>
+                     <Font name="System Bold" size="13.0" />
+                  </font>
+                  <padding>
+                     <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                  </padding>
+               </Button>
+               <Button mnemonicParsing="false" onAction="#verDetalhes" styleClass="botao-secundario" text="Ver detalhes">
+                  <padding>
+                     <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                  </padding>
+                  <font>
+                     <Font size="13.0" />
+                  </font>
+               </Button>
+               <Region HBox.hgrow="ALWAYS" />
+               <Button onAction="#voltar" text="Voltar" />
+            </children>
+         </HBox>
       </children>
-   </StackPane>
+   </VBox>
 </VBox>

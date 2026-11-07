@@ -42,6 +42,7 @@ public class TelaAvaliarProcessoAdocaoController {
     @FXML
     private void initialize() {
         campoStatusAvaliacao.getItems().addAll(APROVADO, REPROVADO);
+        Combos.mostrarDicaQuandoVazio(campoStatusAvaliacao);
         // Mostra de quem é o processo enquanto o ID é digitado
         campoIdProcesso.textProperty().addListener((obs, anterior, texto) -> mostrarInfo());
         mostrarInfo();

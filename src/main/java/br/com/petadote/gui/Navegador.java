@@ -120,6 +120,9 @@ public class Navegador {
         if (tipo == TelaConfirmarAgendamentoVisitaController.class) {
             return new TelaConfirmarAgendamentoVisitaController(this, contexto.processoServico());
         }
+        if (tipo == TelaListarAnimaisAbrigoController.class) {
+            return new TelaListarAnimaisAbrigoController(this, contexto.animalServico(), contexto.abrigoServico());
+        }
         if (tipo == TelaCadastroController.class) {
             return new TelaCadastroController(this, contexto.adotanteServico(), contexto.abrigoServico());
         }

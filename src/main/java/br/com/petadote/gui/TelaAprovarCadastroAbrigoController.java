@@ -83,6 +83,7 @@ public class TelaAprovarCadastroAbrigoController {
             }
         });
 
+        Combos.mostrarDicaQuandoVazio(campoAbrigo);
         carregarPendentes();
     }
 
