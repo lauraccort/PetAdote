@@ -10,37 +10,43 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="480.0" prefWidth="640.0" spacing="12.0" style="-fx-background-color: #f4efe9;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.petadote.gui.TelaPrincipalAdministradorController">
+<VBox prefHeight="480.0" prefWidth="640.0" spacing="12.0" style="-fx-background-color: #f7efe6;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.petadote.gui.TelaPrincipalAdministradorController">
    <padding>
       <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
    </padding>
-   <Label prefHeight="74.0" prefWidth="355.0" style="-fx-font-family: bold;" text="Painel do administrador" textFill="#a17b45">
+   <Label prefHeight="74.0" prefWidth="355.0" text="Painel do administrador" textFill="#9c4f2a">
       <font>
          <Font name="System Bold" size="29.0" />
       </font>
    </Label>
    <HBox alignment="CENTER" prefHeight="171.0" prefWidth="608.0" style="-fx-spacing: 16;" VBox.vgrow="ALWAYS">
       <children>
-         <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="120.0" prefWidth="230.0" spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4);" HBox.hgrow="NEVER">
-            <ImageView fitHeight="120.0" fitWidth="120.0">
+         <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="230.0" spacing="12.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4);" HBox.hgrow="NEVER">
+            <padding>
+               <Insets bottom="16.0" left="16.0" right="16.0" top="20.0" />
+            </padding>
+            <ImageView fitHeight="120.0" fitWidth="120.0" preserveRatio="true">
                <image>
-                  <Image url="@PetAdote-main%20(5)/PetAdote-main/src/main/resources/br/com/petadote/imagens/relatorios.png" />
+                  <Image url="@../imagens/relatorios.png" />
                </image>
             </ImageView>
-            <Button defaultButton="true" onAction="#abrirRelatorios" prefWidth="230.0" style="-fx-background-color: #d9733a; -fx-background-radius: 6; -fx-cursor: hand;" text="Relatórios" textFill="WHITE">
+            <Button defaultButton="true" onAction="#abrirRelatorios" prefWidth="198.0" style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;" text="Relatórios" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Button>
          </VBox>
-         <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="120.0" prefWidth="230.0" spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4);" HBox.hgrow="NEVER">
+         <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="230.0" spacing="12.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4);" HBox.hgrow="NEVER">
+            <padding>
+               <Insets bottom="16.0" left="16.0" right="16.0" top="20.0" />
+            </padding>
             <children>
-               <ImageView fitHeight="120.0" fitWidth="120.0">
+               <ImageView fitHeight="120.0" fitWidth="120.0" preserveRatio="true">
                   <image>
-                     <Image url="@PetAdote-main%20(5)/PetAdote-main/src/main/resources/br/com/petadote/imagens/abrigo.png" />
+                     <Image url="@../imagens/abrigo.png" />
                   </image>
                </ImageView>
-               <Button onAction="#abrirListarAbrigos" prefWidth="280.0" style="-fx-cursor: hand; -fx-background-color: #d9733a; -fx-background-radius: 6;" text="Abrigos" textFill="WHITE">
+               <Button onAction="#abrirListarAbrigos" prefWidth="198.0" style="-fx-cursor: hand; -fx-background-color: #9c4f2a; -fx-background-radius: 6;" text="Abrigos" textFill="WHITE">
                   <font>
                      <Font name="System Bold" size="14.0" />
                   </font>
