@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Troca as telas da janela principal e cria os controllers.
@@ -20,10 +21,15 @@ public class Navegador {
 
     public static final String TELA_INICIAL = "TelaLogin.fxml";
 
+    /** Telas de cartão pequeno (login e cadastro) crescem menos que as outras em tela cheia. */
+    private static final Set<String> TELAS_COMPACTAS = Set.of("TelaLogin.fxml", "TelaCadastro.fxml");
+    private static final double PROPORCAO_COMPACTA = 0.8;
+
     private final Stage stage;
     private final Contexto contexto;
     private final Deque<String> historico = new ArrayDeque<>();
     private Object selecionado; // item levado de uma tela para a próxima
+    private final MolduraEscalavel moldura = new MolduraEscalavel();
 
     public Navegador(Stage stage, Contexto contexto) {
         this.stage = stage;
@@ -85,12 +91,12 @@ public class Navegador {
         try {
             Parent raiz = loader.load();
             if (stage.getScene() == null) {
-                Scene cena = new Scene(raiz);
+                // A moldura amplia a tela junto com a janela (tela cheia, maximizar, redimensionar)
+                Scene cena = new Scene(moldura, MolduraEscalavel.LARGURA_BASE, MolduraEscalavel.ALTURA_BASE);
                 cena.getStylesheets().add(Navegador.class.getResource("petadote.css").toExternalForm());
                 stage.setScene(cena);
-            } else {
-                stage.getScene().setRoot(raiz); // mantém o tamanho da janela
             }
+            moldura.mostrar(raiz, TELAS_COMPACTAS.contains(fxml) ? PROPORCAO_COMPACTA : 1); // mantém o tamanho da janela
         } catch (IOException e) {
             throw new UncheckedIOException("Erro ao abrir " + fxml, e);
         }
