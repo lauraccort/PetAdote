@@ -4,11 +4,14 @@ import br.com.petadote.model.Abrigo;
 import br.com.petadote.model.Animal;
 import br.com.petadote.model.Cao;
 import br.com.petadote.model.Gato;
+import br.com.petadote.model.InfoRaca;
 import br.com.petadote.model.OutraEspecie;
 import br.com.petadote.model.StatusAbrigo;
 import br.com.petadote.model.StatusAnimal;
 import br.com.petadote.servico.IAbrigoServico;
 import br.com.petadote.servico.IAnimalServico;
+import br.com.petadote.servico.InfoRacaServico;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -18,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * Controller da TelaCadastroAnimal.fxml (REQ02: cadastro de animal vinculado a um abrigo).
@@ -35,6 +39,8 @@ public class TelaCadastroAnimalController {
     private final Navegador navegador;
     private final IAnimalServico animalServico;
     private final IAbrigoServico abrigoServico;
+    private final InfoRacaServico infoRacaServico = new InfoRacaServico();
+    private boolean salvando = false;
 
     @FXML private TextField campoNome;
     @FXML private ComboBox<String> campoEspecie;
@@ -70,6 +76,7 @@ public class TelaCadastroAnimalController {
 
     @FXML
     private void salvar() {
+        if (salvando) return;
         String nome = campoNome.getText().trim();
         String especie = campoEspecie.getValue();
         String raca = campoRaca.getText().trim();
@@ -107,6 +114,51 @@ public class TelaCadastroAnimalController {
             default -> new OutraEspecie(nome, nascimento, raca);
         };
         animal.setStatus(campoStatus.getValue());
+
+        if ((CAO.equals(especie) || GATO.equals(especie)) && !raca.isEmpty()) {
+            buscarInfoRacaECadastrar(animal, especie, raca, abrigo);
+        } else {
+            concluirCadastro(animal, abrigo, false);
+        }
+    }
+
+    /** Busca as informações da raça em segundo plano, para a janela não travar. */
+    private void buscarInfoRacaECadastrar(Animal animal, String especie, String raca, Abrigo abrigo) {
+        salvando = true;
+        mensagem.setTextFill(Color.web("#555555"));
+        mensagem.setText("Buscando informações da raça...");
+
+        Task<Optional<InfoRaca>> tarefa = new Task<>() {
+            @Override
+            protected Optional<InfoRaca> call() {
+                return CAO.equals(especie) ? infoRacaServico.buscarCao(raca)
+                        : infoRacaServico.buscarGato(raca);
+            }
+        };
+        tarefa.setOnSucceeded(e -> {
+            Optional<InfoRaca> info = tarefa.getValue();
+            info.ifPresent(i -> {
+                if (animal instanceof Cao cao) {
+                    cao.setInfoRaca(i);
+                } else if (animal instanceof Gato gato) {
+                    gato.setInfoRaca(i);
+                }
+            });
+            salvando = false;
+            concluirCadastro(animal, abrigo, info.isEmpty());
+        });
+        tarefa.setOnFailed(e -> {
+            salvando = false;
+            concluirCadastro(animal, abrigo, true);
+        });
+
+        Thread fio = new Thread(tarefa, "busca-info-raca");
+        fio.setDaemon(true);
+        fio.start();
+    }
+
+    /** Parte que já existia: salva o animal e vincula ao abrigo. */
+    private void concluirCadastro(Animal animal, Abrigo abrigo, boolean semInfoRaca) {
         try {
             Animal salvo = animalServico.cadastrar(animal);
             if (!abrigoServico.adicionarAnimal(abrigo.getId(), salvo)) {
@@ -115,7 +167,8 @@ public class TelaCadastroAnimalController {
             }
             limpar();
             mensagem.setTextFill(COR_SUCESSO);
-            mensagem.setText(salvo.getNome() + " cadastrado no abrigo " + abrigo.getNome() + ".");
+            mensagem.setText(salvo.getNome() + " cadastrado no abrigo " + abrigo.getNome() + "."
+                    + (semInfoRaca ? " (Não foi possível obter as informações da raça.)" : ""));
         } catch (IllegalArgumentException e) {
             erro(e.getMessage()); // ex.: data de nascimento no futuro
         }

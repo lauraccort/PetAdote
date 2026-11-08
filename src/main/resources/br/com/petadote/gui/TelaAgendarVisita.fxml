@@ -40,8 +40,16 @@
                <Font name="System Bold" size="13.0" />
             </font>
          </Label>
-         <DatePicker prefWidth="220.0" promptText="dd/mm/aaaa" />
-         <Label alignment="CENTER" text="É preciso de duas visitas em um período de 90 dias" textAlignment="CENTER" textFill="#8a6a58" wrapText="true" />
+         <DatePicker fx:id="campoData" prefWidth="220.0" promptText="dd/mm/aaaa" />
+         <Label fx:id="mensagem" alignment="CENTER" text="É preciso de duas visitas em um período de 90 dias" textAlignment="CENTER" textFill="#8a6a58" wrapText="true" />
+         <Button mnemonicParsing="false" onAction="#agendar" style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;" text="Agendar visita" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="13.0" />
+            </font>
+            <padding>
+               <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+            </padding>
+         </Button>
       </VBox>
    </HBox>
    <Region VBox.vgrow="ALWAYS" />

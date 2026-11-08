@@ -2,7 +2,8 @@ package br.com.petadote.model;
 
 import java.time.LocalDate;
 
-public class Avaliacao {
+public class Avaliacao implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
     private LocalDate data;
     private String responsavel;
     private Parecer parecer;

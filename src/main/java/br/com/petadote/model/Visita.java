@@ -2,7 +2,8 @@ package br.com.petadote.model;
 
 import java.time.LocalDate;
 
-public class Visita {
+public class Visita implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
     private Long id;
     private LocalDate data;
     private String situacaoAnimal;

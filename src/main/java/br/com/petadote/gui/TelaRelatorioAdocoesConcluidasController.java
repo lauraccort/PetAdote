@@ -1,5 +1,6 @@
 package br.com.petadote.gui;
 
+import br.com.petadote.Contexto;
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.Visita;
 import br.com.petadote.servico.IProcessoAdocaoServico;
@@ -10,15 +11,13 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
-/**
- * Controller da TelaRelatorioAdocoesConcluidas.fxml (REQ12: adoções concluídas por período).
- */
 public class TelaRelatorioAdocoesConcluidasController {
 
     private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -46,6 +45,10 @@ public class TelaRelatorioAdocoesConcluidasController {
     @FXML private Label total;
     @FXML private Label mensagem;
 
+    public TelaRelatorioAdocoesConcluidasController(Navegador navegador) {
+        this(navegador, Contexto.get().processoServico());
+    }
+
     public TelaRelatorioAdocoesConcluidasController(Navegador navegador, IProcessoAdocaoServico processoServico) {
         this.navegador = navegador;
         this.processoServico = processoServico;
@@ -72,7 +75,6 @@ public class TelaRelatorioAdocoesConcluidasController {
         filtrar();
     }
 
-    /** Mostra as adoções concluídas dentro do período (datas vazias = sem limite). */
     @FXML
     private void filtrar() {
         LocalDate de = campoDe.getValue();
@@ -87,10 +89,13 @@ public class TelaRelatorioAdocoesConcluidasController {
                 .filter(p -> de == null || (p.getDataConclusao() != null && !p.getDataConclusao().isBefore(de)))
                 .filter(p -> ate == null || (p.getDataConclusao() != null && !p.getDataConclusao().isAfter(ate)))
                 .sorted(Comparator.comparing(ProcessoAdocao::getDataConclusao,
-                        Comparator.nullsLast(Comparator.reverseOrder())))
+                        Comparator.nullsLast(Comparator.naturalOrder())))
                 .toList();
+
         tabela.setItems(FXCollections.observableArrayList(concluidos));
-        total.setText(concluidos.size() == 1 ? "1 adoção concluída" : concluidos.size() + " adoções concluídas");
+        total.setText(concluidos.size() == 1
+                ? "1 adoção concluída"
+                : concluidos.size() + " adoções concluídas");
     }
 
     @FXML
@@ -105,14 +110,14 @@ public class TelaRelatorioAdocoesConcluidasController {
         navegador.voltar();
     }
 
+    private static String data(LocalDate valor) {
+        return valor == null ? "" : valor.format(FORMATO);
+    }
+
     private static void coluna(TableColumn<ProcessoAdocao, String> coluna, Function<ProcessoAdocao, Object> valor) {
         coluna.setCellValueFactory(c -> {
             Object v = valor.apply(c.getValue());
             return new SimpleStringProperty(v == null ? "" : v.toString());
         });
-    }
-
-    private static String data(LocalDate data) {
-        return data == null ? null : data.format(FORMATO);
     }
 }
