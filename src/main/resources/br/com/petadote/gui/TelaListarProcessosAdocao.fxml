@@ -22,7 +22,8 @@
          </font>
       </Label>
    </HBox>
-   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 16;">
+   <!-- ocupa o espaço livre entre o título e o "Voltar", deixando os cards no meio da tela -->
+   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 16;" VBox.vgrow="ALWAYS">
       <children>
          <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="230.0" spacing="12.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4);" HBox.hgrow="NEVER">
             <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
@@ -48,7 +49,7 @@
                      <Image url="@../imagens/concluido.png" />
                   </image>
                </ImageView>
-               <Button onAction="#abrirListarSolicitacoesPendentes" prefWidth="280.0" style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;" text="Finalizar processo de adoção" textFill="WHITE">
+               <Button onAction="#abrirFinalizarProcessoAdocao" prefWidth="280.0" style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;" text="Finalizar processo de adoção" textFill="WHITE">
                   <font>
                      <Font name="System Bold" size="13.0" />
                   </font>
@@ -57,7 +58,5 @@
          </VBox>
       </children>
    </HBox>
-   <!-- espaço vazio que empurra o rodapé para baixo; o conteúdo da tela entra acima -->
-   <Region VBox.vgrow="ALWAYS" />
    <Button onAction="#voltar" text="Voltar" />
 </VBox>
