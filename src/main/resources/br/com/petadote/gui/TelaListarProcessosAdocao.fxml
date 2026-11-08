@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="480.0" prefWidth="640.0" spacing="12.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.petadote.gui.TelaListarProcessosAdocaoController">
+<VBox prefHeight="480.0" prefWidth="640.0" spacing="12.0" style="-fx-background-color: #f7efe6;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.petadote.gui.TelaListarProcessosAdocaoController">
    <padding>
       <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
    </padding>
@@ -24,12 +24,35 @@
    </HBox>
    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 16;">
       <children>
-         <VBox spacing="8.0">
-            <Button onAction="#abrirListarSolicitacoesPendentes" prefWidth="280.0" text="Solicitações pendentes" />
+         <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="230.0" spacing="12.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4);" HBox.hgrow="NEVER">
+            <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../imagens/pendente.png" />
+               </image>
+            </ImageView>
+            <Button onAction="#abrirListarSolicitacoesPendentes" prefWidth="280.0" style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;" text="Solicitações pendentes" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font></Button>
+            <padding>
+               <Insets bottom="16.0" left="16.0" right="16.0" top="20.0" />
+            </padding>
          </VBox>
-         <VBox spacing="8.0">
+         <VBox alignment="CENTER" layoutX="199.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="230.0" spacing="12.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4);">
+            <padding>
+               <Insets bottom="16.0" left="16.0" right="16.0" top="20.0" />
+            </padding>
             <children>
-               <Button onAction="#abrirFinalizarProcessoAdocao" prefWidth="280.0" text="Finalizar processo de adoção" />
+               <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../imagens/concluido.png" />
+                  </image>
+               </ImageView>
+               <Button onAction="#abrirListarSolicitacoesPendentes" prefWidth="280.0" style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;" text="Finalizar processo de adoção" textFill="WHITE">
+                  <font>
+                     <Font name="System Bold" size="13.0" />
+                  </font>
+               </Button>
             </children>
          </VBox>
       </children>

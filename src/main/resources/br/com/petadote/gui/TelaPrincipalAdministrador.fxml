@@ -10,10 +10,13 @@
    <padding>
       <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
    </padding>
-   <HBox prefHeight="100.0" prefWidth="200.0">
+   <HBox prefHeight="50.0" prefWidth="100.0" style="-fx-spacing: 10;">
       <children>
-         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" />
-         <Label prefHeight="74.0" prefWidth="355.0" text="Painel do administrador" textFill="#9c4f2a">
+         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@../imagens/petadote.png" />
+            </image></ImageView>
+         <Label alignment="TOP_LEFT" prefHeight="74.0" prefWidth="355.0" text="Painel do administrador" textFill="#9c4f2a">
             <font>
                <Font name="System Bold" size="29.0" />
             </font>
