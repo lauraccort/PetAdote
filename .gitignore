@@ -32,3 +32,5 @@ bin/
 .idea/
 *.iml
 target/
+### Chaves de API (não commitar) ###
+api.properties
