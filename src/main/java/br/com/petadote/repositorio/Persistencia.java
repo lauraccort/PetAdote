@@ -9,6 +9,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+/**
+ * Guarda os dados em UM arquivo (dados/petadote.dat) no lugar de um banco.
+ * Os 4 repositorios sao gravados juntos, para que objetos compartilhados
+ * (ex.: o mesmo Animal no abrigo e no repositorio de animais) continuem
+ * sendo o mesmo objeto depois de ler o arquivo.
+ */
 public final class Persistencia {
 
     private static final Path ARQUIVO = Path.of("dados", "petadote.dat");
@@ -17,10 +23,10 @@ public final class Persistencia {
     private Persistencia() {
     }
 
-    /** Carrega o arquivo, se existir. Devolve true quando havia dados. */
-    public static synchronized boolean carregar() {
+    /** Le o arquivo (se existir) e preenche os repositorios. Chamar ao iniciar. */
+    public static synchronized void carregar() {
         if (!Files.exists(ARQUIVO)) {
-            return false;
+            return;
         }
 
         carregando = true;
@@ -34,8 +40,6 @@ public final class Persistencia {
             AdotanteRepositorio.getInstance().restaurar((Object[]) pacote[2]);
             ProcessoAdocaoRepositorio.getInstance().restaurar((Object[]) pacote[3]);
 
-            return true;
-
         } catch (IOException | ClassNotFoundException e) {
             throw new IllegalStateException("Não foi possível ler " + ARQUIVO
                     + ". Se o código mudou, apague esse arquivo. Detalhe: "
@@ -45,6 +49,7 @@ public final class Persistencia {
         }
     }
 
+    /** Grava o estado atual dos 4 repositorios. */
     public static synchronized void salvar() {
         if (carregando) {
             return;
@@ -65,16 +70,12 @@ public final class Persistencia {
                 });
             }
 
+            // grava num temporario e troca, para nao corromper se der erro
             Files.move(temporario, ARQUIVO, StandardCopyOption.REPLACE_EXISTING);
 
         } catch (IOException e) {
             throw new IllegalStateException("Não foi possível gravar " + ARQUIVO
                     + ": " + e.getMessage(), e);
         }
-    }
-
-    /** Usado pela semeadura inicial para não gravar a cada salvar(). */
-    public static void marcarCarregando(boolean valor) {
-        carregando = valor;
     }
 }
