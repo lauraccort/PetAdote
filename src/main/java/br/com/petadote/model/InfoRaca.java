@@ -1,6 +1,7 @@
 package br.com.petadote.model;
 
-public class InfoRaca {
+public class InfoRaca implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
     private String porte;
     private double pesoMedio;
     private String temperamento;

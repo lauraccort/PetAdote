@@ -1,6 +1,7 @@
 package br.com.petadote.model;
 
-public abstract class Entidade {
+public abstract class Entidade implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
     private Long id;
 
     public Long getId() {

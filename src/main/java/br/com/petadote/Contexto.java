@@ -2,6 +2,7 @@ package br.com.petadote;
 
 import br.com.petadote.model.Abrigo;
 import br.com.petadote.model.Adotante;
+import br.com.petadote.repositorio.Persistencia;
 import br.com.petadote.servico.AbrigoServicoImpl;
 import br.com.petadote.servico.AdotanteServicoImpl;
 import br.com.petadote.servico.AnimalServicoImpl;
@@ -34,6 +35,8 @@ public final class Contexto {
     private Abrigo abrigoLogado;
 
     private Contexto() {
+        // Carrega os dados salvos em disco, se existirem.
+        Persistencia.carregar();
     }
 
     public void entrarComoAdotante(Adotante adotante) {
@@ -76,4 +79,3 @@ public final class Contexto {
         return processoServico;
     }
 }
-
