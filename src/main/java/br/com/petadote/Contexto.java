@@ -46,7 +46,9 @@ public final class Contexto {
     private Abrigo abrigoLogado;
 
     private Contexto() {
+        // carregar() devolve false quando não existe dados/petadote.dat (primeira execução)
         if (!Persistencia.carregar()) {
+            // Enquanto semeia, os repositórios não gravam; o arquivo é escrito uma vez no fim.
             Persistencia.marcarCarregando(true);
             try {
                 semear();
@@ -60,10 +62,21 @@ public final class Contexto {
     /**
      * Dados de exemplo da primeira execução. Os processos nascem com data de
      * abertura antiga para o relatório de pendentes (REQ13) não ficar vazio.
+     *
+     * Contas de teste (administrador: admin@petadote.com / admin123):
+     *   abrigo   -> lar@petadote.com   / abrigo123
+     *   adotante -> ana@petadote.com   / 123456
+     *              bruno@petadote.com  / 123456
+     *              carla@petadote.com  / 123456
      */
     private void semear() {
+        // O serviço exige e-mail/senha válidos e sempre grava o abrigo como PENDENTE;
+        // por isso o abrigo de exemplo é aprovado logo em seguida, para já poder entrar.
         Abrigo lar = new Abrigo("Lar dos Bichos", "Rua das Flores, 120 - Recife/PE", 20);
+        lar.setEmail("lar@petadote.com");
+        lar.setSenha("abrigo123");
         abrigoServico.cadastrar(lar);
+        abrigoServico.aprovar(lar.getId());
 
         Cao thor = new Cao("Thor", LocalDate.now().minusYears(3), "Labrador");
         Cao mel = new Cao("Mel", LocalDate.now().minusMonths(8), "SRD");
@@ -71,16 +84,13 @@ public final class Contexto {
         Gato luna = new Gato("Luna", LocalDate.now().minusYears(1), "SRD");
 
         for (Animal a : new Animal[]{thor, mel, nina, luna}) {
-            lar.adicionarAnimal(a);
             animalServico.cadastrar(a);
+            abrigoServico.adicionarAnimal(lar.getId(), a);
         }
 
-        Adotante ana = new Adotante("Ana Clara", "12345678900", "Rua A, 10 - Recife/PE", 0);
-        Adotante bruno = new Adotante("Bruno Lima", "98765432100", "Rua B, 20 - Olinda/PE", 1);
-        Adotante carla = new Adotante("Carla Souza", "11122233344", "Rua C, 30 - Recife/PE", 0);
-        adotanteServico.cadastrar(ana);
-        adotanteServico.cadastrar(bruno);
-        adotanteServico.cadastrar(carla);
+        Adotante ana = novoAdotante("Ana Clara", "12345678900", "Rua A, 10 - Recife/PE", 0, "ana@petadote.com");
+        Adotante bruno = novoAdotante("Bruno Lima", "98765432100", "Rua B, 20 - Olinda/PE", 1, "bruno@petadote.com");
+        Adotante carla = novoAdotante("Carla Souza", "11122233344", "Rua C, 30 - Recife/PE", 0, "carla@petadote.com");
 
         // Pendente há 30 dias — EM_AVALIACAO
         ProcessoAdocao p1 = processoServico.iniciar(thor.getId(), ana.getId());
@@ -90,13 +100,20 @@ public final class Contexto {
         ProcessoAdocao p2 = processoServico.iniciar(mel.getId(), bruno.getId());
         p2.setDataAbertura(LocalDate.now().minusDays(20));
 
-        // Pendente há 25 dias — APROVADO, aguardando conclusão
+        // Aberto há 25 dias — APROVADO, aguardando conclusão
         ProcessoAdocao p3 = processoServico.iniciar(nina.getId(), carla.getId());
         p3.setDataAbertura(LocalDate.now().minusDays(25));
         processoServico.registrarAvaliacao(p3.getId(),
                 new Avaliacao(LocalDate.now().minusDays(22), "Responsável do abrigo",
                         Parecer.POSITIVO, "Ambiente adequado."));
         processoServico.aprovar(p3.getId());
+    }
+
+    private Adotante novoAdotante(String nome, String cpf, String endereco, int quantAnimal, String email) {
+        Adotante adotante = new Adotante(nome, cpf, endereco, quantAnimal);
+        adotante.setEmail(email);
+        adotante.setSenha("123456");
+        return adotanteServico.cadastrar(adotante);
     }
 
     public void entrarComoAdotante(Adotante adotante) {

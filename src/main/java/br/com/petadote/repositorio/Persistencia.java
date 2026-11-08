@@ -23,10 +23,15 @@ public final class Persistencia {
     private Persistencia() {
     }
 
-    /** Le o arquivo (se existir) e preenche os repositorios. Chamar ao iniciar. */
-    public static synchronized void carregar() {
+    /**
+     * Le o arquivo (se existir) e preenche os repositorios. Chamar ao iniciar.
+     *
+     * @return true se carregou dados do arquivo; false se ele nao existe
+     *         (primeira execucao) e os repositorios continuam vazios.
+     */
+    public static synchronized boolean carregar() {
         if (!Files.exists(ARQUIVO)) {
-            return;
+            return false;
         }
 
         carregando = true;
@@ -39,6 +44,7 @@ public final class Persistencia {
             AnimalRepositorio.getInstance().restaurar((Object[]) pacote[1]);
             AdotanteRepositorio.getInstance().restaurar((Object[]) pacote[2]);
             ProcessoAdocaoRepositorio.getInstance().restaurar((Object[]) pacote[3]);
+            return true;
 
         } catch (IOException | ClassNotFoundException e) {
             throw new IllegalStateException("Não foi possível ler " + ARQUIVO
@@ -47,6 +53,14 @@ public final class Persistencia {
         } finally {
             carregando = false;
         }
+    }
+
+    /**
+     * Enquanto estiver marcado, salvar() nao faz nada. Usado ao semear os dados
+     * de exemplo, para gravar o arquivo uma unica vez no final.
+     */
+    public static synchronized void marcarCarregando(boolean valor) {
+        carregando = valor;
     }
 
     /** Grava o estado atual dos 4 repositorios. */
