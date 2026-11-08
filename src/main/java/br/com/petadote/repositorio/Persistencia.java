@@ -17,9 +17,10 @@ public final class Persistencia {
     private Persistencia() {
     }
 
-    public static synchronized void carregar() {
+    /** Carrega o arquivo, se existir. Devolve true quando havia dados. */
+    public static synchronized boolean carregar() {
         if (!Files.exists(ARQUIVO)) {
-            return;
+            return false;
         }
 
         carregando = true;
@@ -33,6 +34,8 @@ public final class Persistencia {
             AdotanteRepositorio.getInstance().restaurar((Object[]) pacote[2]);
             ProcessoAdocaoRepositorio.getInstance().restaurar((Object[]) pacote[3]);
 
+            return true;
+
         } catch (IOException | ClassNotFoundException e) {
             throw new IllegalStateException("Não foi possível ler " + ARQUIVO
                     + ". Se o código mudou, apague esse arquivo. Detalhe: "
@@ -42,7 +45,6 @@ public final class Persistencia {
         }
     }
 
-    /** Grava o estado atual dos 4 repositorios. */
     public static synchronized void salvar() {
         if (carregando) {
             return;
@@ -63,12 +65,16 @@ public final class Persistencia {
                 });
             }
 
-            // grava num temporario e troca, para nao corromper se der erro
             Files.move(temporario, ARQUIVO, StandardCopyOption.REPLACE_EXISTING);
 
         } catch (IOException e) {
             throw new IllegalStateException("Não foi possível gravar " + ARQUIVO
                     + ": " + e.getMessage(), e);
         }
+    }
+
+    /** Usado pela semeadura inicial para não gravar a cada salvar(). */
+    public static void marcarCarregando(boolean valor) {
+        carregando = valor;
     }
 }
