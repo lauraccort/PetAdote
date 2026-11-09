@@ -32,6 +32,5 @@ bin/
 .idea/
 *.iml
 target/
-### Chaves de API (não commitar) ###
-api.properties
+### Dados locais gerados pelo app ###
 dados/
