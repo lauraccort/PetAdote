@@ -141,11 +141,16 @@ public class ProcessoAdocao extends Entidade {
 
     private java.util.stream.Stream<Visita> visitasNoPeriodo() {
         LocalDate hoje = LocalDate.now();
+        LocalDate inicio = dataConclusao != null ? dataConclusao : hoje;
+        LocalDate fim = inicio.plusDays(PERIODO_VISITAS_DIAS);
+
         return visitas.stream()
                 .filter(v -> !v.isCancelada())
-                .filter(v -> v.getData() != null
-                        && !v.getData().isBefore(hoje)
-                        && v.getData().isBefore(hoje.plusDays(PERIODO_VISITAS_DIAS)));
+                .filter(v -> v.getData() != null)
+                .filter(v -> !v.getData().isBefore(hoje)
+                        || v.isAprovadaPeloAbrigo()
+                        || v.isConcluida())
+                .filter(v -> v.getData().isBefore(fim));
     }
 
     public static int getMinVisitasPosAdocao() {
