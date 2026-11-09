@@ -34,7 +34,30 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
 
     private final AtomicLong proximoIdVisita = new AtomicLong(1);
 
+    // ERRO 6:
+    // Recupera o maior ID de visita já salvo para evitar
+    // a repetição de identificadores após reiniciar o sistema.
     private ProcessoAdocaoServicoImpl() {
+
+        long maiorId = 0;
+
+        for (ProcessoAdocao processo : processoRepositorio.listarTodos()) {
+
+            if (processo != null && processo.getVisitas() != null) {
+
+                for (Visita visita : processo.getVisitas()) {
+
+                    if (visita != null && visita.getId() != null) {
+
+                        if (visita.getId() > maiorId) {
+                            maiorId = visita.getId();
+                        }
+                    }
+                }
+            }
+        }
+
+        proximoIdVisita.set(maiorId + 1);
     }
 
     public static ProcessoAdocaoServicoImpl getInstance() {
@@ -146,6 +169,8 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
             );
         }
 
+        // ERRO 6: gera um ID único, continuando a sequência
+        // recuperada das visitas já existentes.
         visita.setId(proximoIdVisita.getAndIncrement());
 
         processo.agendarVisita(visita);
@@ -241,22 +266,6 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
     }
 
     // Localiza uma visita pelo identificador dentro do processo.
-    private Visita localizarVisita(ProcessoAdocao processo, Long idVisita) {
-
-        if (idVisita == null) {
-            return null;
-        }
-
-        for (Visita visita : processo.getVisitas()) {
-            if (idVisita.equals(visita.getId())) {
-                return visita;
-            }
-        }
-
-        return null;
-    }
-
-    // REQ11: confirma uma visita previamente agendada.
     @Override
     public boolean confirmarVisita(
             Long idProcesso, Long idVisita, String observacao) {
@@ -282,6 +291,22 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         }
 
         return confirmou;
+    }
+
+    // Localiza uma visita pelo identificador dentro do processo.
+    private Visita localizarVisita(ProcessoAdocao processo, Long idVisita) {
+
+        if (idVisita == null) {
+            return null;
+        }
+
+        for (Visita visita : processo.getVisitas()) {
+            if (idVisita.equals(visita.getId())) {
+                return visita;
+            }
+        }
+
+        return null;
     }
 
     // REQ11: cancela uma visita agendada.
@@ -372,3 +397,4 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         processoRepositorio.salvar(processo);
     }
 }
+
