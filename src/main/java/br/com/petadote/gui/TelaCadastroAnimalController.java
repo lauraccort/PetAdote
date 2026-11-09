@@ -122,7 +122,6 @@ public class TelaCadastroAnimalController {
         }
     }
 
-    /** Busca as informações da raça em segundo plano, para a janela não travar. */
     private void buscarInfoRacaECadastrar(Animal animal, String especie, String raca, Abrigo abrigo) {
         salvando = true;
         mensagem.setTextFill(Color.web("#555555"));
