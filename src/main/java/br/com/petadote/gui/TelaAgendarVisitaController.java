@@ -1,28 +1,43 @@
 package br.com.petadote.gui;
 
 import br.com.petadote.Contexto;
+import br.com.petadote.model.Abrigo;
+import br.com.petadote.model.Animal;
 import br.com.petadote.model.ProcessoAdocao;
+import br.com.petadote.model.StatusProcesso;
 import br.com.petadote.model.Visita;
 import br.com.petadote.servico.IProcessoAdocaoServico;
+
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.util.StringConverter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 public class TelaAgendarVisitaController {
 
-    private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter FORMATO =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     private static final int DIAS_LIMITE = 90;
 
     private final Navegador navegador;
-    private final IProcessoAdocaoServico processoServico = Contexto.get().processoServico();
 
-    @FXML private DatePicker campoData;
-    @FXML private Label mensagem;
+    private final IProcessoAdocaoServico processoServico =
+            Contexto.get().processoServico();
+
+    @FXML
+    private ComboBox<ProcessoAdocao> campoProcesso;
+
+    @FXML
+    private DatePicker campoData;
+
+    @FXML
+    private Label mensagem;
 
     public TelaAgendarVisitaController(Navegador navegador) {
         this.navegador = navegador;
@@ -30,63 +45,155 @@ public class TelaAgendarVisitaController {
 
     @FXML
     private void initialize() {
+
         mensagem.setText("");
-        if (campoData != null) {
-            campoData.setValue(LocalDate.now().plusDays(7));
+
+        campoData.setValue(LocalDate.now().plusDays(7));
+
+        campoProcesso.setConverter(new StringConverter<ProcessoAdocao>() {
+
+            @Override
+            public String toString(ProcessoAdocao processo) {
+
+                if (processo == null) {
+                    return "";
+                }
+
+                Animal animal = processo.getAnimal();
+
+                if (animal == null) {
+                    return "Processo " + processo.getId();
+                }
+
+                return animal.getNome()
+                        + " - Processo " + processo.getId();
+            }
+
+            @Override
+            public ProcessoAdocao fromString(String texto) {
+                return null;
+            }
+        });
+
+        carregarProcessos();
+    }
+
+    private void carregarProcessos() {
+
+        campoProcesso.getItems().clear();
+
+        Abrigo abrigo = Contexto.get().abrigoLogado().orElse(null);
+
+        if (abrigo == null) {
+            mensagem.setStyle("-fx-text-fill: #c0392b;");
+            mensagem.setText(
+                    "Nenhum abrigo está logado. Entre com uma conta de abrigo."
+            );
+            return;
+        }
+
+        processoServico.listarTodos().stream()
+
+                .filter(Objects::nonNull)
+
+                .filter(processo ->
+                        processo.getStatus() == StatusProcesso.APROVADO
+                )
+
+                .filter(processo -> !processo.temVisitasSuficientes())
+
+                .filter(processo -> processo.getAnimal() != null)
+
+                .filter(processo ->
+                        processo.getAnimal().getAbrigo() != null
+                )
+
+                .filter(processo ->
+                        Objects.equals(
+                                processo.getAnimal().getAbrigo().getId(),
+                                abrigo.getId()
+                        )
+                )
+
+                .forEach(processo ->
+                        campoProcesso.getItems().add(processo)
+                );
+
+        if (campoProcesso.getItems().isEmpty()) {
+            mensagem.setStyle("-fx-text-fill: #555555;");
+            mensagem.setText(
+                    "Não existem processos aprovados que precisem de visitas."
+            );
+        } else {
+            mensagem.setText(
+                    "Selecione o processo e a data para agendar a visita."
+            );
+            mensagem.setStyle("-fx-text-fill: #555555;");
         }
     }
 
-    /**
-     * REQ09 + REQ18: agenda visita de acompanhamento no processo
-     * concluido que ainda nao tenha as duas visitas exigidas.
-     */
     @FXML
     private void agendar() {
-        try {
-            LocalDate data = campoData.getValue();
-            validarData(data);
 
-            Optional<ProcessoAdocao> alvo = processoQuePrecisaDeVisita();
-            if (alvo.isEmpty()) {
+        try {
+
+            ProcessoAdocao processo = campoProcesso.getValue();
+
+            if (processo == null) {
                 throw new IllegalArgumentException(
-                        "Nenhum processo concluído precisa de visita no momento.");
+                        "Selecione um processo de adoção."
+                );
             }
 
-            ProcessoAdocao processo = alvo.get();
+            LocalDate data = campoData.getValue();
+
+            validarData(data);
+
             Visita nova = new Visita(data);
 
             processoServico.agendarVisita(processo.getId(), nova);
 
             mensagem.setStyle("-fx-text-fill: #2e7d32;");
-            mensagem.setText("Visita agendada para " + data.format(FORMATO)
-                    + " no processo do animal " + processo.getAnimal().getNome() + ".");
-            campoData.setValue(data.plusDays(7));
+
+            mensagem.setText(
+                    "Visita agendada para "
+                            + data.format(FORMATO)
+                            + " no processo do animal "
+                            + processo.getAnimal().getNome()
+                            + "."
+            );
+
+            campoProcesso.setValue(null);
+
+            carregarProcessos();
 
         } catch (IllegalArgumentException | IllegalStateException e) {
+
             mensagem.setStyle("-fx-text-fill: #c0392b;");
             mensagem.setText(e.getMessage());
         }
     }
 
     private void validarData(LocalDate data) {
+
         if (data == null) {
-            throw new IllegalArgumentException("Selecione a data da visita.");
-        }
-        if (data.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("A data da visita não pode estar no passado.");
-        }
-        if (data.isAfter(LocalDate.now().plusDays(DIAS_LIMITE))) {
             throw new IllegalArgumentException(
-                    "A visita deve ocorrer dentro dos " + DIAS_LIMITE + " dias seguintes.");
+                    "Selecione a data da visita."
+            );
         }
-    }
 
+        if (data.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException(
+                    "A data da visita não pode estar no passado."
+            );
+        }
 
-    private Optional<ProcessoAdocao> processoQuePrecisaDeVisita() {
-        List<ProcessoAdocao> concluidos = processoServico.listarConcluidos();
-        return concluidos.stream()
-                .filter(p -> !p.temVisitasSuficientes())
-                .findFirst();
+        if (!data.isBefore(LocalDate.now().plusDays(DIAS_LIMITE))) {
+            throw new IllegalArgumentException(
+                    "A visita deve ocorrer dentro dos próximos "
+                            + DIAS_LIMITE + " dias."
+            );
+        }
     }
 
     @FXML
