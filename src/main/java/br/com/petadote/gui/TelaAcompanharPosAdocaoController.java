@@ -87,7 +87,10 @@ public class TelaAcompanharPosAdocaoController {
         }
         LocalDate data = campoDataVisita.getValue();
         try {
-            processoServico.agendarVisita(processo.getId(), new Visita(data));
+            Visita visita = new Visita(data);
+            processoServico.agendarVisita(processo.getId(), visita);
+            // Visita marcada pelo próprio abrigo já nasce aprovada
+            processoServico.confirmarVisita(processo.getId(), visita.getId(), null);
             campoDataVisita.setValue(null);
             tabelaProcessos.refresh(); // atualiza a coluna "Visitas nos próx. 90 dias"
             mostrarVisitas(processo);
@@ -128,7 +131,8 @@ public class TelaAcompanharPosAdocaoController {
             situacaoMinimo.setText("Mínimo de " + minimo + " visitas em 90 dias atingido");
         } else {
             situacaoMinimo.setTextFill(COR_ERRO);
-            situacaoMinimo.setText("Faltam " + (minimo - noPeriodo) + " visita(s) nos próximos 90 dias");
+            situacaoMinimo.setText("Faltam " + (minimo - noPeriodo)
+                    + " visita(s) aprovada(s) nos próximos 90 dias");
         }
     }
 

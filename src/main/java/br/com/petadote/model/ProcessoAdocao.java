@@ -111,19 +111,41 @@ public class ProcessoAdocao extends Entidade {
         return true;
     }
 
-    /** REQ18: ao menos 2 visitas agendadas nos 90 dias seguintes. */
+    /** REQ18: ao menos 2 visitas aprovadas pelo abrigo nos 90 dias seguintes. */
     public boolean temVisitasSuficientes() {
         return contarVisitasNoPeriodo() >= MIN_VISITAS_POS_ADOCAO;
     }
 
-    /** REQ18: quantas visitas estão agendadas de hoje até 90 dias à frente. */
+    /**
+     * REQ18: quantas visitas, já aprovadas pelo abrigo (confirmadas ou
+     * reagendadas), estão marcadas de hoje até 90 dias à frente.
+     */
     public long contarVisitasNoPeriodo() {
+        return visitasNoPeriodo()
+                .filter(Visita::isAprovadaPeloAbrigo)
+                .count();
+    }
+
+    /**
+     * Visitas pedidas pelo adotante no período que não foram canceladas,
+     * incluindo as que ainda aguardam a aprovação do abrigo.
+     */
+    public long contarVisitasSolicitadasNoPeriodo() {
+        return visitasNoPeriodo().count();
+    }
+
+    /** Indica se o adotante ainda precisa pedir visitas para chegar ao mínimo. */
+    public boolean precisaSolicitarVisitas() {
+        return contarVisitasSolicitadasNoPeriodo() < MIN_VISITAS_POS_ADOCAO;
+    }
+
+    private java.util.stream.Stream<Visita> visitasNoPeriodo() {
         LocalDate hoje = LocalDate.now();
         return visitas.stream()
                 .filter(v -> !v.isCancelada())
-                .filter(v -> !v.getData().isBefore(hoje)
-                        && v.getData().isBefore(hoje.plusDays(PERIODO_VISITAS_DIAS)))
-                .count();
+                .filter(v -> v.getData() != null
+                        && !v.getData().isBefore(hoje)
+                        && v.getData().isBefore(hoje.plusDays(PERIODO_VISITAS_DIAS)));
     }
 
     public static int getMinVisitasPosAdocao() {

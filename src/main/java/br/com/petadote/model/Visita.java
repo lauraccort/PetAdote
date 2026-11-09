@@ -63,6 +63,12 @@ public class Visita implements java.io.Serializable {
         return !concluida && statusAgendamento != StatusAgendamento.CANCELADA;
     }
 
+    /** O abrigo aceitou a visita (confirmou ou marcou nova data). */
+    public boolean isAprovadaPeloAbrigo() {
+        return statusAgendamento == StatusAgendamento.CONFIRMADA
+                || statusAgendamento == StatusAgendamento.REAGENDADA;
+    }
+
     public boolean isCancelada() {
         return statusAgendamento == StatusAgendamento.CANCELADA;
     }

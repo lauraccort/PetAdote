@@ -1,5 +1,6 @@
 package br.com.petadote.gui;
 
+import br.com.petadote.Contexto;
 import br.com.petadote.servico.IProcessoAdocaoServico;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -44,6 +45,12 @@ public class TelaListarVisitasController {
 
         tabelaVisitas.setItems(FXCollections.observableArrayList(
                 VisitaDoProcesso.de(processoServico.listarTodos())
+                        // O abrigo logado só vê as visitas dos seus animais
+                        .filter(vp -> Contexto.get().abrigoLogado()
+                                .map(a -> vp.processo().getAnimal() != null
+                                        && vp.processo().getAnimal().getAbrigo() != null
+                                        && a.getId().equals(vp.processo().getAnimal().getAbrigo().getId()))
+                                .orElse(true))
                         .sorted(Comparator.comparing(l -> l.visita().getData()))
                         .toList()));
 

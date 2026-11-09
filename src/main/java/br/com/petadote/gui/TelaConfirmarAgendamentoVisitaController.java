@@ -41,6 +41,9 @@ public class TelaConfirmarAgendamentoVisitaController {
     @FXML private TextField campoObservacoes;
     @FXML private Label mensagem;
 
+    // Visita escolhida no painel; tem prioridade sobre a busca pelo número
+    private VisitaDoProcesso visitaSelecionada;
+
     public TelaConfirmarAgendamentoVisitaController(
             Navegador navegador,
             IProcessoAdocaoServico processoServico) {
@@ -69,13 +72,13 @@ public class TelaConfirmarAgendamentoVisitaController {
                 (obs, anterior, texto) -> mostrarInfo()
         );
 
-        navegador.selecionado(VisitaDoProcesso.class)
+        visitaSelecionada = navegador.selecionado(VisitaDoProcesso.class)
                 .filter(vp -> vp.visita().getId() != null)
-                .ifPresent(vp ->
-                        campoIdVisita.setText(
-                                String.valueOf(vp.visita().getId())
-                        )
-                );
+                .orElse(null);
+
+        if (visitaSelecionada != null) {
+            campoIdVisita.setText(String.valueOf(visitaSelecionada.visita().getId()));
+        }
 
         mostrarInfo();
     }
@@ -149,7 +152,8 @@ public class TelaConfirmarAgendamentoVisitaController {
                 }
 
                 resultado = "Visita " + visita.getId()
-                        + " cancelada. Ela não conta mais para as 2 visitas obrigatórias.";
+                        + " cancelada. Ela não conta mais para as 2 visitas obrigatórias;"
+                        + " o adotante poderá pedir outra data.";
             }
 
             default -> {
@@ -167,6 +171,7 @@ public class TelaConfirmarAgendamentoVisitaController {
             }
         }
 
+        visitaSelecionada = null;
         campoIdVisita.clear();
         campoStatusVisita.setValue(null);
         campoNovaData.setValue(null);
@@ -210,6 +215,13 @@ public class TelaConfirmarAgendamentoVisitaController {
             id = Long.parseLong(campoIdVisita.getText().trim());
         } catch (NumberFormatException e) {
             return Optional.empty();
+        }
+
+        // Usa a própria visita escolhida no painel quando o número bate,
+        // para não confundir com outra visita de mesmo número.
+        if (visitaSelecionada != null
+                && visitaSelecionada.visita().getId().equals(id)) {
+            return Optional.of(visitaSelecionada);
         }
 
         return VisitaDoProcesso.de(processoServico.listarTodos())

@@ -1,7 +1,7 @@
 package br.com.petadote.gui;
 
 import br.com.petadote.Contexto;
-import br.com.petadote.model.Abrigo;
+import br.com.petadote.model.Adotante;
 import br.com.petadote.model.Animal;
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.StatusProcesso;
@@ -82,17 +82,19 @@ public class TelaAgendarVisitaController {
 
         campoProcesso.getItems().clear();
 
-        Abrigo abrigo = Contexto.get().abrigoLogado().orElse(null);
+        Adotante adotante = Contexto.get().adotanteLogado().orElse(null);
 
-        if (abrigo == null) {
+        if (adotante == null) {
             mensagem.setStyle("-fx-text-fill: #c0392b;");
             mensagem.setText(
-                    "Nenhum abrigo está logado. Entre com uma conta de abrigo."
+                    "Entre como adotante para agendar visitas."
             );
             return;
         }
 
-        processoServico.listarTodos().stream()
+        // Processos aprovados do adotante logado que ainda não têm
+        // pedidos de visita suficientes (contando os que aguardam o abrigo).
+        processoServico.listarPorAdotante(adotante.getId()).stream()
 
                 .filter(Objects::nonNull)
 
@@ -100,35 +102,36 @@ public class TelaAgendarVisitaController {
                         processo.getStatus() == StatusProcesso.APROVADO
                 )
 
-                .filter(processo -> !processo.temVisitasSuficientes())
+                .filter(ProcessoAdocao::precisaSolicitarVisitas)
 
                 .filter(processo -> processo.getAnimal() != null)
-
-                .filter(processo ->
-                        processo.getAnimal().getAbrigo() != null
-                )
-
-                .filter(processo ->
-                        Objects.equals(
-                                processo.getAnimal().getAbrigo().getId(),
-                                abrigo.getId()
-                        )
-                )
 
                 .forEach(processo ->
                         campoProcesso.getItems().add(processo)
                 );
 
+        // Se veio de "Minhas visitas" com uma visita selecionada, já escolhe o processo dela
+        navegador.selecionado(VisitaDoProcesso.class)
+                .map(VisitaDoProcesso::processo)
+                .filter(campoProcesso.getItems()::contains)
+                .ifPresent(campoProcesso::setValue);
+
+        if (campoProcesso.getItems().size() == 1) {
+            campoProcesso.setValue(campoProcesso.getItems().get(0));
+        }
+
+        mensagem.setStyle("-fx-text-fill: #555555;");
+
         if (campoProcesso.getItems().isEmpty()) {
-            mensagem.setStyle("-fx-text-fill: #555555;");
             mensagem.setText(
-                    "Não existem processos aprovados que precisem de visitas."
+                    "Nenhum processo aprovado precisa de novas visitas."
             );
         } else {
             mensagem.setText(
-                    "Selecione o processo e a data para agendar a visita."
+                    "São necessárias " + ProcessoAdocao.getMinVisitasPosAdocao()
+                            + " visitas nos próximos " + DIAS_LIMITE
+                            + " dias. Cada pedido precisa ser aprovado pelo abrigo."
             );
-            mensagem.setStyle("-fx-text-fill: #555555;");
         }
     }
 
@@ -153,19 +156,17 @@ public class TelaAgendarVisitaController {
 
             processoServico.agendarVisita(processo.getId(), nova);
 
-            mensagem.setStyle("-fx-text-fill: #2e7d32;");
-
-            mensagem.setText(
-                    "Visita agendada para "
-                            + data.format(FORMATO)
-                            + " no processo do animal "
-                            + processo.getAnimal().getNome()
-                            + "."
-            );
+            String sucesso = "Visita pedida para "
+                    + data.format(FORMATO)
+                    + " (" + processo.getAnimal().getNome()
+                    + "). Aguarde a aprovação do abrigo.";
 
             campoProcesso.setValue(null);
 
             carregarProcessos();
+
+            mensagem.setStyle("-fx-text-fill: #2e7d32;");
+            mensagem.setText(sucesso);
 
         } catch (IllegalArgumentException | IllegalStateException e) {
 

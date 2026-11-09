@@ -15,7 +15,6 @@ import br.com.petadote.repositorio.AdotanteRepositorio;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
@@ -31,8 +30,6 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
 
     private final IRepositorio<Adotante> adotanteRepositorio =
             AdotanteRepositorio.getInstance();
-
-    private final AtomicLong proximoIdVisita = new AtomicLong(1);
 
     private ProcessoAdocaoServicoImpl() {
     }
@@ -146,7 +143,7 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
             );
         }
 
-        visita.setId(proximoIdVisita.getAndIncrement());
+        visita.setId(proximoIdVisita());
 
         processo.agendarVisita(visita);
 
@@ -238,6 +235,18 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         processo.setJustificativaAdotante(justificativa);
 
         processoRepositorio.salvar(processo);
+    }
+
+    // Próximo id de visita, calculado a partir das visitas já gravadas.
+    // Assim o número continua único mesmo depois de reiniciar o programa.
+    private long proximoIdVisita() {
+        return processoRepositorio.listarTodos().stream()
+                .flatMap(p -> p.getVisitas().stream())
+                .map(Visita::getId)
+                .filter(id -> id != null)
+                .mapToLong(Long::longValue)
+                .max()
+                .orElse(0L) + 1;
     }
 
     // Localiza uma visita pelo identificador dentro do processo.

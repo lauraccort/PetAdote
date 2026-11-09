@@ -65,7 +65,7 @@ public class TelaConsultarParecerController {
     /** Dica do que acontece depois, conforme o status. */
     private static String proximoPasso(StatusProcesso status) {
         return switch (status) {
-            case APROVADO -> " Próximo passo: agende as visitas de acompanhamento em \"Minhas visitas\".";
+            case APROVADO -> " Próximo passo: peça as visitas de acompanhamento em \"Minhas visitas\" e aguarde a aprovação do abrigo.";
             case CONCLUIDO -> " A adoção foi concluída. Parabéns!";
             case NEGADO -> " Você pode iniciar um processo para outro animal.";
             case EM_AVALIACAO -> "";

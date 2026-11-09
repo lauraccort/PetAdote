@@ -98,8 +98,8 @@ public class TelaFinalizarProcessoAdocaoController {
         }
         if (!processo.temVisitasSuficientes()) {
             long faltam = ProcessoAdocao.getMinVisitasPosAdocao() - processo.contarVisitasNoPeriodo();
-            return "Faltam " + faltam + " visita(s) de acompanhamento nos próximos 90 dias (REQ18). "
-                    + "Agende em \"Acompanhamento pós-adoção\".";
+            return "Faltam " + faltam + " visita(s) de acompanhamento aprovada(s) nos próximos 90 dias (REQ18). "
+                    + "Confirme os pedidos do adotante no \"Painel de visitas\" ou agende em \"Acompanhamento pós-adoção\".";
         }
         return null;
     }
@@ -115,7 +115,7 @@ public class TelaFinalizarProcessoAdocaoController {
             infoProcesso.setText("Animal: " + p.getAnimal().getNome()
                     + "  ·  Adotante: " + p.getAdotante().getNome()
                     + "  ·  Status: " + p.getStatus().getDescricao()
-                    + "  ·  Visitas nos próx. 90 dias: " + p.contarVisitasNoPeriodo()
+                    + "  ·  Visitas aprovadas nos próx. 90 dias: " + p.contarVisitasNoPeriodo()
                     + " de " + ProcessoAdocao.getMinVisitasPosAdocao());
         }
     }

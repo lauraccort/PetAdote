@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -40,8 +41,9 @@
                <Font name="System Bold" size="13.0" />
             </font>
          </Label>
-         <DatePicker fx:id="campoData" prefWidth="220.0" promptText="dd/mm/aaaa" />
-         <Label fx:id="mensagem" alignment="CENTER" text="É preciso de duas visitas em um período de 90 dias" textAlignment="CENTER" textFill="#8a6a58" wrapText="true" />
+         <ComboBox fx:id="campoProcesso" prefWidth="260.0" promptText="Processo de adoção" />
+         <DatePicker fx:id="campoData" prefWidth="260.0" promptText="dd/mm/aaaa" />
+         <Label fx:id="mensagem" alignment="CENTER" textAlignment="CENTER" textFill="#8a6a58" wrapText="true" />
          <Button mnemonicParsing="false" onAction="#agendar" style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;" text="Agendar visita" textFill="WHITE">
             <font>
                <Font name="System Bold" size="13.0" />
