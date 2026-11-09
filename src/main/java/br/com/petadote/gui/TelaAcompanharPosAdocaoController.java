@@ -12,6 +12,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -48,6 +49,7 @@ public class TelaAcompanharPosAdocaoController {
 
     @FXML private DatePicker campoDataVisita;
     @FXML private Button botaoAgendar;
+    @FXML private TextArea campoRespostasAdotante;
     @FXML private Label situacaoMinimo;
     @FXML private Label mensagem;
 
@@ -116,6 +118,7 @@ public class TelaAcompanharPosAdocaoController {
         if (processo == null) {
             tituloVisitas.setText("Visitas do processo selecionado");
             tabelaVisitas.getItems().clear();
+            campoRespostasAdotante.clear();
             situacaoMinimo.setText("");
             return;
         }
@@ -123,6 +126,8 @@ public class TelaAcompanharPosAdocaoController {
                 + " (" + processo.getAnimal().getNome() + " → " + processo.getAdotante().getNome() + ")");
         tabelaVisitas.setItems(FXCollections.observableArrayList(
                 processo.getVisitas().stream().sorted(Comparator.comparing(Visita::getData)).toList()));
+
+        campoRespostasAdotante.setText(textoRespostas(processo));
 
         // REQ18: mínimo de visitas nos próximos 90 dias
         long noPeriodo = processo.contarVisitasNoPeriodo();
@@ -135,6 +140,14 @@ public class TelaAcompanharPosAdocaoController {
             situacaoMinimo.setText("Faltam " + (minimo - noPeriodo)
                     + " visita(s) aprovada(s) nos próximos 90 dias");
         }
+    }
+
+    /** Respostas que o adotante enviou em "Responder acompanhamento", da mais recente à mais antiga. */
+    private static String textoRespostas(ProcessoAdocao processo) {
+        if (processo.getRespostasAcompanhamento().isEmpty()) {
+            return "O adotante ainda não respondeu ao acompanhamento.";
+        }
+        return String.join("\n", processo.getRespostasAcompanhamento().reversed());
     }
 
     @FXML

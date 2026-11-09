@@ -20,6 +20,8 @@ public class ProcessoAdocao extends Entidade {
     private String justificativaAdotante;
     private List<Visita> visitas;
     private List<Avaliacao> avaliacoes;
+    // Respostas do adotante ao acompanhamento (pode vir null de um .dat antigo)
+    private List<String> respostasAcompanhamento;
 
     public ProcessoAdocao() {
         this.visitas = new ArrayList<>();
@@ -86,6 +88,20 @@ public class ProcessoAdocao extends Entidade {
     /** REQ09: agenda visita de acompanhamento pós-adoção. */
     public void agendarVisita(Visita visita) {
         visitas.add(visita);
+    }
+
+    /** REQ10: guarda uma resposta do adotante ao acompanhamento pós-adoção. */
+    public void registrarRespostaAcompanhamento(String resposta) {
+        if (respostasAcompanhamento == null) {
+            respostasAcompanhamento = new ArrayList<>();
+        }
+        respostasAcompanhamento.add(resposta);
+    }
+
+    public List<String> getRespostasAcompanhamento() {
+        return respostasAcompanhamento == null
+                ? List.of()
+                : Collections.unmodifiableList(respostasAcompanhamento);
     }
 
     /**
