@@ -172,7 +172,7 @@ public class TelaListarAnimaisAbrigoController {
     }
 
     /**
-     * REQ18: envia o animal selecionado para tratamento veterinário.
+     * REQ17: envia o animal selecionado para tratamento veterinário.
      */
     @FXML
     private void enviarParaTratamento() {
@@ -205,7 +205,7 @@ public class TelaListarAnimaisAbrigoController {
     }
 
     /**
-     * REQ18: registra a alta do tratamento veterinário.
+     * REQ17: registra a alta do tratamento veterinário.
      */
     @FXML
     private void receberAlta() {

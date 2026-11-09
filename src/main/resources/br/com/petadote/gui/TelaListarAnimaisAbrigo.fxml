@@ -91,6 +91,22 @@
                      <Font size="13.0" />
                   </font>
                </Button>
+               <Button mnemonicParsing="false" onAction="#enviarParaTratamento" styleClass="botao-secundario" text="Enviar para tratamento">
+                  <padding>
+                     <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                  </padding>
+                  <font>
+                     <Font size="13.0" />
+                  </font>
+               </Button>
+               <Button mnemonicParsing="false" onAction="#receberAlta" styleClass="botao-secundario" text="Registrar alta">
+                  <padding>
+                     <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                  </padding>
+                  <font>
+                     <Font size="13.0" />
+                  </font>
+               </Button>
                <Region HBox.hgrow="ALWAYS" />
                <Button onAction="#voltar" text="Voltar" />
             </children>

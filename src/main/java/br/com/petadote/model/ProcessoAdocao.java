@@ -38,7 +38,7 @@ public class ProcessoAdocao extends Entidade {
         this();
         this.animal = animal;
         this.adotante = adotante;
-        this.status = StatusProcesso.EM_AVALIACAO;
+        this.status = StatusProcesso.EM_AVALIACAO; // REQ06: status inicial "Em Avaliação"
         this.dataAbertura = LocalDate.now();
     }
 
@@ -82,7 +82,7 @@ public class ProcessoAdocao extends Entidade {
     }
 
     /**
-     * REQ06 e REQ18: nega o processo após avaliação desfavorável.
+     * REQ07 e REQ17: nega o processo após avaliação desfavorável.
      * O animal só volta a ficar disponível se ainda estiver
      * em avaliação. Se estiver em tratamento veterinário,
      * seu status é preservado.
@@ -94,7 +94,7 @@ public class ProcessoAdocao extends Entidade {
 
         this.status = StatusProcesso.NEGADO;
 
-        // REQ18: preserva o tratamento veterinário do animal.
+        // REQ17: preserva o tratamento veterinário do animal.
         if (animal.getStatus() == StatusAnimal.EM_AVALIACAO) {
             animal.setStatus(StatusAnimal.DISPONIVEL);
         }

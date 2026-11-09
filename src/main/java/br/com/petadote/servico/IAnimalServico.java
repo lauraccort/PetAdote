@@ -8,7 +8,7 @@ import java.util.Optional;
 
 /**
  * REQ02: define as operações de gerenciamento dos animais.
- * REQ18: define operações de tratamento veterinário e alta.
+ * REQ17: define operações de tratamento veterinário e alta.
  */
 public interface IAnimalServico {
 
@@ -31,13 +31,13 @@ public interface IAnimalServico {
     boolean excluir(Long id);
 
     /**
-     * REQ18: envia um animal disponível ou em avaliação
+     * REQ17: envia um animal disponível ou em avaliação
      * para tratamento veterinário.
      */
     boolean enviarParaTratamento(Long id);
 
     /**
-     * REQ18: registra a alta do tratamento veterinário.
+     * REQ17: registra a alta do tratamento veterinário.
      * O animal volta a disponível ou em avaliação,
      * dependendo da existência de processo ativo.
      */

@@ -87,7 +87,7 @@ public class AnimalServicoImpl implements IAnimalServico {
     }
 
     /**
-     * REQ18: envia um animal disponível ou em avaliação
+     * REQ17: envia um animal disponível ou em avaliação
      * para tratamento veterinário.
      */
     @Override
@@ -109,7 +109,7 @@ public class AnimalServicoImpl implements IAnimalServico {
     }
 
     /**
-     * REQ18: registra a alta do tratamento veterinário.
+     * REQ17: registra a alta do tratamento veterinário.
      * Se houver processo ativo, o animal retorna para avaliação.
      * Caso contrário, retorna para disponível.
      */
