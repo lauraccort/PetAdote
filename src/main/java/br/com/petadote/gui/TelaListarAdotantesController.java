@@ -1,3 +1,4 @@
+
 package br.com.petadote.gui;
 
 import br.com.petadote.model.Adotante;
@@ -12,19 +13,25 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class TelaListarAdotantesController {
+
     private final Navegador navegador;
     private final IAdotanteServico adotanteServico;
 
     @FXML
     private TableView<Adotante> tabelaAdotantes;
+
     @FXML
     private TableColumn<Adotante, Long> colunaId;
+
     @FXML
     private TableColumn<Adotante, String> colunaNome;
+
     @FXML
     private TableColumn<Adotante, String> colunaEmail;
+
     @FXML
     private TableColumn<Adotante, String> colunaCpf;
+
     @FXML
     private Label mensagem;
 
@@ -35,15 +42,23 @@ public class TelaListarAdotantesController {
 
     @FXML
     private void initialize() {
-        // Vincula as colunas aos atributos da classe Adotante (getId, getNome, getEmail, getCpf)
-        colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        colunaEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-        colunaCpf.setCellValueFactory(new PropertyValueFactory<>("cpf"));
 
-        // Some com o aviso "Selecione um adotante" assim que alguém é selecionado
-        tabelaAdotantes.getSelectionModel().selectedItemProperty()
-                .addListener((obs, anterior, atual) -> mensagem.setText(""));
+        colunaId.setCellValueFactory(
+                new PropertyValueFactory<>("id"));
+
+        colunaNome.setCellValueFactory(
+                new PropertyValueFactory<>("nome"));
+
+        colunaEmail.setCellValueFactory(
+                new PropertyValueFactory<>("email"));
+
+        colunaCpf.setCellValueFactory(
+                new PropertyValueFactory<>("cpf"));
+
+        tabelaAdotantes.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((obs, anterior, atual) ->
+                        mensagem.setText(""));
 
         carregarAdotantes();
     }
@@ -51,31 +66,40 @@ public class TelaListarAdotantesController {
     private void carregarAdotantes() {
         try {
             if (adotanteServico != null) {
-                ObservableList<Adotante> lista = FXCollections.observableArrayList(adotanteServico.listarTodos());
+                ObservableList<Adotante> lista =
+                        FXCollections.observableArrayList(
+                                adotanteServico.listarTodos());
+
                 tabelaAdotantes.setItems(lista);
             }
         } catch (Exception e) {
-            if (mensagem != null) {
-                mensagem.setText("Erro ao carregar adotantes: " + e.getMessage());
-            }
+            mensagem.setText(
+                    "Erro ao carregar adotantes: " + e.getMessage());
         }
     }
 
     @FXML
     private void abrirHistoricoAdotante() {
-        Adotante selecionado = tabelaAdotantes.getSelectionModel().getSelectedItem();
+
+        Adotante selecionado = tabelaAdotantes
+                .getSelectionModel()
+                .getSelectedItem();
+
         if (selecionado != null) {
-            if (mensagem != null) mensagem.setText("");
-            this.navegador.ir("TelaHistoricoAdotante.fxml");
+
+            mensagem.setText("");
+
+            // Envia o adotante selecionado para a próxima tela.
+            navegador.ir("TelaHistoricoAdotante.fxml", selecionado);
+
         } else {
-            if (mensagem != null) {
-                mensagem.setText("Selecione um adotante na tabela.");
-            }
+            mensagem.setText("Selecione um adotante na tabela.");
         }
     }
 
     @FXML
     private void voltar() {
-        this.navegador.voltar();
+        navegador.voltar();
     }
 }
+
