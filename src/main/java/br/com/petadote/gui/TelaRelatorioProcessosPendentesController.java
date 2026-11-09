@@ -138,10 +138,16 @@ public class TelaRelatorioProcessosPendentesController {
         java.util.Map<Long, ProcessoAdocao> porId = new java.util.LinkedHashMap<>();
 
         for (ProcessoAdocao p : processoServico.listarPendentesHa15Dias()) {
+            if (!AbrigoLogado.pode(p)) {
+                continue;
+            }
             porId.put(p.getId(), p);
         }
 
         for (ProcessoAdocao p : processoServico.listarTodos()) {
+            if (!AbrigoLogado.pode(p)) {
+                continue;
+            }
             if (p.getStatus() != StatusProcesso.APROVADO) {
                 continue;
             }

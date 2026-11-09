@@ -111,6 +111,7 @@ public class TelaRelatorioAdocoesConcluidasController {
         mensagem.setText("");
 
         List<ProcessoAdocao> concluidos = processoServico.listarConcluidos().stream()
+                .filter(AbrigoLogado::pode)
                 .filter(p -> de == null || (p.getDataConclusao() != null && !p.getDataConclusao().isBefore(de)))
                 .filter(p -> ate == null || (p.getDataConclusao() != null && !p.getDataConclusao().isAfter(ate)))
                 .sorted(Comparator.comparing(ProcessoAdocao::getDataConclusao,

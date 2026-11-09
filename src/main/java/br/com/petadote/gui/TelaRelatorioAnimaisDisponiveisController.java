@@ -86,6 +86,7 @@ public class TelaRelatorioAnimaisDisponiveisController {
 
     private void carregar() {
         List<Animal> disponiveis = animalServico.listarDisponiveis().stream()
+                .filter(AbrigoLogado::pode)
                 .sorted(Comparator.comparing(Animal::getNome, String.CASE_INSENSITIVE_ORDER))
                 .toList();
 
