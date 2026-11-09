@@ -94,6 +94,7 @@
          <children>
             <Hyperlink onAction="#voltar" text="Voltar" />
             <Region HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#exportarCsv" styleClass="botao-secundario" text="Exportar CSV" />
          </children>
       </HBox>
    </bottom>
