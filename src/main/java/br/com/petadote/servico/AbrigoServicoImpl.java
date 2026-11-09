@@ -1,3 +1,4 @@
+
 package br.com.petadote.servico;
 
 import br.com.petadote.model.Animal;
@@ -5,12 +6,14 @@ import br.com.petadote.model.Abrigo;
 import br.com.petadote.model.StatusAbrigo;
 import br.com.petadote.repositorio.IRepositorio;
 import br.com.petadote.repositorio.AbrigoRepositorio;
+
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 public class AbrigoServicoImpl implements IAbrigoServico {
+
     private static final AbrigoServicoImpl INSTANCIA = new AbrigoServicoImpl();
 
     private final IRepositorio<Abrigo> repositorio = AbrigoRepositorio.getInstance();
@@ -27,14 +30,21 @@ public class AbrigoServicoImpl implements IAbrigoServico {
         if (abrigo.getNome() == null || abrigo.getNome().isBlank()) {
             throw new IllegalArgumentException("Nome do abrigo é obrigatório.");
         }
+
         if (abrigo.getCapacidade() <= 0) {
             throw new IllegalArgumentException("Capacidade deve ser maior que zero.");
         }
-        ValidadorAcesso.validar(abrigo.getEmail(), abrigo.getSenha(),
-                repositorio.listarTodos().stream().map(Abrigo::getEmail));
+
+        ValidadorAcesso.validar(
+                abrigo.getEmail(),
+                abrigo.getSenha(),
+                repositorio.listarTodos().stream().map(Abrigo::getEmail)
+        );
+
         // Todo cadastro novo entra como pedido pendente de aprovação
         abrigo.setStatus(StatusAbrigo.PENDENTE);
         abrigo.setDataPedido(LocalDate.now());
+
         return repositorio.salvar(abrigo);
     }
 
@@ -52,27 +62,44 @@ public class AbrigoServicoImpl implements IAbrigoServico {
     public Abrigo atualizar(Long id, String nome, String endereco, int capacidade) {
         Abrigo abrigo = repositorio.buscarPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Abrigo não encontrado."));
+
         abrigo.setNome(nome);
         abrigo.setEndereco(endereco);
         abrigo.setCapacidade(capacidade);
+
         return repositorio.salvar(abrigo);
     }
 
     @Override
     public boolean adicionarAnimal(Long idAbrigo, Animal animal) {
-        // Encontra o abrigo e aplica a regra REQ19 (capacidade + não duplicar vínculo)
-        return repositorio.buscarPorId(idAbrigo)
-                .map(abrigo -> abrigo.adicionarAnimal(animal))
-                .orElse(false);
+        Optional<Abrigo> resultado = repositorio.buscarPorId(idAbrigo);
+
+        if (resultado.isEmpty()) {
+            return false;
+        }
+
+        Abrigo abrigo = resultado.get();
+
+        boolean adicionado = abrigo.adicionarAnimal(animal);
+
+        if (!adicionado) {
+            return false;
+        }
+
+        repositorio.salvar(abrigo);
+
+        return true;
     }
 
     @Override
     public boolean excluir(Long id) {
         Optional<Abrigo> abrigo = repositorio.buscarPorId(id);
-        // REQ20: só exclui se existir E não tiver animais vinculados
+
+        // Só exclui se existir e não tiver animais vinculados
         if (abrigo.isEmpty() || !abrigo.get().podeExcluir()) {
             return false;
         }
+
         return repositorio.excluirPorId(id);
     }
 
@@ -88,17 +115,53 @@ public class AbrigoServicoImpl implements IAbrigoServico {
     public List<Abrigo> listarPendentes() {
         return repositorio.listarTodos().stream()
                 .filter(a -> a.getStatus() == StatusAbrigo.PENDENTE)
-                .sorted(Comparator.comparing(Abrigo::getDataPedido, Comparator.nullsLast(Comparator.naturalOrder())))
+                .sorted(Comparator.comparing(
+                        Abrigo::getDataPedido,
+                        Comparator.nullsLast(Comparator.naturalOrder())
+                ))
                 .toList();
     }
 
     @Override
     public boolean aprovar(Long id) {
-        return repositorio.buscarPorId(id).map(Abrigo::aprovar).orElse(false);
+        Optional<Abrigo> resultado = repositorio.buscarPorId(id);
+
+        if (resultado.isEmpty()) {
+            return false;
+        }
+
+        Abrigo abrigo = resultado.get();
+
+        boolean aprovado = abrigo.aprovar();
+
+        if (!aprovado) {
+            return false;
+        }
+
+        repositorio.salvar(abrigo);
+
+        return true;
     }
 
     @Override
     public boolean negar(Long id) {
-        return repositorio.buscarPorId(id).map(Abrigo::negar).orElse(false);
+        Optional<Abrigo> resultado = repositorio.buscarPorId(id);
+
+        if (resultado.isEmpty()) {
+            return false;
+        }
+
+        Abrigo abrigo = resultado.get();
+
+        boolean negado = abrigo.negar();
+
+        if (!negado) {
+            return false;
+        }
+
+        repositorio.salvar(abrigo);
+
+        return true;
     }
 }
+
