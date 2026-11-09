@@ -2,6 +2,11 @@ package br.com.petadote.model;
 
 import java.time.LocalDate;
 
+/**
+ * REQ09: visita de acompanhamento pós-adoção (composição dentro de ProcessoAdocao).
+ * REQ10: guarda o resultado (situação do animal e observações).
+ * REQ18: só visitas confirmadas/reagendadas pelo abrigo contam para o mínimo.
+ */
 public class Visita implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
     private Long id;

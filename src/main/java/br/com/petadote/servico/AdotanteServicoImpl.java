@@ -18,6 +18,7 @@ public class AdotanteServicoImpl implements IAdotanteServico {
         return INSTANCIA;
     }
 
+    // REQ04: cadastra o adotante (nome e CPF com 11 dígitos obrigatórios).
     @Override
     public Adotante cadastrar(Adotante adotante) {
         if (adotante.getNome() == null || adotante.getNome().isBlank()) {

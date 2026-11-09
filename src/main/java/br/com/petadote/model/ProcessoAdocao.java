@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Núcleo do processo de adoção (REQ06 a REQ10 e regras REQ14 a REQ18).
+ * Composições: lista de Avaliacao (REQ07) e lista de Visita (REQ09).
+ */
 public class ProcessoAdocao extends Entidade {
     private static final long serialVersionUID = 1L;
 
@@ -32,7 +36,7 @@ public class ProcessoAdocao extends Entidade {
         this();
         this.animal = animal;
         this.adotante = adotante;
-        this.status = StatusProcesso.EM_AVALIACAO;
+        this.status = StatusProcesso.EM_AVALIACAO; // REQ06: status inicial "Em Avaliação"
         this.dataAbertura = LocalDate.now();
     }
 
@@ -90,7 +94,10 @@ public class ProcessoAdocao extends Entidade {
         visitas.add(visita);
     }
 
-    /** REQ10: guarda uma resposta do adotante ao acompanhamento pós-adoção. */
+    /**
+     * Complementa o REQ10: guarda uma resposta do adotante ao acompanhamento
+     * pós-adoção (o resultado da visita em si fica em Visita.registrarResultado).
+     */
     public void registrarRespostaAcompanhamento(String resposta) {
         if (respostasAcompanhamento == null) {
             respostasAcompanhamento = new ArrayList<>();
@@ -123,7 +130,7 @@ public class ProcessoAdocao extends Entidade {
         }
         this.status = StatusProcesso.CONCLUIDO;
         this.dataConclusao = LocalDate.now();
-        this.animal.setStatus(StatusAnimal.ADOTADO);
+        this.animal.setStatus(StatusAnimal.ADOTADO); // REQ08
         return true;
     }
 

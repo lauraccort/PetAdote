@@ -16,6 +16,7 @@ import java.util.Optional;
 /**
  * Controller da TelaListarMeusProcessos.fxml (Meus processos).
  * Lista os processos do adotante logado e leva o selecionado para o parecer.
+ * REQ05: histórico de processos do adotante (visão do próprio adotante).
  */
 public class TelaListarMeusProcessosController {
 

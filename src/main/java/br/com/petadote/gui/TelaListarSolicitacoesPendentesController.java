@@ -14,7 +14,8 @@ import java.util.Comparator;
 
 /**
  * Controller da TelaListarSolicitacoesPendentes.fxml (Solicitações pendentes).
- * Lista os processos "Em avaliação", do mais antigo ao mais novo.
+ * Lista os processos "Em avaliação", do mais antigo ao mais novo,
+ * e leva o escolhido para a avaliação prévia (REQ07).
  */
 public class TelaListarSolicitacoesPendentesController {
 

@@ -108,6 +108,7 @@ public class TelaCadastroAnimalController {
             return;
         }
 
+        // REQ02: cria a subclasse correspondente à espécie escolhida
         Animal animal = switch (especie) {
             case CAO -> new Cao(nome, nascimento, raca);
             case GATO -> new Gato(nome, nascimento, raca);
@@ -122,6 +123,7 @@ public class TelaCadastroAnimalController {
         }
     }
 
+    /** REQ03: busca porte, peso e temperamento da raça na API, em segundo plano. */
     private void buscarInfoRacaECadastrar(Animal animal, String especie, String raca, Abrigo abrigo) {
         salvando = true;
         mensagem.setTextFill(Color.web("#555555"));

@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * Controller da TelaConsultarParecer.fxml (Parecer da adoção).
  * Mostra ao adotante o status do processo escolhido em "Meus processos"
- * e o parecer mais recente dado pelo abrigo.
+ * e o parecer mais recente dado pelo abrigo (consulta da avaliação do REQ07).
  */
 public class TelaConsultarParecerController {
 

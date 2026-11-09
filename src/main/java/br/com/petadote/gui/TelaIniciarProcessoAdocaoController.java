@@ -116,6 +116,8 @@ public class TelaIniciarProcessoAdocaoController {
             ProcessoAdocao processo = contexto.processoServico()
                     .iniciar(animal.getId(), adotante.get().getId());
 
+            // Apoio ao REQ06/REQ07: registra a justificativa pelo serviço,
+            // garantindo que ela seja persistida.
             contexto.processoServico().registrarJustificativa(
                     processo.getId(), motivo
             );

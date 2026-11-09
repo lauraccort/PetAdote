@@ -15,6 +15,8 @@ import javafx.scene.paint.Color;
 
 /**
  * Controller da TelaCadastro.fxml (Cadastro de Adotante ou Abrigo).
+ * REQ04: cadastro de adotante (nome, CPF, endereço, animais que já possui).
+ * REQ01: cadastro de abrigo (nome, endereço, capacidade).
  */
 public class TelaCadastroController {
 
@@ -78,7 +80,7 @@ public class TelaCadastroController {
             if (!senha.equals(campoConfirmarSenha.getText())) {
                 throw new IllegalArgumentException("As senhas não conferem.");
             }
-            if (ADOTANTE.equals(campoPerfil.getValue())) {
+            if (ADOTANTE.equals(campoPerfil.getValue())) { // REQ04
                 int quantAnimais = lerNumero(campoQuantAnimais, "Animais que já possui", 0);
                 Adotante novo = new Adotante(
                         campoNome.getText().trim(), campoCpf.getText().trim(),
@@ -87,7 +89,7 @@ public class TelaCadastroController {
                 novo.setSenha(senha);
                 Adotante adotante = adotanteServico.cadastrar(novo);
                 sucesso("Adotante cadastrado: " + adotante.getNome() + " (id " + adotante.getId() + ").", true);
-            } else {
+            } else { // REQ01
                 int capacidade = lerNumero(campoCapacidade, "Capacidade de animais", null);
                 Abrigo novo = new Abrigo(campoNome.getText().trim(), campoEndereco.getText().trim(), capacidade);
                 novo.setEmail(email);

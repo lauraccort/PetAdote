@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
+/** REQ12: relatório de adoções concluídas por período, exportável em CSV. */
 public class TelaRelatorioAdocoesConcluidasController {
 
     private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -147,7 +148,7 @@ public class TelaRelatorioAdocoesConcluidasController {
         });
     }
 
-    /** REQ12: exporta em CSV o que a tabela mostra, já filtrado por período. */
+    /** REQ12: exporta o relatório (já filtrado pelo período) em CSV. */
     @FXML
     private void exportarCsv() {
         if (tabela.getItems().isEmpty()) {
@@ -180,7 +181,7 @@ public class TelaRelatorioAdocoesConcluidasController {
     }
 
     /**
-     * Monta o CSV com o que a tabela mostra no período selecionado.
+     * Monta o CSV com o que a tabela mostra agora (já filtrado pelo período).
      */
     private String montarCsv() {
         StringBuilder csv = new StringBuilder("\uFEFF"); // BOM: o Excel abre os acentos certos

@@ -23,6 +23,7 @@ import java.util.function.Function;
 /**
  * Controller da TelaListarAnimaisAbrigo.fxml (Animais do abrigo).
  * Lista os animais com filtros por abrigo, espécie, status e busca por nome.
+ * Com o filtro de status "Disponível" atende também à consulta do REQ11.
  */
 public class TelaListarAnimaisAbrigoController {
 

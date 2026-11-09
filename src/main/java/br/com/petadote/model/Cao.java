@@ -2,6 +2,10 @@ package br.com.petadote.model;
 
 import java.time.LocalDate;
 
+/**
+ * REQ02: subclasse de Animal com atributo próprio (raça).
+ * REQ03: infoRaca guarda porte, peso e temperamento vindos da TheDogAPI.
+ */
 public class Cao extends Animal {
     private static final long serialVersionUID = 1L;
 

@@ -56,6 +56,7 @@ public class TelaFinalizarProcessoAdocaoController {
 
         String observacoes = campoObservacoes.getText().trim();
         processo.setObservacaoFinal(observacoes.isEmpty() ? null : observacoes);
+        // REQ08: conclui o processo e o animal passa a "Adotado"
         if (!processoServico.concluir(processo.getId())) {
             erro("Não foi possível concluir este processo.");
             return;

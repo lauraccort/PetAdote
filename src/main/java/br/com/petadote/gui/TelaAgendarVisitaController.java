@@ -18,6 +18,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+/**
+ * REQ09: o adotante pede visitas de acompanhamento para um processo aprovado.
+ * REQ18: limita a data aos próximos 90 dias; cada pedido precisa da aprovação do abrigo.
+ */
 public class TelaAgendarVisitaController {
 
     private static final DateTimeFormatter FORMATO =

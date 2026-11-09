@@ -2,6 +2,10 @@ package br.com.petadote.model;
 
 import java.time.LocalDate;
 
+/**
+ * REQ02: superclasse da herança Cão / Gato / Outra espécie.
+ * Cada animal fica vinculado a um abrigo (atributo abrigo).
+ */
 public abstract class Animal extends Entidade {
     private static final long serialVersionUID = 1L;
 
@@ -21,7 +25,8 @@ public abstract class Animal extends Entidade {
     }
 
     /**
-     * REQ14: só pode iniciar processo se estiver DISPONIVEL.
+     * REQ14: só pode iniciar processo se estiver DISPONIVEL
+     * (bloqueia animal ADOTADO ou com outro processo EM_AVALIACAO).
      * O status EM_AVALIACAO já impede novo processo concorrente
      * e ADOTADO impede reabertura.
      */

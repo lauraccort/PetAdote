@@ -23,6 +23,7 @@ public interface IProcessoAdocaoServico {
     // REQ05
     List<ProcessoAdocao> listarPorAdotante(Long idAdotante);
 
+    // REQ12
     List<ProcessoAdocao> listarConcluidos();
 
     // REQ13
@@ -42,24 +43,24 @@ public interface IProcessoAdocaoServico {
     // REQ08, REQ15, REQ17 e REQ18
     boolean concluir(Long idProcesso);
 
-    // Registra uma justificativa para o processo.
+    // Apoio ao REQ06/REQ07: justificativa do adotante, lida na avaliação prévia.
     void registrarJustificativa(Long idProcesso, String justificativa);
 
-    // Confirma uma visita agendada.
+    // REQ09/REQ18: confirma uma visita agendada (passa a contar para o mínimo).
     boolean confirmarVisita(
             Long idProcesso,
             Long idVisita,
             String observacao
     );
 
-    // REQ18: cancela uma visita respeitando a quantidade mínima exigida.
+    // REQ09: cancela uma visita; ela deixa de contar para o mínimo do REQ18.
     boolean cancelarVisita(
             Long idProcesso,
             Long idVisita,
             String observacao
     );
 
-    // REQ18: reagenda uma visita respeitando a quantidade mínima exigida.
+    // REQ09: reagenda uma visita; ela continua contando para o mínimo do REQ18.
     boolean reagendarVisita(
             Long idProcesso,
             Long idVisita,

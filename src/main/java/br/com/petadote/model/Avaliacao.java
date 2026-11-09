@@ -2,6 +2,10 @@ package br.com.petadote.model;
 
 import java.time.LocalDate;
 
+/**
+ * REQ07: avaliação prévia (composição dentro de ProcessoAdocao), com o
+ * parecer do responsável do abrigo. Usada pelo REQ15 (parecer favorável).
+ */
 public class Avaliacao implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
     private LocalDate data;
