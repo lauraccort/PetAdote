@@ -47,8 +47,12 @@ public class Abrigo extends Entidade {
         return true;
     }
 
+    /**
+     * REQ19: animais adotados continuam ligados ao abrigo (histórico e
+     * acompanhamento pós-adoção), mas já saíram e não ocupam vaga.
+     */
     public boolean temVaga() {
-        return animais.size() < capacidade;
+        return getQuantidadeAnimais() < capacidade;
     }
 
     /**
@@ -78,14 +82,17 @@ public class Abrigo extends Entidade {
 
     /**
      * REQ20: abrigo só pode ser excluído se não possuir
-     * animais vinculados.
+     * animais vinculados (os já adotados não contam).
      */
     public boolean podeExcluir() {
-        return animais.isEmpty();
+        return getQuantidadeAnimais() == 0;
     }
 
+    /** Animais que ainda estão no abrigo (todos, menos os adotados). */
     public int getQuantidadeAnimais() {
-        return animais.size();
+        return (int) animais.stream()
+                .filter(a -> a.getStatus() != StatusAnimal.ADOTADO)
+                .count();
     }
 
     public List<Animal> getAnimais() {

@@ -227,13 +227,7 @@ public class TelaConfirmarAgendamentoVisitaController {
         return VisitaDoProcesso.de(processoServico.listarTodos())
                 .filter(vp -> vp.visita().getId() != null
                         && vp.visita().getId().equals(id))
-                .filter(vp -> Contexto.get().abrigoLogado()
-                        .map(a -> vp.processo().getAnimal() != null
-                                && vp.processo().getAnimal().getAbrigo() != null
-                                && a.getId().equals(
-                                vp.processo().getAnimal().getAbrigo().getId()
-                        ))
-                        .orElse(true))
+                .filter(AbrigoLogado::pode)
                 .findFirst();
     }
 

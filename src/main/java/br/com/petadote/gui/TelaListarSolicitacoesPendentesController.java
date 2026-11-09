@@ -46,6 +46,7 @@ public class TelaListarSolicitacoesPendentesController {
         tabelaSolicitacoes.setItems(FXCollections.observableArrayList(
                 processoServico.listarTodos().stream()
                         .filter(p -> p.getStatus() == StatusProcesso.EM_AVALIACAO)
+                        .filter(AbrigoLogado::pode)
                         .sorted(Comparator.comparing(ProcessoAdocao::getDataAbertura,
                                 Comparator.nullsLast(Comparator.naturalOrder())))
                         .toList()));
@@ -58,14 +59,17 @@ public class TelaListarSolicitacoesPendentesController {
     @FXML
     private void abrirHistoricoAdotante() {
         if (temSelecao()) {
-            navegador.ir("TelaHistoricoAdotante.fxml");
+            // A tela de histórico espera o adotante da solicitação
+            navegador.ir("TelaHistoricoAdotante.fxml",
+                    tabelaSolicitacoes.getSelectionModel().getSelectedItem().getAdotante());
         }
     }
 
     @FXML
     private void abrirAvaliarProcessoAdocao() {
         if (temSelecao()) {
-            navegador.ir("TelaAvaliarProcessoAdocao.fxml");
+            navegador.ir("TelaAvaliarProcessoAdocao.fxml",
+                    tabelaSolicitacoes.getSelectionModel().getSelectedItem());
         }
     }
 

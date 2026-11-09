@@ -64,6 +64,7 @@ public class TelaListarAnimaisAbrigoController {
 
         filtroAbrigo.getItems().setAll(abrigoServico.listarTodos().stream()
                 .filter(a -> a.getStatus() == StatusAbrigo.APROVADO)
+                .filter(AbrigoLogado::pode)
                 .sorted(Comparator.comparing(Abrigo::getNome))
                 .toList());
         filtroAbrigo.setConverter(conversor(Abrigo::getNome));
@@ -129,6 +130,7 @@ public class TelaListarAnimaisAbrigoController {
         String busca = campoBusca.getText().trim().toLowerCase();
 
         tabelaAnimais.setItems(FXCollections.observableArrayList(animalServico.listarTodos().stream()
+                .filter(AbrigoLogado::pode)
                 .filter(a -> abrigo == null || a.getAbrigo() == abrigo)
                 .filter(a -> especie == null || especie.equals(TextoAnimal.grupoEspecie(a)))
                 .filter(a -> status == null || a.getStatus() == status)

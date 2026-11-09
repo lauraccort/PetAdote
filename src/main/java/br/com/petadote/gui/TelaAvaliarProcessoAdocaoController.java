@@ -45,6 +45,9 @@ public class TelaAvaliarProcessoAdocaoController {
         Combos.mostrarDicaQuandoVazio(campoStatusAvaliacao);
         // Mostra de quem é o processo enquanto o ID é digitado
         campoIdProcesso.textProperty().addListener((obs, anterior, texto) -> mostrarInfo());
+        // Vindo de "Solicitações pendentes", já preenche o processo escolhido
+        navegador.selecionado(ProcessoAdocao.class)
+                .ifPresent(p -> campoIdProcesso.setText(String.valueOf(p.getId())));
         mostrarInfo();
     }
 
@@ -114,7 +117,8 @@ public class TelaAvaliarProcessoAdocaoController {
 
     private Optional<ProcessoAdocao> buscarProcesso() {
         try {
-            return processoServico.buscarPorId(Long.parseLong(campoIdProcesso.getText().trim()));
+            return processoServico.buscarPorId(Long.parseLong(campoIdProcesso.getText().trim()))
+                    .filter(AbrigoLogado::pode);
         } catch (NumberFormatException e) {
             return Optional.empty();
         }

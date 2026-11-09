@@ -105,6 +105,7 @@ public class TelaAcompanharPosAdocaoController {
                 processoServico.listarTodos().stream()
                         .filter(p -> p.getStatus() == StatusProcesso.APROVADO
                                 || p.getStatus() == StatusProcesso.CONCLUIDO)
+                        .filter(AbrigoLogado::pode)
                         .toList()));
     }
 

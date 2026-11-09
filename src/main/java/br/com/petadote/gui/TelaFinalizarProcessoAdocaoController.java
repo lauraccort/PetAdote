@@ -122,7 +122,8 @@ public class TelaFinalizarProcessoAdocaoController {
 
     private Optional<ProcessoAdocao> buscarProcesso() {
         try {
-            return processoServico.buscarPorId(Long.parseLong(campoIdProcesso.getText().trim()));
+            return processoServico.buscarPorId(Long.parseLong(campoIdProcesso.getText().trim()))
+                    .filter(AbrigoLogado::pode);
         } catch (NumberFormatException e) {
             return Optional.empty();
         }

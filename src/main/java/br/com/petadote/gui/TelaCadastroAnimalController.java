@@ -193,8 +193,12 @@ public class TelaCadastroAnimalController {
     private void carregarAbrigos() {
         campoAbrigo.getItems().setAll(abrigoServico.listarTodos().stream()
                 .filter(a -> a.getStatus() == StatusAbrigo.APROVADO)
+                .filter(AbrigoLogado::pode) // abrigo logado só cadastra no próprio abrigo
                 .sorted(Comparator.comparing(Abrigo::getNome))
                 .toList());
+        if (campoAbrigo.getItems().size() == 1) {
+            campoAbrigo.setValue(campoAbrigo.getItems().get(0));
+        }
     }
 
     private void limpar() {
