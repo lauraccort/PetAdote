@@ -143,6 +143,8 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
             );
         }
 
+        // ERRO 6: gera um ID único, continuando a sequência
+        // das visitas já gravadas (vale também após reiniciar).
         visita.setId(proximoIdVisita());
 
         processo.agendarVisita(visita);
@@ -250,22 +252,6 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
     }
 
     // Localiza uma visita pelo identificador dentro do processo.
-    private Visita localizarVisita(ProcessoAdocao processo, Long idVisita) {
-
-        if (idVisita == null) {
-            return null;
-        }
-
-        for (Visita visita : processo.getVisitas()) {
-            if (idVisita.equals(visita.getId())) {
-                return visita;
-            }
-        }
-
-        return null;
-    }
-
-    // REQ11: confirma uma visita previamente agendada.
     @Override
     public boolean confirmarVisita(
             Long idProcesso, Long idVisita, String observacao) {
@@ -291,6 +277,22 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         }
 
         return confirmou;
+    }
+
+    // Localiza uma visita pelo identificador dentro do processo.
+    private Visita localizarVisita(ProcessoAdocao processo, Long idVisita) {
+
+        if (idVisita == null) {
+            return null;
+        }
+
+        for (Visita visita : processo.getVisitas()) {
+            if (idVisita.equals(visita.getId())) {
+                return visita;
+            }
+        }
+
+        return null;
     }
 
     // REQ11: cancela uma visita agendada.
@@ -381,3 +383,4 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         processoRepositorio.salvar(processo);
     }
 }
+
