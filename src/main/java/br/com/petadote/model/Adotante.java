@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class Adotante extends Entidade {
+    private static final long serialVersionUID = 1L;
+
     private String nome;
     private String cpf;
     private String endereco;

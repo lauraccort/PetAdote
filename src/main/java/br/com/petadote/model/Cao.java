@@ -3,6 +3,8 @@ package br.com.petadote.model;
 import java.time.LocalDate;
 
 public class Cao extends Animal {
+    private static final long serialVersionUID = 1L;
+
     private String raca;
     private InfoRaca infoRaca;
 

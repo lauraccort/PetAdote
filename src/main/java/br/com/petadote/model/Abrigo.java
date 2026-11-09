@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class Abrigo extends Entidade {
+    private static final long serialVersionUID = 1L;
+
     private String nome;
     private String endereco;
     private int capacidade;

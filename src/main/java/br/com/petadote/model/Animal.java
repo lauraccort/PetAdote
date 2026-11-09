@@ -3,6 +3,8 @@ package br.com.petadote.model;
 import java.time.LocalDate;
 
 public abstract class Animal extends Entidade {
+    private static final long serialVersionUID = 1L;
+
     private String nome;
     private LocalDate dataNascimento;
     private StatusAnimal status;
