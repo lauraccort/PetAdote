@@ -1,3 +1,4 @@
+
 package br.com.petadote.model;
 
 import java.time.LocalDate;
@@ -25,12 +26,11 @@ public abstract class Animal extends Entidade {
     }
 
     /**
-     * REQ14: só pode iniciar processo se estiver DISPONIVEL
-     * (bloqueia animal ADOTADO ou com outro processo EM_AVALIACAO).
-     * O status EM_AVALIACAO já impede novo processo concorrente
-     * e ADOTADO impede reabertura.
+     * REQ14: só pode iniciar processo se estiver DISPONIVEL.
      */
-    public boolean podeIniciarProcesso() { return status == StatusAnimal.DISPONIVEL; }
+    public boolean podeIniciarProcesso() {
+        return status == StatusAnimal.DISPONIVEL;
+    }
 
     /**
      * REQ17: bloqueia conclusão de adoção de animal
@@ -38,6 +38,36 @@ public abstract class Animal extends Entidade {
      */
     public boolean podeConcluirAdocao() {
         return status != StatusAnimal.EM_TRATAMENTO_VETERINARIO;
+    }
+
+    /**
+     * Envia animais disponíveis ou em avaliação
+     * para tratamento veterinário.
+     */
+    public boolean enviarParaTratamento() {
+        if (status != StatusAnimal.DISPONIVEL
+                && status != StatusAnimal.EM_AVALIACAO) {
+            return false;
+        }
+
+        status = StatusAnimal.EM_TRATAMENTO_VETERINARIO;
+        return true;
+    }
+
+    /**
+     * Após a alta, o animal volta a ficar disponível
+     * ou em avaliação, caso tenha processo ativo.
+     */
+    public boolean receberAlta(boolean temProcessoAtivo) {
+        if (status != StatusAnimal.EM_TRATAMENTO_VETERINARIO) {
+            return false;
+        }
+
+        status = temProcessoAtivo
+                ? StatusAnimal.EM_AVALIACAO
+                : StatusAnimal.DISPONIVEL;
+
+        return true;
     }
 
     public String getNome() {
@@ -72,3 +102,4 @@ public abstract class Animal extends Entidade {
         this.abrigo = abrigo;
     }
 }
+

@@ -2,17 +2,22 @@ package br.com.petadote.servico;
 
 import br.com.petadote.model.Animal;
 import br.com.petadote.model.StatusAnimal;
+import br.com.petadote.model.StatusProcesso;
 import br.com.petadote.repositorio.IRepositorio;
 import br.com.petadote.repositorio.AnimalRepositorio;
+import br.com.petadote.repositorio.ProcessoAdocaoRepositorio;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AnimalServicoImpl implements IAnimalServico {
+
     private static final AnimalServicoImpl INSTANCIA = new AnimalServicoImpl();
 
-    private final IRepositorio<Animal> repositorio = AnimalRepositorio.getInstance();
+    private final IRepositorio<Animal> repositorio =
+            AnimalRepositorio.getInstance();
 
     private AnimalServicoImpl() {
     }
@@ -21,16 +26,20 @@ public class AnimalServicoImpl implements IAnimalServico {
         return INSTANCIA;
     }
 
-    // REQ02: cadastra o animal (Cão, Gato ou Outra espécie); o vínculo com
-    // o abrigo é feito em AbrigoServicoImpl.adicionarAnimal.
+    // REQ02: cadastra o animal (Cão, Gato ou Outra espécie);
+    // o vínculo com o abrigo é feito em AbrigoServicoImpl.adicionarAnimal.
     @Override
     public Animal cadastrar(Animal animal) {
         if (animal.getNome() == null || animal.getNome().isBlank()) {
             throw new IllegalArgumentException("Nome do animal é obrigatório.");
         }
-        if (animal.getDataNascimento() != null && animal.getDataNascimento().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Data de nascimento não pode ser futura.");
+
+        if (animal.getDataNascimento() != null
+                && animal.getDataNascimento().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException(
+                    "Data de nascimento não pode ser futura.");
         }
+
         return repositorio.salvar(animal);
     }
 
@@ -55,20 +64,81 @@ public class AnimalServicoImpl implements IAnimalServico {
     @Override
     public Animal atualizar(Long id, String nome, LocalDate dataNascimento) {
         Animal animal = repositorio.buscarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Animal não encontrado."));
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Animal não encontrado."));
+
         animal.setNome(nome);
         animal.setDataNascimento(dataNascimento);
+
         return repositorio.salvar(animal);
     }
 
     @Override
     public boolean excluir(Long id) {
         Optional<Animal> animal = repositorio.buscarPorId(id);
+
         if (animal.isEmpty()
                 || animal.get().getStatus() != StatusAnimal.DISPONIVEL
                 || animal.get().getAbrigo() != null) {
             return false;
         }
+
         return repositorio.excluirPorId(id);
+    }
+
+    /**
+     * REQ18: envia um animal disponível ou em avaliação
+     * para tratamento veterinário.
+     */
+    @Override
+    public boolean enviarParaTratamento(Long id) {
+        Optional<Animal> resultado = repositorio.buscarPorId(id);
+
+        if (resultado.isEmpty()) {
+            return false;
+        }
+
+        Animal animal = resultado.get();
+
+        if (!animal.enviarParaTratamento()) {
+            return false;
+        }
+
+        repositorio.salvar(animal);
+        return true;
+    }
+
+    /**
+     * REQ18: registra a alta do tratamento veterinário.
+     * Se houver processo ativo, o animal retorna para avaliação.
+     * Caso contrário, retorna para disponível.
+     */
+    @Override
+    public boolean receberAlta(Long id) {
+        Optional<Animal> resultado = repositorio.buscarPorId(id);
+
+        if (resultado.isEmpty()) {
+            return false;
+        }
+
+        Animal animal = resultado.get();
+
+        boolean temProcessoAtivo =
+                ProcessoAdocaoRepositorio.getInstance()
+                        .listarTodos()
+                        .stream()
+                        .anyMatch(processo ->
+                                processo.getAnimal() != null
+                                        && id.equals(processo.getAnimal().getId())
+                                        && (processo.getStatus() == StatusProcesso.EM_AVALIACAO
+                                        || processo.getStatus() == StatusProcesso.APROVADO)
+                        );
+
+        if (!animal.receberAlta(temProcessoAtivo)) {
+            return false;
+        }
+
+        repositorio.salvar(animal);
+        return true;
     }
 }

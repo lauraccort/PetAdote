@@ -1,3 +1,4 @@
+
 package br.com.petadote.model;
 
 import java.time.LocalDate;
@@ -24,6 +25,7 @@ public class ProcessoAdocao extends Entidade {
     private String justificativaAdotante;
     private List<Visita> visitas;
     private List<Avaliacao> avaliacoes;
+
     // Respostas do adotante ao acompanhamento (pode vir null de um .dat antigo)
     private List<String> respostasAcompanhamento;
 
@@ -36,7 +38,7 @@ public class ProcessoAdocao extends Entidade {
         this();
         this.animal = animal;
         this.adotante = adotante;
-        this.status = StatusProcesso.EM_AVALIACAO; // REQ06: status inicial "Em Avaliação"
+        this.status = StatusProcesso.EM_AVALIACAO;
         this.dataAbertura = LocalDate.now();
     }
 
@@ -49,9 +51,11 @@ public class ProcessoAdocao extends Entidade {
         if (!animal.podeIniciarProcesso()) {
             return false;
         }
+
         if (!adotante.podeIniciarNovoProcesso()) {
             return false;
         }
+
         animal.setStatus(StatusAnimal.EM_AVALIACAO);
         adotante.adicionarProcesso(this);
         return true;
@@ -72,20 +76,29 @@ public class ProcessoAdocao extends Entidade {
         if (status != StatusProcesso.EM_AVALIACAO || !avaliacaoFavoravel()) {
             return false;
         }
+
         this.status = StatusProcesso.APROVADO;
         return true;
     }
 
     /**
-     * Nega o processo após avaliação desfavorável: o animal volta a
-     * ficar disponível para outros adotantes.
+     * REQ06 e REQ18: nega o processo após avaliação desfavorável.
+     * O animal só volta a ficar disponível se ainda estiver
+     * em avaliação. Se estiver em tratamento veterinário,
+     * seu status é preservado.
      */
     public boolean negarProcesso() {
         if (status != StatusProcesso.EM_AVALIACAO) {
             return false;
         }
+
         this.status = StatusProcesso.NEGADO;
-        this.animal.setStatus(StatusAnimal.DISPONIVEL);
+
+        // REQ18: preserva o tratamento veterinário do animal.
+        if (animal.getStatus() == StatusAnimal.EM_AVALIACAO) {
+            animal.setStatus(StatusAnimal.DISPONIVEL);
+        }
+
         return true;
     }
 
@@ -102,6 +115,7 @@ public class ProcessoAdocao extends Entidade {
         if (respostasAcompanhamento == null) {
             respostasAcompanhamento = new ArrayList<>();
         }
+
         respostasAcompanhamento.add(resposta);
     }
 
@@ -119,18 +133,23 @@ public class ProcessoAdocao extends Entidade {
         if (status != StatusProcesso.APROVADO) {
             return false;
         }
+
         if (!avaliacaoFavoravel()) {
             return false; // REQ15
         }
+
         if (!animal.podeConcluirAdocao()) {
             return false; // REQ17
         }
+
         if (!temVisitasSuficientes()) {
             return false; // REQ18
         }
+
         this.status = StatusProcesso.CONCLUIDO;
         this.dataConclusao = LocalDate.now();
         this.animal.setStatus(StatusAnimal.ADOTADO); // REQ08
+
         return true;
     }
 
