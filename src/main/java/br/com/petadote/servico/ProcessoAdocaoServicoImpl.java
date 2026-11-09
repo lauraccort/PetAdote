@@ -220,7 +220,6 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         return concluido;
     }
 
-    // REQ12: registra a justificativa apresentada pelo adotante.
     @Override
     public void registrarJustificativa(Long idProcesso, String justificativa) {
 

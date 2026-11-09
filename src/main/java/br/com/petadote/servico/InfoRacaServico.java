@@ -102,7 +102,7 @@ public class InfoRacaServico {
         return Optional.of(new InfoRaca(porte, peso, temperamento));
     }
 
-    /** "29 - 36" vira 32,5; "6" vira 6; texto sem número vira 0. */
+    /** Calcula a média da raça para estimar: "29 - 36" vira 32,5; "6" vira 6; texto sem número vira 0. */
     private static double pesoMedio(String texto) {
         if (texto == null) {
             return 0;

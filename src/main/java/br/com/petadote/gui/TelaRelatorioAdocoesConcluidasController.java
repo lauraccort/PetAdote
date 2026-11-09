@@ -147,6 +147,7 @@ public class TelaRelatorioAdocoesConcluidasController {
         });
     }
 
+    /** REQ12: exporta em CSV o que a tabela mostra, já filtrado por período. */
     @FXML
     private void exportarCsv() {
         if (tabela.getItems().isEmpty()) {
@@ -179,7 +180,7 @@ public class TelaRelatorioAdocoesConcluidasController {
     }
 
     /**
-     * Monta o CSV com o que a tabela mostra agora (já filtrado pelo período).
+     * Monta o CSV com o que a tabela mostra no período selecionado.
      */
     private String montarCsv() {
         StringBuilder csv = new StringBuilder("\uFEFF"); // BOM: o Excel abre os acentos certos
