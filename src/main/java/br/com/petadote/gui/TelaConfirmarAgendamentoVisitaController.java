@@ -18,6 +18,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+/**
+ * REQ09: o abrigo confirma, reagenda ou cancela a visita pedida pelo adotante.
+ * Só visitas confirmadas/reagendadas contam para o mínimo do REQ18.
+ */
 public class TelaConfirmarAgendamentoVisitaController {
 
     private static final String CONFIRMADA = "Confirmada";

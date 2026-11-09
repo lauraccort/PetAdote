@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * REQ01: abrigo/lar temporário com nome, endereço e capacidade de animais.
+ * REQ19 (capacidade) e REQ20 (exclusão) são verificados nos métodos abaixo.
+ */
 public class Abrigo extends Entidade {
     private static final long serialVersionUID = 1L;
 

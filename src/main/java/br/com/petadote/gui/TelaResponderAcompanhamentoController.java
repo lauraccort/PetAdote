@@ -24,6 +24,7 @@ import java.util.Optional;
 
 /**
  * Controller da TelaResponderAcompanhamento.fxml (Responder acompanhamento).
+ * Complementa o acompanhamento pós-adoção (REQ09/REQ10) com o relato do adotante.
  * O adotante escolhe um dos seus processos aprovados/concluídos e conta como o
  * animal está se adaptando. A resposta fica guardada no processo e o abrigo a vê
  * em "Acompanhamento pós-adoção". Abaixo do formulário aparecem as respostas já enviadas.

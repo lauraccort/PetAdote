@@ -50,7 +50,7 @@ public class TelaDetalhesAnimalController {
                 + (animal.getDataNascimento() == null ? "" : " (nascido em " + animal.getDataNascimento().format(FORMATO) + ")"));
         infoExtra.setText(textoExtra(animal));
 
-        if (animal.getStatus() != StatusAnimal.DISPONIVEL) {
+        if (animal.getStatus() != StatusAnimal.DISPONIVEL) { // REQ14
             mensagem.setText(animal.getNome() + " não está disponível para adoção no momento ("
                     + animal.getStatus().getDescricao() + ").");
             btnIniciarProcesso.setDisable(true);

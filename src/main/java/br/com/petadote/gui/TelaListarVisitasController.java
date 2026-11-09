@@ -12,7 +12,8 @@ import java.util.Comparator;
 
 /**
  * Controller da TelaListarVisitas.fxml (Painel de visitas).
- * Lista as visitas de acompanhamento de todos os processos, por data.
+ * Lista as visitas de acompanhamento (REQ09) dos processos do abrigo, por data,
+ * e leva a escolhida para confirmação (REQ09) ou registro do resultado (REQ10).
  */
 public class TelaListarVisitasController {
 

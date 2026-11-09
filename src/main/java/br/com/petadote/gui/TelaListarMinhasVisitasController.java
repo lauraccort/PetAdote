@@ -14,7 +14,8 @@ import java.util.Optional;
 
 /**
  * Controller da TelaListarMinhasVisitas.fxml (Minhas visitas).
- * Lista as visitas de acompanhamento dos processos do adotante logado.
+ * Lista as visitas de acompanhamento (REQ09) dos processos do adotante logado
+ * e leva a escolhida para a consulta do resultado (REQ10).
  */
 public class TelaListarMinhasVisitasController {
 

@@ -16,6 +16,7 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import java.util.List;
 import java.util.Optional;
 
+/** REQ05: histórico de processos de adoção de um adotante (visão do abrigo). */
 public class TelaHistoricoAdotanteController {
 
     private final Navegador navegador;

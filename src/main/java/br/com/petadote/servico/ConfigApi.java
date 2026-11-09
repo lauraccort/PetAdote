@@ -6,7 +6,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
-/** Lê as chaves de API do arquivo api.properties (fora do Git) ou de variáveis de ambiente. */
+/**
+ * REQ03: lê as chaves da TheDogAPI/TheCatAPI do arquivo api.properties
+ * (fora do Git) ou de variáveis de ambiente.
+ */
 public class ConfigApi {
 
     private static final Path ARQUIVO = Path.of("api.properties");

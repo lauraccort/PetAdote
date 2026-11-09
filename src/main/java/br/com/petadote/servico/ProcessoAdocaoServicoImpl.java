@@ -83,6 +83,7 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
                 .collect(Collectors.toList());
     }
 
+    // REQ12: base do relatório de adoções concluídas.
     @Override
     public List<ProcessoAdocao> listarConcluidos() {
 
@@ -220,7 +221,8 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         return concluido;
     }
 
-    // REQ12: registra a justificativa apresentada pelo adotante.
+    // Apoio ao REQ06/REQ07: registra a justificativa do adotante
+    // (ambiente e motivação), lida pelo abrigo na avaliação prévia.
     @Override
     public void registrarJustificativa(Long idProcesso, String justificativa) {
 
@@ -251,7 +253,8 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
                 .orElse(0L) + 1;
     }
 
-    // Localiza uma visita pelo identificador dentro do processo.
+    // REQ09/REQ18: o abrigo aprova a visita pedida; só visitas aprovadas
+    // contam para o mínimo de 2 visitas em 90 dias.
     @Override
     public boolean confirmarVisita(
             Long idProcesso, Long idVisita, String observacao) {
@@ -295,7 +298,7 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         return null;
     }
 
-    // REQ11: cancela uma visita agendada.
+    // REQ09: cancela uma visita agendada (ela deixa de contar para o REQ18).
     @Override
     public boolean cancelarVisita(
             Long idProcesso, Long idVisita, String observacao) {
@@ -323,7 +326,7 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         return cancelou;
     }
 
-    // REQ11: altera a data de uma visita agendada.
+    // REQ09: altera a data de uma visita agendada (continua contando para o REQ18).
     @Override
     public boolean reagendarVisita(
             Long idProcesso,

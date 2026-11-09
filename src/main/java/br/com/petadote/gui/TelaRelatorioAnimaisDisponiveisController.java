@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
+/** REQ11: relatório de animais disponíveis, com colunas de abrigo e espécie. */
 public class TelaRelatorioAnimaisDisponiveisController {
 
     private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");

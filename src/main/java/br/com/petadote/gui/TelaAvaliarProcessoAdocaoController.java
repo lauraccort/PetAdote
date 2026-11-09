@@ -74,6 +74,7 @@ public class TelaAvaliarProcessoAdocaoController {
             return;
         }
 
+        // REQ07: registra a avaliação prévia antes de aprovar/negar o processo
         Parecer parecer = APROVADO.equals(decisao) ? Parecer.POSITIVO : Parecer.NEGATIVO;
         processoServico.registrarAvaliacao(processo.getId(),
                 new Avaliacao(LocalDate.now(), responsavel(processo), parecer, observacoes));

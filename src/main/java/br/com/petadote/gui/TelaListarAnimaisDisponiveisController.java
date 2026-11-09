@@ -13,6 +13,7 @@ import java.util.Comparator;
 /**
  * Controller da TelaListarAnimaisDisponiveis.fxml (Animais disponíveis para adoção).
  * Leva o animal selecionado para a tela de detalhes.
+ * Só mostra animais DISPONIVEIS, primeiro passo do bloqueio do REQ14.
  */
 public class TelaListarAnimaisDisponiveisController {
 

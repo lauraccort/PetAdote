@@ -25,6 +25,7 @@ public class AbrigoServicoImpl implements IAbrigoServico {
         return INSTANCIA;
     }
 
+    // REQ01: cadastra o abrigo (nome, endereço e capacidade obrigatórios).
     @Override
     public Abrigo cadastrar(Abrigo abrigo) {
         if (abrigo.getNome() == null || abrigo.getNome().isBlank()) {
@@ -70,6 +71,8 @@ public class AbrigoServicoImpl implements IAbrigoServico {
         return repositorio.salvar(abrigo);
     }
 
+    // REQ02: vincula o animal ao abrigo.
+    // REQ19: Abrigo.adicionarAnimal recusa se a capacidade já foi atingida.
     @Override
     public boolean adicionarAnimal(Long idAbrigo, Animal animal) {
         Optional<Abrigo> resultado = repositorio.buscarPorId(idAbrigo);
@@ -95,7 +98,7 @@ public class AbrigoServicoImpl implements IAbrigoServico {
     public boolean excluir(Long id) {
         Optional<Abrigo> abrigo = repositorio.buscarPorId(id);
 
-        // Só exclui se existir e não tiver animais vinculados
+        // REQ20: só exclui se existir e não tiver animais vinculados
         if (abrigo.isEmpty() || !abrigo.get().podeExcluir()) {
             return false;
         }

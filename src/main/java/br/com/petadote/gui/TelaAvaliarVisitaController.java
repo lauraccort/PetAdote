@@ -15,6 +15,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+/**
+ * REQ10: o abrigo registra o resultado da visita (situação do animal e observações).
+ * Também permite confirmar ou cancelar a visita (REQ09).
+ */
 public class TelaAvaliarVisitaController {
 
     private static final String REALIZADA = "Realizada";
@@ -127,7 +131,7 @@ public class TelaAvaliarVisitaController {
         String resultado;
 
         switch (status) {
-            case REALIZADA -> {
+            case REALIZADA -> { // REQ10
                 String situacao = campoSituacaoAnimal.getValue();
 
                 if (situacao == null) {

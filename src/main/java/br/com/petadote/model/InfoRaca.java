@@ -1,5 +1,6 @@
 package br.com.petadote.model;
 
+/** REQ03: porte, peso médio e temperamento da raça, obtidos da TheDogAPI/TheCatAPI. */
 public class InfoRaca implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
     private String porte;

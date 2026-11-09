@@ -21,6 +21,8 @@ public class AnimalServicoImpl implements IAnimalServico {
         return INSTANCIA;
     }
 
+    // REQ02: cadastra o animal (Cão, Gato ou Outra espécie); o vínculo com
+    // o abrigo é feito em AbrigoServicoImpl.adicionarAnimal.
     @Override
     public Animal cadastrar(Animal animal) {
         if (animal.getNome() == null || animal.getNome().isBlank()) {
@@ -42,6 +44,7 @@ public class AnimalServicoImpl implements IAnimalServico {
         return repositorio.listarTodos();
     }
 
+    // REQ11: base do relatório de animais disponíveis.
     @Override
     public List<Animal> listarDisponiveis() {
         return repositorio.listarTodos().stream()

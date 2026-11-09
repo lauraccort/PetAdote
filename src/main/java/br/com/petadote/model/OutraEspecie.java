@@ -2,6 +2,7 @@ package br.com.petadote.model;
 
 import java.time.LocalDate;
 
+/** REQ02: subclasse "Outro" de Animal, com atributo próprio (nome da espécie). */
 public class OutraEspecie extends Animal {
     private static final long serialVersionUID = 1L;
 

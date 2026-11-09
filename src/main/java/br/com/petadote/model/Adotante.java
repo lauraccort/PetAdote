@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * REQ04: adotante com nome, CPF, endereço e quantidade de animais que já possui.
+ * Também guarda o histórico de processos (REQ05) e o limite de ativos (REQ16).
+ */
 public class Adotante extends Entidade {
     private static final long serialVersionUID = 1L;
 
