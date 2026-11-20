@@ -3,7 +3,7 @@ package br.com.petadote.gui;
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.StatusProcesso;
 import br.com.petadote.model.Visita;
-import br.com.petadote.servico.IProcessoAdocaoServico;
+import br.com.petadote.servico.PetAdoteFachada;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -31,7 +31,7 @@ public class TelaAcompanharPosAdocaoController {
     private static final Color COR_SUCESSO = Color.web("#2e7d32");
 
     private final Navegador navegador;
-    private final IProcessoAdocaoServico processoServico;
+    private final PetAdoteFachada fachada;
 
     @FXML private TableView<ProcessoAdocao> tabelaProcessos;
     @FXML private TableColumn<ProcessoAdocao, String> colunaProcessoId;
@@ -53,9 +53,9 @@ public class TelaAcompanharPosAdocaoController {
     @FXML private Label situacaoMinimo;
     @FXML private Label mensagem;
 
-    public TelaAcompanharPosAdocaoController(Navegador navegador, IProcessoAdocaoServico processoServico) {
+    public TelaAcompanharPosAdocaoController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
-        this.processoServico = processoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -90,9 +90,9 @@ public class TelaAcompanharPosAdocaoController {
         LocalDate data = campoDataVisita.getValue();
         try {
             Visita visita = new Visita(data);
-            processoServico.agendarVisita(processo.getId(), visita);
+            fachada.agendarVisita(processo.getId(), visita);
             // Visita marcada pelo próprio abrigo já nasce aprovada
-            processoServico.confirmarVisita(processo.getId(), visita.getId(), null);
+            fachada.confirmarVisita(processo.getId(), visita.getId(), null);
             campoDataVisita.setValue(null);
             tabelaProcessos.refresh(); // atualiza a coluna "Visitas nos próx. 90 dias"
             mostrarVisitas(processo);
@@ -104,7 +104,7 @@ public class TelaAcompanharPosAdocaoController {
 
     private void atualizarProcessos() {
         tabelaProcessos.setItems(FXCollections.observableArrayList(
-                processoServico.listarTodos().stream()
+                fachada.listarProcessos().stream()
                         .filter(p -> p.getStatus() == StatusProcesso.APROVADO
                                 || p.getStatus() == StatusProcesso.CONCLUIDO)
                         .filter(AbrigoLogado::pode)

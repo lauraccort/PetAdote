@@ -1,6 +1,5 @@
 package br.com.petadote.gui;
 
-import br.com.petadote.servico.IProcessoAdocaoServico;
 import javafx.fxml.FXML;
 
 /**
@@ -11,7 +10,7 @@ public class TelaListarProcessosAdocaoController {
 
     private final Navegador navegador;
 
-    public TelaListarProcessosAdocaoController(Navegador navegador, IProcessoAdocaoServico processoServico) {
+    public TelaListarProcessosAdocaoController(Navegador navegador) {
         this.navegador = navegador;
     }
 

@@ -5,8 +5,7 @@ import br.com.petadote.model.Abrigo;
 import br.com.petadote.model.Animal;
 import br.com.petadote.model.StatusAbrigo;
 import br.com.petadote.model.StatusAnimal;
-import br.com.petadote.servico.IAbrigoServico;
-import br.com.petadote.servico.IAnimalServico;
+import br.com.petadote.servico.PetAdoteFachada;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -37,8 +36,7 @@ public class TelaListarAnimaisAbrigoController {
     private static final Color COR_INFO = Color.web("#4a2a1a");
 
     private final Navegador navegador;
-    private final IAnimalServico animalServico;
-    private final IAbrigoServico abrigoServico;
+    private final PetAdoteFachada fachada;
 
     @FXML private ComboBox<Abrigo> filtroAbrigo;
     @FXML private ComboBox<String> filtroEspecie;
@@ -57,12 +55,10 @@ public class TelaListarAnimaisAbrigoController {
 
     public TelaListarAnimaisAbrigoController(
             Navegador navegador,
-            IAnimalServico animalServico,
-            IAbrigoServico abrigoServico) {
+            PetAdoteFachada fachada) {
 
         this.navegador = navegador;
-        this.animalServico = animalServico;
-        this.abrigoServico = abrigoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -78,7 +74,7 @@ public class TelaListarAnimaisAbrigoController {
                 a -> a.getStatus().getDescricao());
 
         filtroAbrigo.getItems().setAll(
-                abrigoServico.listarTodos().stream()
+                fachada.listarAbrigos().stream()
                         .filter(a -> a.getStatus() == StatusAbrigo.APROVADO)
                         .filter(AbrigoLogado::pode)
                         .sorted(Comparator.comparing(Abrigo::getNome))
@@ -187,7 +183,7 @@ public class TelaListarAnimaisAbrigoController {
         }
 
         boolean sucesso =
-                animalServico.enviarParaTratamento(animal.getId());
+                fachada.enviarParaTratamento(animal.getId());
 
         if (sucesso) {
             filtrar();
@@ -220,7 +216,7 @@ public class TelaListarAnimaisAbrigoController {
         }
 
         boolean sucesso =
-                animalServico.receberAlta(animal.getId());
+                fachada.receberAlta(animal.getId());
 
         if (sucesso) {
             filtrar();
@@ -259,7 +255,7 @@ public class TelaListarAnimaisAbrigoController {
 
         tabelaAnimais.setItems(
                 FXCollections.observableArrayList(
-                        animalServico.listarTodos().stream()
+                        fachada.listarAnimais().stream()
                                 .filter(AbrigoLogado::pode)
                                 .filter(a -> abrigo == null
                                         || a.getAbrigo() == abrigo)

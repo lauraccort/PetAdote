@@ -51,7 +51,7 @@ public class TelaListarMeusProcessosController {
             return;
         }
         tabelaMeusProcessos.setItems(FXCollections.observableArrayList(
-                contexto.processoServico().listarPorAdotante(adotante.get().getId()).stream()
+                contexto.fachada().listarProcessosDoAdotante(adotante.get().getId()).stream()
                         .sorted(Comparator.comparing(ProcessoAdocao::getId).reversed()) // mais recente primeiro
                         .toList()));
         tabelaMeusProcessos.getSelectionModel().selectedItemProperty().addListener((obs, a, b) -> mensagem.setText(""));

@@ -4,7 +4,6 @@ import br.com.petadote.Contexto;
 import br.com.petadote.model.Abrigo;
 import br.com.petadote.model.Adotante;
 import br.com.petadote.model.StatusAbrigo;
-import br.com.petadote.servico.ContaAdministrador;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -76,7 +75,7 @@ public class TelaLoginController {
     }
 
     private boolean entrarComoAdotante(String email, String senha) {
-        Optional<Adotante> adotante = contexto.adotanteServico().autenticar(email, senha);
+        Optional<Adotante> adotante = contexto.fachada().autenticarAdotante(email, senha);
         if (adotante.isEmpty()) {
             credenciaisIncorretas(ADOTANTE);
             return false;
@@ -86,7 +85,7 @@ public class TelaLoginController {
     }
 
     private boolean entrarComoAbrigo(String email, String senha) {
-        Optional<Abrigo> abrigo = contexto.abrigoServico().autenticar(email, senha);
+        Optional<Abrigo> abrigo = contexto.fachada().autenticarAbrigo(email, senha);
         if (abrigo.isEmpty()) {
             credenciaisIncorretas(ABRIGO);
             return false;
@@ -103,7 +102,7 @@ public class TelaLoginController {
     }
 
     private boolean entrarComoAdministrador(String email, String senha) {
-        if (!ContaAdministrador.confere(email, senha)) {
+        if (!contexto.fachada().autenticarAdministrador(email, senha)) {
             credenciaisIncorretas(ADMINISTRADOR);
             return false;
         }

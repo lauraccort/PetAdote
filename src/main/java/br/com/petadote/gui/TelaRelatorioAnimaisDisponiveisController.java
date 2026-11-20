@@ -5,7 +5,7 @@ import br.com.petadote.model.Animal;
 import br.com.petadote.model.Cao;
 import br.com.petadote.model.Gato;
 import br.com.petadote.model.InfoRaca;
-import br.com.petadote.servico.IAnimalServico;
+import br.com.petadote.servico.PetAdoteFachada;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -27,7 +27,7 @@ public class TelaRelatorioAnimaisDisponiveisController {
     private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final Navegador navegador;
-    private final IAnimalServico animalServico;
+    private final PetAdoteFachada fachada;
 
     @FXML private TableView<Animal> tabela;
     @FXML private TableColumn<Animal, String> colId;
@@ -45,12 +45,12 @@ public class TelaRelatorioAnimaisDisponiveisController {
     @FXML private Label total;
 
     public TelaRelatorioAnimaisDisponiveisController(Navegador navegador) {
-        this(navegador, Contexto.get().animalServico());
+        this(navegador, Contexto.get().fachada());
     }
 
-    public TelaRelatorioAnimaisDisponiveisController(Navegador navegador, IAnimalServico animalServico) {
+    public TelaRelatorioAnimaisDisponiveisController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
-        this.animalServico = animalServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -86,7 +86,7 @@ public class TelaRelatorioAnimaisDisponiveisController {
     }
 
     private void carregar() {
-        List<Animal> disponiveis = animalServico.listarDisponiveis().stream()
+        List<Animal> disponiveis = fachada.listarAnimaisDisponiveis().stream()
                 .filter(AbrigoLogado::pode)
                 .sorted(Comparator.comparing(Animal::getNome, String.CASE_INSENSITIVE_ORDER))
                 .toList();

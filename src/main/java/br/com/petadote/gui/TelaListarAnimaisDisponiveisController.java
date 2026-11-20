@@ -1,7 +1,7 @@
 package br.com.petadote.gui;
 
 import br.com.petadote.model.Animal;
-import br.com.petadote.servico.IAnimalServico;
+import br.com.petadote.servico.PetAdoteFachada;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -18,7 +18,7 @@ import java.util.Comparator;
 public class TelaListarAnimaisDisponiveisController {
 
     private final Navegador navegador;
-    private final IAnimalServico animalServico;
+    private final PetAdoteFachada fachada;
 
     @FXML private TableView<Animal> tabelaAnimais;
     @FXML private TableColumn<Animal, String> colunaId;
@@ -27,9 +27,9 @@ public class TelaListarAnimaisDisponiveisController {
     @FXML private TableColumn<Animal, String> colunaIdade;
     @FXML private Label mensagem;
 
-    public TelaListarAnimaisDisponiveisController(Navegador navegador, IAnimalServico animalServico) {
+    public TelaListarAnimaisDisponiveisController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
-        this.animalServico = animalServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -39,7 +39,7 @@ public class TelaListarAnimaisDisponiveisController {
         colunaEspecie.setCellValueFactory(c -> texto(TextoAnimal.especieERaca(c.getValue())));
         colunaIdade.setCellValueFactory(c -> texto(TextoAnimal.idade(c.getValue().getDataNascimento())));
 
-        tabelaAnimais.setItems(FXCollections.observableArrayList(animalServico.listarDisponiveis().stream()
+        tabelaAnimais.setItems(FXCollections.observableArrayList(fachada.listarAnimaisDisponiveis().stream()
                 .sorted(Comparator.comparing(Animal::getNome, String.CASE_INSENSITIVE_ORDER))
                 .toList()));
         tabelaAnimais.getSelectionModel().selectedItemProperty().addListener((obs, a, b) -> mensagem.setText(""));

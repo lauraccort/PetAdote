@@ -3,7 +3,7 @@ package br.com.petadote.gui;
 import br.com.petadote.Contexto;
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.Visita;
-import br.com.petadote.servico.IProcessoAdocaoServico;
+import br.com.petadote.servico.PetAdoteFachada;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -30,7 +30,7 @@ public class TelaRelatorioAdocoesConcluidasController {
     private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final Navegador navegador;
-    private final IProcessoAdocaoServico processoServico;
+    private final PetAdoteFachada fachada;
 
     @FXML
     private DatePicker campoDe;
@@ -72,12 +72,12 @@ public class TelaRelatorioAdocoesConcluidasController {
     private Label mensagem;
 
     public TelaRelatorioAdocoesConcluidasController(Navegador navegador) {
-        this(navegador, Contexto.get().processoServico());
+        this(navegador, Contexto.get().fachada());
     }
 
-    public TelaRelatorioAdocoesConcluidasController(Navegador navegador, IProcessoAdocaoServico processoServico) {
+    public TelaRelatorioAdocoesConcluidasController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
-        this.processoServico = processoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -111,7 +111,7 @@ public class TelaRelatorioAdocoesConcluidasController {
         }
         mensagem.setText("");
 
-        List<ProcessoAdocao> concluidos = processoServico.listarConcluidos().stream()
+        List<ProcessoAdocao> concluidos = fachada.listarProcessosConcluidos().stream()
                 .filter(AbrigoLogado::pode)
                 .filter(p -> de == null || (p.getDataConclusao() != null && !p.getDataConclusao().isBefore(de)))
                 .filter(p -> ate == null || (p.getDataConclusao() != null && !p.getDataConclusao().isAfter(ate)))

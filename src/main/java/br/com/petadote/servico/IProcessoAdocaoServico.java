@@ -75,5 +75,6 @@ public interface IProcessoAdocaoServico {
             String situacao,
             String observacoes
     );
-}
 
+    void registrarRespostaAcompanhamento(Long idProcesso, String resposta);
+}

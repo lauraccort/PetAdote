@@ -6,7 +6,7 @@ import br.com.petadote.model.Animal;
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.StatusProcesso;
 import br.com.petadote.model.Visita;
-import br.com.petadote.servico.IProcessoAdocaoServico;
+import br.com.petadote.servico.PetAdoteFachada;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -31,8 +31,8 @@ public class TelaAgendarVisitaController {
 
     private final Navegador navegador;
 
-    private final IProcessoAdocaoServico processoServico =
-            Contexto.get().processoServico();
+    private final PetAdoteFachada fachada =
+            Contexto.get().fachada();
 
     @FXML
     private ComboBox<ProcessoAdocao> campoProcesso;
@@ -98,7 +98,7 @@ public class TelaAgendarVisitaController {
 
         // Processos aprovados do adotante logado que ainda não têm
         // pedidos de visita suficientes (contando os que aguardam o abrigo).
-        processoServico.listarPorAdotante(adotante.getId()).stream()
+        fachada.listarProcessosDoAdotante(adotante.getId()).stream()
 
                 .filter(Objects::nonNull)
 
@@ -158,7 +158,7 @@ public class TelaAgendarVisitaController {
 
             Visita nova = new Visita(data);
 
-            processoServico.agendarVisita(processo.getId(), nova);
+            fachada.agendarVisita(processo.getId(), nova);
 
             String sucesso = "Visita pedida para "
                     + data.format(FORMATO)

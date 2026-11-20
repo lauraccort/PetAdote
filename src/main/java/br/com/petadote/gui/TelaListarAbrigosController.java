@@ -2,7 +2,7 @@ package br.com.petadote.gui;
 
 import br.com.petadote.model.Abrigo;
 import br.com.petadote.model.StatusAbrigo;
-import br.com.petadote.servico.IAbrigoServico;
+import br.com.petadote.servico.PetAdoteFachada;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -19,7 +19,7 @@ import java.util.List;
 public class TelaListarAbrigosController {
 
     private final Navegador navegador;
-    private final IAbrigoServico abrigoServico;
+    private final PetAdoteFachada fachada;
 
     @FXML private TableView<Abrigo> tabela;
     @FXML private TableColumn<Abrigo, String> colId;
@@ -30,9 +30,9 @@ public class TelaListarAbrigosController {
     @FXML private TableColumn<Abrigo, String> colVagas;
     @FXML private Label total;
 
-    public TelaListarAbrigosController(Navegador navegador, IAbrigoServico abrigoServico) {
+    public TelaListarAbrigosController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
-        this.abrigoServico = abrigoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -44,12 +44,12 @@ public class TelaListarAbrigosController {
         colAnimais.setCellValueFactory(c -> texto(c.getValue().getQuantidadeAnimais()));
         colVagas.setCellValueFactory(c -> texto(c.getValue().getCapacidade() - c.getValue().getQuantidadeAnimais()));
 
-        List<Abrigo> aprovados = abrigoServico.listarTodos().stream()
+        List<Abrigo> aprovados = fachada.listarAbrigos().stream()
                 .filter(a -> a.getStatus() == StatusAbrigo.APROVADO)
                 .sorted(Comparator.comparing(Abrigo::getNome, String.CASE_INSENSITIVE_ORDER))
                 .toList();
         tabela.setItems(FXCollections.observableArrayList(aprovados));
-        int pendentes = abrigoServico.listarPendentes().size();
+        int pendentes = fachada.listarAbrigosPendentes().size();
         total.setText((aprovados.size() == 1 ? "1 abrigo aprovado" : aprovados.size() + " abrigos aprovados")
                 + (pendentes == 0 ? "" : "  ·  " + pendentes + (pendentes == 1 ? " pedido pendente" : " pedidos pendentes")));
     }

@@ -4,7 +4,7 @@ import br.com.petadote.model.Avaliacao;
 import br.com.petadote.model.Parecer;
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.StatusProcesso;
-import br.com.petadote.servico.IProcessoAdocaoServico;
+import br.com.petadote.servico.PetAdoteFachada;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -26,7 +26,7 @@ public class TelaAvaliarProcessoAdocaoController {
     private static final Color COR_SUCESSO = Color.web("#2e7d32");
 
     private final Navegador navegador;
-    private final IProcessoAdocaoServico processoServico;
+    private final PetAdoteFachada fachada;
 
     @FXML private TextField campoIdProcesso;
     @FXML private Label infoProcesso;
@@ -34,9 +34,9 @@ public class TelaAvaliarProcessoAdocaoController {
     @FXML private TextField campoObservacoes;
     @FXML private Label mensagem;
 
-    public TelaAvaliarProcessoAdocaoController(Navegador navegador, IProcessoAdocaoServico processoServico) {
+    public TelaAvaliarProcessoAdocaoController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
-        this.processoServico = processoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -76,11 +76,11 @@ public class TelaAvaliarProcessoAdocaoController {
 
         // REQ07: registra a avaliação prévia antes de aprovar/negar o processo
         Parecer parecer = APROVADO.equals(decisao) ? Parecer.POSITIVO : Parecer.NEGATIVO;
-        processoServico.registrarAvaliacao(processo.getId(),
+        fachada.registrarAvaliacao(processo.getId(),
                 new Avaliacao(LocalDate.now(), responsavel(processo), parecer, observacoes));
         boolean ok = parecer == Parecer.POSITIVO
-                ? processoServico.aprovar(processo.getId())
-                : processoServico.negar(processo.getId());
+                ? fachada.aprovarProcesso(processo.getId())
+                : fachada.negarProcesso(processo.getId());
         if (!ok) {
             erro("Não foi possível concluir a avaliação deste processo.");
             return;
@@ -118,7 +118,7 @@ public class TelaAvaliarProcessoAdocaoController {
 
     private Optional<ProcessoAdocao> buscarProcesso() {
         try {
-            return processoServico.buscarPorId(Long.parseLong(campoIdProcesso.getText().trim()))
+            return fachada.buscarProcesso(Long.parseLong(campoIdProcesso.getText().trim()))
                     .filter(AbrigoLogado::pode);
         } catch (NumberFormatException e) {
             return Optional.empty();

@@ -1,11 +1,10 @@
 
 package br.com.petadote.gui;
 
+import br.com.petadote.Contexto;
 import br.com.petadote.model.Adotante;
-import br.com.petadote.servico.IAdotanteServico;
-import br.com.petadote.servico.AdotanteServicoImpl;
+import br.com.petadote.servico.PetAdoteFachada;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -15,7 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class TelaListarAdotantesController {
 
     private final Navegador navegador;
-    private final IAdotanteServico adotanteServico;
+    private final PetAdoteFachada fachada;
 
     @FXML
     private TableView<Adotante> tabelaAdotantes;
@@ -37,7 +36,7 @@ public class TelaListarAdotantesController {
 
     public TelaListarAdotantesController(Navegador navegador) {
         this.navegador = navegador;
-        this.adotanteServico = AdotanteServicoImpl.getInstance();
+        this.fachada = Contexto.get().fachada();
     }
 
     @FXML
@@ -65,13 +64,7 @@ public class TelaListarAdotantesController {
 
     private void carregarAdotantes() {
         try {
-            if (adotanteServico != null) {
-                ObservableList<Adotante> lista =
-                        FXCollections.observableArrayList(
-                                adotanteServico.listarTodos());
-
-                tabelaAdotantes.setItems(lista);
-            }
+            tabelaAdotantes.setItems(FXCollections.observableArrayList(fachada.listarAdotantes()));
         } catch (Exception e) {
             mensagem.setText(
                     "Erro ao carregar adotantes: " + e.getMessage());

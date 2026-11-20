@@ -4,7 +4,7 @@ package br.com.petadote.gui;
 import br.com.petadote.Contexto;
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.Visita;
-import br.com.petadote.servico.IProcessoAdocaoServico;
+import br.com.petadote.servico.PetAdoteFachada;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -35,7 +35,7 @@ public class TelaConfirmarAgendamentoVisitaController {
     private static final Color COR_SUCESSO = Color.web("#2e7d32");
 
     private final Navegador navegador;
-    private final IProcessoAdocaoServico processoServico;
+    private final PetAdoteFachada fachada;
 
     @FXML private TextField campoIdVisita;
     @FXML private Label infoVisita;
@@ -50,10 +50,10 @@ public class TelaConfirmarAgendamentoVisitaController {
 
     public TelaConfirmarAgendamentoVisitaController(
             Navegador navegador,
-            IProcessoAdocaoServico processoServico) {
+            PetAdoteFachada fachada) {
 
         this.navegador = navegador;
-        this.processoServico = processoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -126,7 +126,7 @@ public class TelaConfirmarAgendamentoVisitaController {
                     return;
                 }
 
-                if (!processoServico.reagendarVisita(
+                if (!fachada.reagendarVisita(
                         encontrada.get().processo().getId(),
                         visita.getId(),
                         novaData,
@@ -146,7 +146,7 @@ public class TelaConfirmarAgendamentoVisitaController {
                     return;
                 }
 
-                if (!processoServico.cancelarVisita(
+                if (!fachada.cancelarVisita(
                         encontrada.get().processo().getId(),
                         visita.getId(),
                         obs)) {
@@ -161,7 +161,7 @@ public class TelaConfirmarAgendamentoVisitaController {
             }
 
             default -> {
-                if (!processoServico.confirmarVisita(
+                if (!fachada.confirmarVisita(
                         encontrada.get().processo().getId(),
                         visita.getId(),
                         obs)) {
@@ -228,7 +228,7 @@ public class TelaConfirmarAgendamentoVisitaController {
             return Optional.of(visitaSelecionada);
         }
 
-        return VisitaDoProcesso.de(processoServico.listarTodos())
+        return VisitaDoProcesso.de(fachada.listarProcessos())
                 .filter(vp -> vp.visita().getId() != null
                         && vp.visita().getId().equals(id))
                 .filter(AbrigoLogado::pode)

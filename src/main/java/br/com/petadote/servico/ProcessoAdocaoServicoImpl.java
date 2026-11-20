@@ -385,5 +385,12 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
 
         processoRepositorio.salvar(processo);
     }
-}
 
+    @Override
+    public void registrarRespostaAcompanhamento(Long idProcesso, String resposta) {
+        ProcessoAdocao processo = processoRepositorio.buscarPorId(idProcesso)
+                .orElseThrow(() -> new IllegalArgumentException("Processo de adoção não encontrado."));
+        processo.registrarRespostaAcompanhamento(resposta);
+        processoRepositorio.salvar(processo);
+    }
+}

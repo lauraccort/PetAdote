@@ -49,7 +49,7 @@ public class TelaListarMinhasVisitasController {
             return;
         }
         tabelaMinhasVisitas.setItems(FXCollections.observableArrayList(
-                VisitaDoProcesso.de(contexto.processoServico().listarPorAdotante(adotante.get().getId()))
+                VisitaDoProcesso.de(contexto.fachada().listarProcessosDoAdotante(adotante.get().getId()))
                         .sorted(Comparator.comparing(v -> v.visita().getData()))
                         .toList()));
         tabelaMinhasVisitas.getSelectionModel().selectedItemProperty().addListener((obs, a, b) -> mensagem.setText(""));

@@ -123,12 +123,11 @@ public class TelaIniciarProcessoAdocaoController {
 
         try {
             // REQ06: inicia o processo de adoção.
-            ProcessoAdocao processo = contexto.processoServico()
-                    .iniciar(animal.getId(), adotante.get().getId());
+            ProcessoAdocao processo = contexto.fachada().iniciarProcesso(animal.getId(), adotante.get().getId());
 
             // Apoio ao REQ06/REQ07: registra a justificativa pelo serviço,
             // garantindo que ela seja persistida.
-            contexto.processoServico().registrarJustificativa(
+            contexto.fachada().registrarJustificativa(
                     processo.getId(), motivo
             );
 

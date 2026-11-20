@@ -4,6 +4,7 @@ import br.com.petadote.model.Abrigo;
 import br.com.petadote.model.Adotante;
 import br.com.petadote.model.Animal;
 import br.com.petadote.model.Avaliacao;
+import br.com.petadote.model.InfoRaca;
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.Visita;
 import java.time.LocalDate;
@@ -22,11 +23,17 @@ public class PetAdoteFachada {
     private final IAdotanteServico adotanteServico = AdotanteServicoImpl.getInstance();
     private final IProcessoAdocaoServico processoServico = ProcessoAdocaoServicoImpl.getInstance();
 
+    private final InfoRacaServico infoRacaServico = new InfoRacaServico();
+
     private PetAdoteFachada() {
     }
 
     public static PetAdoteFachada getInstance() {
         return INSTANCIA;
+    }
+
+    public boolean autenticarAdministrador(String email, String senha) {
+        return ContaAdministrador.confere(email, senha);
     }
 
     // ---------- Abrigo ----------
@@ -57,6 +64,22 @@ public class PetAdoteFachada {
         return abrigoServico.excluir(id);
     }
 
+    public Optional<Abrigo> autenticarAbrigo(String email, String senha) {
+        return abrigoServico.autenticar(email, senha);
+    }
+
+    public boolean aprovarAbrigo(Long id) {
+        return abrigoServico.aprovar(id);
+    }
+
+    public boolean negarAbrigo(Long id) {
+        return abrigoServico.negar(id);
+    }
+
+    public List<Abrigo> listarAbrigosPendentes() {
+        return abrigoServico.listarPendentes();
+    }
+
     // ---------- Animal ----------
     public Animal cadastrarAnimal(Animal animal) {
         return animalServico.cadastrar(animal);
@@ -82,6 +105,22 @@ public class PetAdoteFachada {
         return animalServico.excluir(id);
     }
 
+    public boolean enviarParaTratamento(Long id) {
+        return animalServico.enviarParaTratamento(id);
+    }
+
+    public boolean receberAlta(Long id) {
+        return animalServico.receberAlta(id);
+    }
+
+    public Optional<InfoRaca> buscarInfoRacaCao(String raca) {
+        return infoRacaServico.buscarCao(raca);
+    }
+
+    public Optional<InfoRaca> buscarInfoRacaGato(String raca) {
+        return infoRacaServico.buscarGato(raca);
+    }
+
     // ---------- Adotante ----------
     public Adotante cadastrarAdotante(Adotante adotante) {
         return adotanteServico.cadastrar(adotante);
@@ -101,6 +140,10 @@ public class PetAdoteFachada {
 
     public boolean excluirAdotante(Long id) {
         return adotanteServico.excluir(id);
+    }
+
+    public Optional<Adotante> autenticarAdotante(String email, String senha) {
+        return adotanteServico.autenticar(email, senha);
     }
 
     // ---------- Processo de adoção ----------
@@ -142,5 +185,33 @@ public class PetAdoteFachada {
 
     public boolean concluirProcesso(Long idProcesso) {
         return processoServico.concluir(idProcesso);
+    }
+
+    public boolean negarProcesso(Long idProcesso) {
+        return processoServico.negar(idProcesso);
+    }
+
+    public void registrarJustificativa(Long idProcesso, String justificativa) {
+        processoServico.registrarJustificativa(idProcesso, justificativa);
+    }
+
+    public boolean confirmarVisita(Long idProcesso, Long idVisita, String observacao) {
+        return processoServico.confirmarVisita(idProcesso, idVisita, observacao);
+    }
+
+    public boolean cancelarVisita(Long idProcesso, Long idVisita, String observacao) {
+        return processoServico.cancelarVisita(idProcesso, idVisita, observacao);
+    }
+
+    public boolean reagendarVisita(Long idProcesso, Long idVisita, LocalDate novaData, String observacao) {
+        return processoServico.reagendarVisita(idProcesso, idVisita, novaData, observacao);
+    }
+
+    public void registrarResultadoVisita(Long idProcesso, Long idVisita, String situacao, String observacoes) {
+        processoServico.registrarResultadoVisita(idProcesso, idVisita, situacao, observacoes);
+    }
+
+    public void registrarRespostaAcompanhamento(Long idProcesso, String resposta) {
+        processoServico.registrarRespostaAcompanhamento(idProcesso, resposta);
     }
 }

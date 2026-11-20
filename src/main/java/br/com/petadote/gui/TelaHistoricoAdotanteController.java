@@ -3,7 +3,7 @@ package br.com.petadote.gui;
 
 import br.com.petadote.model.Adotante;
 import br.com.petadote.model.ProcessoAdocao;
-import br.com.petadote.servico.IProcessoAdocaoServico;
+import br.com.petadote.servico.PetAdoteFachada;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -20,7 +20,7 @@ import java.util.Optional;
 public class TelaHistoricoAdotanteController {
 
     private final Navegador navegador;
-    private final IProcessoAdocaoServico processoServico;
+    private final PetAdoteFachada fachada;
 
     @FXML
     private TableView<ProcessoAdocao> tabelaHistorico;
@@ -42,10 +42,10 @@ public class TelaHistoricoAdotanteController {
 
     public TelaHistoricoAdotanteController(
             Navegador navegador,
-            IProcessoAdocaoServico processoServico) {
+            PetAdoteFachada fachada) {
 
         this.navegador = navegador;
-        this.processoServico = processoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -89,7 +89,7 @@ public class TelaHistoricoAdotanteController {
             Long idAdotante = selecionado.get().getId();
 
             List<ProcessoAdocao> processos =
-                    processoServico.listarPorAdotante(idAdotante);
+                    fachada.listarProcessosDoAdotante(idAdotante);
 
             tabelaHistorico.setItems(
                     FXCollections.observableArrayList(processos));

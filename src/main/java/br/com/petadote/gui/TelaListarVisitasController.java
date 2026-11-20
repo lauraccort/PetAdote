@@ -1,6 +1,6 @@
 package br.com.petadote.gui;
 
-import br.com.petadote.servico.IProcessoAdocaoServico;
+import br.com.petadote.servico.PetAdoteFachada;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -20,7 +20,7 @@ public class TelaListarVisitasController {
     private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final Navegador navegador;
-    private final IProcessoAdocaoServico processoServico;
+    private final PetAdoteFachada fachada;
 
     @FXML private TableView<VisitaDoProcesso> tabelaVisitas;
     @FXML private TableColumn<VisitaDoProcesso, String> colunaNumero;
@@ -30,9 +30,9 @@ public class TelaListarVisitasController {
     @FXML private TableColumn<VisitaDoProcesso, String> colunaStatus;
     @FXML private Label mensagem;
 
-    public TelaListarVisitasController(Navegador navegador, IProcessoAdocaoServico processoServico) {
+    public TelaListarVisitasController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
-        this.processoServico = processoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -44,7 +44,7 @@ public class TelaListarVisitasController {
         colunaStatus.setCellValueFactory(c -> texto(c.getValue().status()));
 
         tabelaVisitas.setItems(FXCollections.observableArrayList(
-                VisitaDoProcesso.de(processoServico.listarTodos())
+                VisitaDoProcesso.de(fachada.listarProcessos())
                         // O abrigo logado só vê as visitas dos seus animais
                         .filter(AbrigoLogado::pode)
                         .sorted(Comparator.comparing(l -> l.visita().getData()))

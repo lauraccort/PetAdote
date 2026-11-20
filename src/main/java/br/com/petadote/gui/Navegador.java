@@ -153,72 +153,65 @@ public class Navegador {
 
         if (tipo == TelaAcompanharPosAdocaoController.class) {
             return new TelaAcompanharPosAdocaoController(
-                    this, contexto.processoServico());
+                    this, contexto.fachada());
         }
 
         if (tipo == TelaAprovarCadastroAbrigoController.class) {
             return new TelaAprovarCadastroAbrigoController(
-                    this, contexto.abrigoServico());
-        }
-
-        if (tipo == TelaListarProcessosAdocaoController.class) {
-            return new TelaListarProcessosAdocaoController(
-                    this, contexto.processoServico());
+                    this, contexto.fachada());
         }
 
         if (tipo == TelaRelatorioAdocoesConcluidasController.class) {
             return new TelaRelatorioAdocoesConcluidasController(
-                    this, contexto.processoServico());
+                    this, contexto.fachada());
         }
 
         if (tipo == TelaListarSolicitacoesPendentesController.class) {
             return new TelaListarSolicitacoesPendentesController(
-                    this, contexto.processoServico());
+                    this, contexto.fachada());
         }
 
         // Histórico do adotante
         if (tipo == TelaHistoricoAdotanteController.class) {
             return new TelaHistoricoAdotanteController(
-                    this, contexto.processoServico());
+                    this, contexto.fachada());
         }
 
         if (tipo == TelaAvaliarProcessoAdocaoController.class) {
             return new TelaAvaliarProcessoAdocaoController(
-                    this, contexto.processoServico());
+                    this, contexto.fachada());
         }
 
         if (tipo == TelaListarVisitasController.class) {
             return new TelaListarVisitasController(
-                    this, contexto.processoServico());
+                    this, contexto.fachada());
         }
 
         if (tipo == TelaFinalizarProcessoAdocaoController.class) {
             return new TelaFinalizarProcessoAdocaoController(
-                    this, contexto.processoServico());
+                    this, contexto.fachada());
         }
 
         if (tipo == TelaCadastroAnimalController.class) {
             return new TelaCadastroAnimalController(
                     this,
-                    contexto.animalServico(),
-                    contexto.abrigoServico());
+                    contexto.fachada());
         }
 
         if (tipo == TelaConfirmarAgendamentoVisitaController.class) {
             return new TelaConfirmarAgendamentoVisitaController(
-                    this, contexto.processoServico());
+                    this, contexto.fachada());
         }
 
         if (tipo == TelaListarAnimaisAbrigoController.class) {
             return new TelaListarAnimaisAbrigoController(
                     this,
-                    contexto.animalServico(),
-                    contexto.abrigoServico());
+                    contexto.fachada());
         }
 
         if (tipo == TelaListarAnimaisDisponiveisController.class) {
             return new TelaListarAnimaisDisponiveisController(
-                    this, contexto.animalServico());
+                    this, contexto.fachada());
         }
 
         if (tipo == TelaListarMeusProcessosController.class) {
@@ -233,12 +226,12 @@ public class Navegador {
 
         if (tipo == TelaListarAbrigosController.class) {
             return new TelaListarAbrigosController(
-                    this, contexto.abrigoServico());
+                    this, contexto.fachada());
         }
 
         if (tipo == TelaExcluirAbrigoController.class) {
             return new TelaExcluirAbrigoController(
-                    this, contexto.abrigoServico());
+                    this, contexto.fachada());
         }
 
         if (tipo == TelaIniciarProcessoAdocaoController.class) {
@@ -248,14 +241,13 @@ public class Navegador {
 
         if (tipo == TelaAvaliarVisitaController.class) {
             return new TelaAvaliarVisitaController(
-                    this, contexto.processoServico());
+                    this, contexto.fachada());
         }
 
         if (tipo == TelaCadastroController.class) {
             return new TelaCadastroController(
                     this,
-                    contexto.adotanteServico(),
-                    contexto.abrigoServico());
+                    contexto.fachada());
         }
 
         try {

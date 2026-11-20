@@ -2,8 +2,7 @@ package br.com.petadote.gui;
 
 import br.com.petadote.model.Abrigo;
 import br.com.petadote.model.Adotante;
-import br.com.petadote.servico.IAbrigoServico;
-import br.com.petadote.servico.IAdotanteServico;
+import br.com.petadote.servico.PetAdoteFachada;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -27,8 +26,7 @@ public class TelaCadastroController {
     private static final Color COR_SUCESSO = Color.web("#2e7d32");
 
     private final Navegador navegador;
-    private final IAdotanteServico adotanteServico;
-    private final IAbrigoServico abrigoServico;
+    private final PetAdoteFachada fachada;
 
     @FXML private ComboBox<String> campoPerfil;
     @FXML private Node camposComuns;
@@ -45,10 +43,9 @@ public class TelaCadastroController {
     @FXML private Label mensagem;
     @FXML private Button botaoCadastrar;
 
-    public TelaCadastroController(Navegador navegador, IAdotanteServico adotanteServico, IAbrigoServico abrigoServico) {
+    public TelaCadastroController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
-        this.adotanteServico = adotanteServico;
-        this.abrigoServico = abrigoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -87,14 +84,12 @@ public class TelaCadastroController {
                         campoEndereco.getText().trim(), quantAnimais);
                 novo.setEmail(email);
                 novo.setSenha(senha);
-                Adotante adotante = adotanteServico.cadastrar(novo);
+                Adotante adotante = fachada.cadastrarAdotante(novo);
                 sucesso("Adotante cadastrado: " + adotante.getNome() + " (id " + adotante.getId() + ").", true);
             } else { // REQ01
                 int capacidade = lerNumero(campoCapacidade, "Capacidade de animais", null);
-                Abrigo novo = new Abrigo(campoNome.getText().trim(), campoEndereco.getText().trim(), capacidade);
-                novo.setEmail(email);
-                novo.setSenha(senha);
-                Abrigo abrigo = abrigoServico.cadastrar(novo);
+                Abrigo abrigo = fachada.cadastrarAbrigo(
+                        campoNome.getText().trim(), campoEndereco.getText().trim(), capacidade, email, senha);
                 sucesso("Pedido de cadastro do abrigo " + abrigo.getNome()
                         + " enviado. Aguarde a aprovação do administrador para entrar.", false);
             }

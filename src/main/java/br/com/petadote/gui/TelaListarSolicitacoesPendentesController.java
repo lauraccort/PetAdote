@@ -2,7 +2,7 @@ package br.com.petadote.gui;
 
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.StatusProcesso;
-import br.com.petadote.servico.IProcessoAdocaoServico;
+import br.com.petadote.servico.PetAdoteFachada;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -22,7 +22,7 @@ public class TelaListarSolicitacoesPendentesController {
     private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final Navegador navegador;
-    private final IProcessoAdocaoServico processoServico;
+    private final PetAdoteFachada fachada;
 
     @FXML private TableView<ProcessoAdocao> tabelaSolicitacoes;
     @FXML private TableColumn<ProcessoAdocao, String> colunaId;
@@ -31,9 +31,9 @@ public class TelaListarSolicitacoesPendentesController {
     @FXML private TableColumn<ProcessoAdocao, String> colunaData;
     @FXML private Label mensagem;
 
-    public TelaListarSolicitacoesPendentesController(Navegador navegador, IProcessoAdocaoServico processoServico) {
+    public TelaListarSolicitacoesPendentesController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
-        this.processoServico = processoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -45,7 +45,7 @@ public class TelaListarSolicitacoesPendentesController {
                 c.getValue().getDataAbertura() == null ? null : c.getValue().getDataAbertura().format(FORMATO)));
 
         tabelaSolicitacoes.setItems(FXCollections.observableArrayList(
-                processoServico.listarTodos().stream()
+                fachada.listarProcessos().stream()
                         .filter(p -> p.getStatus() == StatusProcesso.EM_AVALIACAO)
                         .filter(AbrigoLogado::pode)
                         .sorted(Comparator.comparing(ProcessoAdocao::getDataAbertura,

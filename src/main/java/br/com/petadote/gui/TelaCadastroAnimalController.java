@@ -8,9 +8,7 @@ import br.com.petadote.model.InfoRaca;
 import br.com.petadote.model.OutraEspecie;
 import br.com.petadote.model.StatusAbrigo;
 import br.com.petadote.model.StatusAnimal;
-import br.com.petadote.servico.IAbrigoServico;
-import br.com.petadote.servico.IAnimalServico;
-import br.com.petadote.servico.InfoRacaServico;
+import br.com.petadote.servico.PetAdoteFachada;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -37,9 +35,7 @@ public class TelaCadastroAnimalController {
     private static final Color COR_SUCESSO = Color.web("#2e7d32");
 
     private final Navegador navegador;
-    private final IAnimalServico animalServico;
-    private final IAbrigoServico abrigoServico;
-    private final InfoRacaServico infoRacaServico = new InfoRacaServico();
+    private final PetAdoteFachada fachada;
     private boolean salvando = false;
 
     @FXML private TextField campoNome;
@@ -51,10 +47,9 @@ public class TelaCadastroAnimalController {
     @FXML private ComboBox<Abrigo> campoAbrigo;
     @FXML private Label mensagem;
 
-    public TelaCadastroAnimalController(Navegador navegador, IAnimalServico animalServico, IAbrigoServico abrigoServico) {
+    public TelaCadastroAnimalController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
-        this.animalServico = animalServico;
-        this.abrigoServico = abrigoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -132,8 +127,8 @@ public class TelaCadastroAnimalController {
         Task<Optional<InfoRaca>> tarefa = new Task<>() {
             @Override
             protected Optional<InfoRaca> call() {
-                return CAO.equals(especie) ? infoRacaServico.buscarCao(raca)
-                        : infoRacaServico.buscarGato(raca);
+                return CAO.equals(especie) ? fachada.buscarInfoRacaCao(raca)
+                        : fachada.buscarInfoRacaGato(raca);
             }
         };
         tarefa.setOnSucceeded(e -> {
@@ -161,8 +156,8 @@ public class TelaCadastroAnimalController {
     /** Parte que já existia: salva o animal e vincula ao abrigo. */
     private void concluirCadastro(Animal animal, Abrigo abrigo, boolean semInfoRaca) {
         try {
-            Animal salvo = animalServico.cadastrar(animal);
-            if (!abrigoServico.adicionarAnimal(abrigo.getId(), salvo)) {
+            Animal salvo = fachada.cadastrarAnimal(animal);
+            if (!fachada.adicionarAnimalAoAbrigo(abrigo.getId(), salvo)) {
                 erro("Não foi possível vincular o animal ao abrigo.");
                 return;
             }
@@ -192,7 +187,7 @@ public class TelaCadastroAnimalController {
     }
 
     private void carregarAbrigos() {
-        campoAbrigo.getItems().setAll(abrigoServico.listarTodos().stream()
+        campoAbrigo.getItems().setAll(fachada.listarAbrigos().stream()
                 .filter(a -> a.getStatus() == StatusAbrigo.APROVADO)
                 .filter(AbrigoLogado::pode) // abrigo logado só cadastra no próprio abrigo
                 .sorted(Comparator.comparing(Abrigo::getNome))

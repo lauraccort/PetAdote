@@ -1,7 +1,7 @@
 package br.com.petadote.gui;
 
 import br.com.petadote.model.Abrigo;
-import br.com.petadote.servico.IAbrigoServico;
+import br.com.petadote.servico.PetAdoteFachada;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,7 +26,7 @@ public class TelaAprovarCadastroAbrigoController {
     private static final Color COR_SUCESSO = Color.web("#2e7d32");
 
     private final Navegador navegador;
-    private final IAbrigoServico abrigoServico;
+    private final PetAdoteFachada fachada;
 
     @FXML private TableView<Abrigo> tabelaPedidos;
     @FXML private TableColumn<Abrigo, String> colunaNome;
@@ -40,9 +40,9 @@ public class TelaAprovarCadastroAbrigoController {
 
     private final ObservableList<Abrigo> pendentes = FXCollections.observableArrayList();
 
-    public TelaAprovarCadastroAbrigoController(Navegador navegador, IAbrigoServico abrigoServico) {
+    public TelaAprovarCadastroAbrigoController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
-        this.abrigoServico = abrigoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -90,7 +90,7 @@ public class TelaAprovarCadastroAbrigoController {
     @FXML
     private void aprovar() {
         Abrigo abrigo = campoAbrigo.getValue();
-        if (abrigo != null && abrigoServico.aprovar(abrigo.getId())) {
+        if (abrigo != null && fachada.aprovarAbrigo(abrigo.getId())) {
             concluir("Abrigo " + abrigo.getNome() + " aprovado. Ele já pode entrar no sistema.", COR_SUCESSO);
         } else {
             concluir("Não foi possível aprovar este pedido.", COR_ERRO);
@@ -100,7 +100,7 @@ public class TelaAprovarCadastroAbrigoController {
     @FXML
     private void negar() {
         Abrigo abrigo = campoAbrigo.getValue();
-        if (abrigo != null && abrigoServico.negar(abrigo.getId())) {
+        if (abrigo != null && fachada.negarAbrigo(abrigo.getId())) {
             concluir("Pedido do abrigo " + abrigo.getNome() + " negado.", COR_SUCESSO);
         } else {
             concluir("Não foi possível negar este pedido.", COR_ERRO);
@@ -113,7 +113,7 @@ public class TelaAprovarCadastroAbrigoController {
     }
 
     private void carregarPendentes() {
-        pendentes.setAll(abrigoServico.listarPendentes());
+        pendentes.setAll(fachada.listarAbrigosPendentes());
         campoAbrigo.setValue(null);
         atualizarBotoes();
     }

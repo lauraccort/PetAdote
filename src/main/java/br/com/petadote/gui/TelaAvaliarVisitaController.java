@@ -3,7 +3,7 @@ package br.com.petadote.gui;
 
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.Visita;
-import br.com.petadote.servico.IProcessoAdocaoServico;
+import br.com.petadote.servico.PetAdoteFachada;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -32,7 +32,7 @@ public class TelaAvaliarVisitaController {
     private static final Color COR_SUCESSO = Color.web("#2e7d32");
 
     private final Navegador navegador;
-    private final IProcessoAdocaoServico processoServico;
+    private final PetAdoteFachada fachada;
 
     @FXML private TextField campoIdProcesso;
     @FXML private TextField campoIdVisita;
@@ -44,10 +44,10 @@ public class TelaAvaliarVisitaController {
 
     public TelaAvaliarVisitaController(
             Navegador navegador,
-            IProcessoAdocaoServico processoServico) {
+            PetAdoteFachada fachada) {
 
         this.navegador = navegador;
-        this.processoServico = processoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -147,7 +147,7 @@ public class TelaAvaliarVisitaController {
                 }
 
                 try {
-                    processoServico.registrarResultadoVisita(
+                    fachada.registrarResultadoVisita(
                             encontrada.get().processo().getId(),
                             visita.getId(),
                             situacao,
@@ -168,7 +168,7 @@ public class TelaAvaliarVisitaController {
                     return;
                 }
 
-                if (!processoServico.cancelarVisita(
+                if (!fachada.cancelarVisita(
                         encontrada.get().processo().getId(),
                         visita.getId(),
                         observacoes)) {
@@ -181,7 +181,7 @@ public class TelaAvaliarVisitaController {
             }
 
             default -> {
-                if (!processoServico.confirmarVisita(
+                if (!fachada.confirmarVisita(
                         encontrada.get().processo().getId(),
                         visita.getId(),
                         observacoes.isEmpty() ? null : observacoes)) {
@@ -260,7 +260,7 @@ public class TelaAvaliarVisitaController {
 
         Long idProcesso = numero(campoIdProcesso.getText());
 
-        return VisitaDoProcesso.de(processoServico.listarTodos())
+        return VisitaDoProcesso.de(fachada.listarProcessos())
                 .filter(vp -> idVisita.equals(vp.visita().getId()))
                 .filter(vp -> idProcesso == null
                         || idProcesso.equals(vp.processo().getId()))

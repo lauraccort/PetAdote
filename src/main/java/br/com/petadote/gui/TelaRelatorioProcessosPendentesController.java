@@ -5,7 +5,7 @@ import br.com.petadote.model.Avaliacao;
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.StatusProcesso;
 import br.com.petadote.model.Visita;
-import br.com.petadote.servico.IProcessoAdocaoServico;
+import br.com.petadote.servico.PetAdoteFachada;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -36,7 +36,7 @@ public class TelaRelatorioProcessosPendentesController {
     private static final int DIAS_LIMITE = 15;
 
     private final Navegador navegador;
-    private final IProcessoAdocaoServico processoServico;
+    private final PetAdoteFachada fachada;
 
     @FXML private TableView<ProcessoAdocao> tabela;
     @FXML private TableColumn<ProcessoAdocao, String> colProcesso;
@@ -59,13 +59,13 @@ public class TelaRelatorioProcessosPendentesController {
 
     /** Usado pelo Navegador (reflexao) quando nao ha injecao explicita. */
     public TelaRelatorioProcessosPendentesController(Navegador navegador) {
-        this(navegador, Contexto.get().processoServico());
+        this(navegador, Contexto.get().fachada());
     }
 
     public TelaRelatorioProcessosPendentesController(Navegador navegador,
-                                                     IProcessoAdocaoServico processoServico) {
+                                                     PetAdoteFachada fachada) {
         this.navegador = navegador;
-        this.processoServico = processoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -137,14 +137,14 @@ public class TelaRelatorioProcessosPendentesController {
 
         java.util.Map<Long, ProcessoAdocao> porId = new java.util.LinkedHashMap<>();
 
-        for (ProcessoAdocao p : processoServico.listarPendentesHa15Dias()) {
+        for (ProcessoAdocao p : fachada.listarProcessosPendentes()) {
             if (!AbrigoLogado.pode(p)) {
                 continue;
             }
             porId.put(p.getId(), p);
         }
 
-        for (ProcessoAdocao p : processoServico.listarTodos()) {
+        for (ProcessoAdocao p : fachada.listarProcessos()) {
             if (!AbrigoLogado.pode(p)) {
                 continue;
             }

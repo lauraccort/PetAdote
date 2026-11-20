@@ -4,7 +4,6 @@ import br.com.petadote.Contexto;
 import br.com.petadote.model.Adotante;
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.StatusProcesso;
-import br.com.petadote.repositorio.ProcessoAdocaoRepositorio;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -96,7 +95,7 @@ public class TelaResponderAcompanhamentoController {
 
     private void carregarProcessos(Adotante adotante) {
         campoProcesso.setItems(FXCollections.observableArrayList(
-                contexto.processoServico().listarPorAdotante(adotante.getId()).stream()
+                contexto.fachada().listarProcessosDoAdotante(adotante.getId()).stream()
                         .filter(p -> p.getStatus() == StatusProcesso.APROVADO
                                 || p.getStatus() == StatusProcesso.CONCLUIDO)
                         .filter(p -> p.getAnimal() != null)
@@ -130,8 +129,8 @@ public class TelaResponderAcompanhamentoController {
             return;
         }
 
-        processo.registrarRespostaAcompanhamento(LocalDate.now().format(FORMATO) + " — " + texto);
-        ProcessoAdocaoRepositorio.getInstance().salvar(processo); // grava em dados/petadote.dat
+        contexto.fachada().registrarRespostaAcompanhamento(
+                processo.getId(), LocalDate.now().format(FORMATO) + " — " + texto);
 
         campoResposta.clear();
         mostrarRespostas(processo);

@@ -1,7 +1,7 @@
 package br.com.petadote.gui;
 
 import br.com.petadote.model.Abrigo;
-import br.com.petadote.servico.IAbrigoServico;
+import br.com.petadote.servico.PetAdoteFachada;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -18,15 +18,15 @@ public class TelaExcluirAbrigoController {
     private static final Color COR_SUCESSO = Color.web("#2e7d32");
 
     private final Navegador navegador;
-    private final IAbrigoServico abrigoServico;
+    private final PetAdoteFachada fachada;
 
     @FXML private TextField campoIdAbrigo;
     @FXML private Label infoAbrigo;
     @FXML private Label mensagem;
 
-    public TelaExcluirAbrigoController(Navegador navegador, IAbrigoServico abrigoServico) {
+    public TelaExcluirAbrigoController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
-        this.abrigoServico = abrigoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -54,7 +54,7 @@ public class TelaExcluirAbrigoController {
                     + (n == 1 ? " animal vinculado" : " animais vinculados") + " a ele (REQ20).");
             return;
         }
-        if (!abrigoServico.excluir(abrigo.getId())) {
+        if (!fachada.excluirAbrigo(abrigo.getId())) {
             erro("Não foi possível excluir este abrigo.");
             return;
         }
@@ -84,7 +84,7 @@ public class TelaExcluirAbrigoController {
 
     private Optional<Abrigo> buscarAbrigo() {
         try {
-            return abrigoServico.buscarPorId(Long.parseLong(campoIdAbrigo.getText().trim()));
+            return fachada.buscarAbrigo(Long.parseLong(campoIdAbrigo.getText().trim()));
         } catch (NumberFormatException e) {
             return Optional.empty();
         }

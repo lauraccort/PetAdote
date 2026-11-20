@@ -2,7 +2,7 @@ package br.com.petadote.gui;
 
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.StatusProcesso;
-import br.com.petadote.servico.IProcessoAdocaoServico;
+import br.com.petadote.servico.PetAdoteFachada;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -21,16 +21,16 @@ public class TelaFinalizarProcessoAdocaoController {
     private static final Color COR_SUCESSO = Color.web("#2e7d32");
 
     private final Navegador navegador;
-    private final IProcessoAdocaoServico processoServico;
+    private final PetAdoteFachada fachada;
 
     @FXML private TextField campoIdProcesso;
     @FXML private Label infoProcesso;
     @FXML private TextField campoObservacoes;
     @FXML private Label mensagem;
 
-    public TelaFinalizarProcessoAdocaoController(Navegador navegador, IProcessoAdocaoServico processoServico) {
+    public TelaFinalizarProcessoAdocaoController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
-        this.processoServico = processoServico;
+        this.fachada = fachada;
     }
 
     @FXML
@@ -57,7 +57,7 @@ public class TelaFinalizarProcessoAdocaoController {
         String observacoes = campoObservacoes.getText().trim();
         processo.setObservacaoFinal(observacoes.isEmpty() ? null : observacoes);
         // REQ08: conclui o processo e o animal passa a "Adotado"
-        if (!processoServico.concluir(processo.getId())) {
+        if (!fachada.concluirProcesso(processo.getId())) {
             erro("Não foi possível concluir este processo.");
             return;
         }
@@ -123,7 +123,7 @@ public class TelaFinalizarProcessoAdocaoController {
 
     private Optional<ProcessoAdocao> buscarProcesso() {
         try {
-            return processoServico.buscarPorId(Long.parseLong(campoIdProcesso.getText().trim()))
+            return fachada.buscarProcesso(Long.parseLong(campoIdProcesso.getText().trim()))
                     .filter(AbrigoLogado::pode);
         } catch (NumberFormatException e) {
             return Optional.empty();
