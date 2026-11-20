@@ -8,39 +8,55 @@
 
 <StackPane prefHeight="560.0" prefWidth="720.0" style="-fx-background-color: #f7efe6;" stylesheets="@petadote.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.petadote.gui.TelaFinalizarProcessoAdocaoController">
    <children>
-      <VBox maxHeight="-Infinity" maxWidth="660.0" spacing="14.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4);">
+      <VBox maxHeight="-Infinity" maxWidth="660.0" spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 4);">
          <padding>
-            <Insets bottom="24.0" left="28.0" right="28.0" top="24.0" />
+            <Insets bottom="20.0" left="28.0" right="28.0" top="20.0" />
          </padding>
          <children>
             <HBox alignment="CENTER_LEFT" spacing="12.0">
                <children>
-                  <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="44.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../imagens/abrigo.png" />
                      </image>
                   </ImageView>
                   <Label text="Finalizar Processo de Adoção" textFill="#9c4f2a">
                      <font>
-                        <Font name="System Bold" size="28.0" />
+                        <Font name="System Bold" size="24.0" />
                      </font>
                   </Label>
                </children>
             </HBox>
-            <Label text="Confirme os dados e conclua o processo de adoção" textFill="#8a6a58">
+            <Label text="Selecione o processo aprovado e conclua a adoção" textFill="#8a6a58">
                <VBox.margin>
-                  <Insets bottom="6.0" />
+                  <Insets bottom="4.0" />
                </VBox.margin>
             </Label>
 
+            <TableView fx:id="tabelaProcessos" prefHeight="180.0" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="colunaId" prefWidth="55.0" text="ID" />
+                  <TableColumn fx:id="colunaAnimal" prefWidth="150.0" text="Animal" />
+                  <TableColumn fx:id="colunaAdotante" prefWidth="170.0" text="Adotante" />
+                  <TableColumn fx:id="colunaStatus" prefWidth="110.0" text="Status" />
+                  <TableColumn fx:id="colunaVisitas" prefWidth="120.0" text="Visitas 90d" />
+               </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+               <placeholder>
+                  <Label text="Nenhum processo aprovado aguardando conclusão." />
+               </placeholder>
+            </TableView>
+
             <VBox spacing="6.0">
                <children>
-                  <Label text="Processo" textFill="#4a2a1a">
+                  <Label text="Processo selecionado" textFill="#4a2a1a">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="campoIdProcesso" editable="false" focusTraversable="false" promptText="Processo selecionado" />
+                  <TextField fx:id="campoIdProcesso" editable="false" focusTraversable="false" promptText="Selecione um processo na tabela" />
                   <Label fx:id="infoProcesso" textFill="#8a6a58" wrapText="true" />
 
                   <Label text="Observações / Parecer Final" textFill="#4a2a1a">

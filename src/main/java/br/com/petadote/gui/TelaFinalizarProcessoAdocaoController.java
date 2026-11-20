@@ -3,10 +3,15 @@ package br.com.petadote.gui;
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.StatusProcesso;
 import br.com.petadote.servico.PetAdoteFachada;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
+import java.util.Comparator;
 import java.util.Optional;
 
 /**
@@ -15,8 +20,8 @@ import java.util.Optional;
  * REQ17 (animal fora de tratamento) e REQ18 (2 visitas nos próximos 90 dias),
  * dizendo qual delas impediu a conclusão.
  *
- * O processo vem sempre do Navegador. O ID exibido é somente leitura e
- * nunca é usado como fonte de verdade.
+ * O processo é escolhido na própria tabela da tela. O ID exibido é
+ * somente leitura e nunca é usado como fonte de verdade.
  */
 public class TelaFinalizarProcessoAdocaoController {
 
@@ -26,12 +31,18 @@ public class TelaFinalizarProcessoAdocaoController {
     private final Navegador navegador;
     private final PetAdoteFachada fachada;
 
+    @FXML private TableView<ProcessoAdocao> tabelaProcessos;
+    @FXML private TableColumn<ProcessoAdocao, String> colunaId;
+    @FXML private TableColumn<ProcessoAdocao, String> colunaAnimal;
+    @FXML private TableColumn<ProcessoAdocao, String> colunaAdotante;
+    @FXML private TableColumn<ProcessoAdocao, String> colunaStatus;
+    @FXML private TableColumn<ProcessoAdocao, String> colunaVisitas;
     @FXML private TextField campoIdProcesso;
     @FXML private Label infoProcesso;
     @FXML private TextField campoObservacoes;
     @FXML private Label mensagem;
 
-    /** Processo escolhido na tela anterior. Fonte de verdade. */
+    /** Processo escolhido na tabela. Fonte de verdade. */
     private ProcessoAdocao processoSelecionado;
 
     public TelaFinalizarProcessoAdocaoController(Navegador navegador, PetAdoteFachada fachada) {
@@ -41,23 +52,52 @@ public class TelaFinalizarProcessoAdocaoController {
 
     @FXML
     private void initialize() {
-        // O processo vem da tela anterior; o ID exibido é apenas informativo.
-        processoSelecionado = navegador.selecionado(ProcessoAdocao.class)
-                .filter(AbrigoLogado::pode)
-                .orElse(null);
+        colunaId.setCellValueFactory(c -> texto(c.getValue().getId()));
+        colunaAnimal.setCellValueFactory(c -> texto(c.getValue().getAnimal().getNome()));
+        colunaAdotante.setCellValueFactory(c -> texto(c.getValue().getAdotante().getNome()));
+        colunaStatus.setCellValueFactory(c -> texto(c.getValue().getStatus().getDescricao()));
+        colunaVisitas.setCellValueFactory(c -> texto(
+                c.getValue().contarVisitasNoPeriodo()
+                        + " de " + ProcessoAdocao.getMinVisitasPosAdocao()));
 
-        if (processoSelecionado != null) {
-            campoIdProcesso.setText(String.valueOf(processoSelecionado.getId()));
-        }
+        carregarProcessos();
+
+        // Ao selecionar na tabela, preenche o resumo e limpa a mensagem anterior
+        tabelaProcessos.getSelectionModel().selectedItemProperty()
+                .addListener((obs, anterior, atual) -> {
+                    processoSelecionado = atual;
+                    mensagem.setText("");
+                    mostrarInfo();
+                });
+
+        // Se veio de outra tela com um processo escolhido, já deixa selecionado
+        navegador.selecionado(ProcessoAdocao.class)
+                .filter(AbrigoLogado::pode)
+                .ifPresent(p -> {
+                    processoSelecionado = p;
+                    campoIdProcesso.setText(String.valueOf(p.getId()));
+                    tabelaProcessos.getSelectionModel().select(p);
+                });
 
         mostrarInfo();
+    }
+
+    /** Lista os processos aprovados do abrigo logado, do mais antigo ao mais novo. */
+    private void carregarProcessos() {
+        tabelaProcessos.setItems(FXCollections.observableArrayList(
+                fachada.listarProcessos().stream()
+                        .filter(p -> p.getStatus() == StatusProcesso.APROVADO)
+                        .filter(AbrigoLogado::pode)
+                        .sorted(Comparator.comparing(ProcessoAdocao::getDataAbertura,
+                                Comparator.nullsLast(Comparator.naturalOrder())))
+                        .toList()));
     }
 
     @FXML
     private void finalizarProcesso() {
         Optional<ProcessoAdocao> encontrado = buscarProcesso();
         if (encontrado.isEmpty()) {
-            erro("Nenhum processo selecionado. Volte e escolha um processo na lista.");
+            erro("Selecione um processo na tabela.");
             return;
         }
         ProcessoAdocao processo = encontrado.get();
@@ -78,6 +118,8 @@ public class TelaFinalizarProcessoAdocaoController {
         processoSelecionado = null;
         campoIdProcesso.clear();
         campoObservacoes.clear();
+        carregarProcessos();   // o processo concluído sai da lista
+
         mensagem.setTextFill(COR_SUCESSO);
         mensagem.setText("Adoção concluída: " + processo.getAnimal().getNome() + " agora é de "
                 + processo.getAdotante().getNome() + ". Acompanhe as visitas em \"Acompanhamento pós-adoção\".");
@@ -121,11 +163,13 @@ public class TelaFinalizarProcessoAdocaoController {
 
     private void mostrarInfo() {
         if (processoSelecionado == null) {
+            campoIdProcesso.setText("");
             infoProcesso.setText("");
             return;
         }
 
         ProcessoAdocao p = processoSelecionado;
+        campoIdProcesso.setText(String.valueOf(p.getId()));
         infoProcesso.setText("Animal: " + p.getAnimal().getNome()
                 + "  ·  Adotante: " + p.getAdotante().getNome()
                 + "  ·  Status: " + p.getStatus().getDescricao()
@@ -133,8 +177,16 @@ public class TelaFinalizarProcessoAdocaoController {
                 + " de " + ProcessoAdocao.getMinVisitasPosAdocao());
     }
 
+    /**
+     * Retorna o processo selecionado na tabela. O texto do campo NÃO é lido:
+     * o ID exibido é apenas informativo.
+     */
     private Optional<ProcessoAdocao> buscarProcesso() {
         return Optional.ofNullable(processoSelecionado);
+    }
+
+    private static SimpleStringProperty texto(Object valor) {
+        return new SimpleStringProperty(valor == null ? "" : valor.toString());
     }
 
     private void erro(String texto) {
