@@ -1,4 +1,3 @@
-
 package br.com.petadote.gui;
 
 import br.com.petadote.Contexto;
@@ -21,6 +20,11 @@ import java.util.Optional;
  * REQ06: abrir processo de adoção.
  * REQ14: impedir solicitação para animal indisponível.
  * REQ16: respeitar o limite de processos ativos do adotante.
+ *
+ * O animal vem sempre do Navegador (tela de detalhes). O ID exibido é
+ * somente leitura e nunca é usado como fonte de verdade: o processo é
+ * aberto a partir do objeto Animal selecionado, impedindo que o adotante
+ * troque o animal digitando outro ID.
  */
 public class TelaIniciarProcessoAdocaoController {
 
@@ -29,6 +33,9 @@ public class TelaIniciarProcessoAdocaoController {
 
     private final Navegador navegador;
     private final Contexto contexto;
+
+    /** Animal realmente selecionado na tela anterior. Fonte de verdade. */
+    private Animal animalSelecionado;
 
     @FXML
     private TextField campoIdAnimal;
@@ -54,16 +61,19 @@ public class TelaIniciarProcessoAdocaoController {
     @FXML
     private void initialize() {
 
-        campoIdAnimal.textProperty().addListener((obs, anterior, texto) -> {
-            mensagem.setText("");
-            mostrarInfo();
+        // O ID do animal vem preenchido da tela de detalhes e é somente leitura.
+        navegador.selecionado(Animal.class).ifPresent(a -> {
+            animalSelecionado = a;
+            campoIdAnimal.setText(String.valueOf(a.getId()));
         });
 
-        // O ID do animal pode vir preenchido da tela de detalhes.
-        navegador.selecionado(Animal.class)
-                .ifPresent(a -> campoIdAnimal.setText(String.valueOf(a.getId())));
-
         mostrarInfo();
+
+        if (animalSelecionado == null) {
+            erro("Nenhum animal selecionado. Volte e escolha um animal na lista.");
+            btnSalvarProcesso.setDisable(true);
+            return;
+        }
 
         if (contexto.adotanteLogado().isEmpty()) {
             erro("Entre como adotante para pedir uma adoção.");
@@ -84,7 +94,7 @@ public class TelaIniciarProcessoAdocaoController {
         Optional<Animal> encontrado = buscarAnimal();
 
         if (encontrado.isEmpty()) {
-            erro("Informe o ID de um animal existente.");
+            erro("Nenhum animal selecionado. Volte e escolha um animal na lista.");
             return;
         }
 
@@ -122,7 +132,6 @@ public class TelaIniciarProcessoAdocaoController {
                     processo.getId(), motivo
             );
 
-            campoIdAnimal.clear();
             campoMotivo.clear();
 
             mensagem.setTextFill(COR_SUCESSO);
@@ -140,44 +149,33 @@ public class TelaIniciarProcessoAdocaoController {
         navegador.voltar();
     }
 
-    // Exibe informações do animal selecionado.
+    /** Exibe informações do animal selecionado. */
     private void mostrarInfo() {
 
-        Optional<Animal> animal = buscarAnimal();
-
-        if (campoIdAnimal.getText().isBlank()) {
+        if (animalSelecionado == null) {
             infoAnimal.setText("");
-
-        } else if (animal.isEmpty()) {
-            infoAnimal.setText("Animal não encontrado.");
-
-        } else {
-            Animal a = animal.get();
-
-            infoAnimal.setText(a.getNome() + "  ·  "
-                    + TextoAnimal.especieERaca(a)
-                    + "  ·  " + TextoAnimal.idade(a.getDataNascimento())
-                    + "  ·  " + a.getStatus().getDescricao());
+            return;
         }
+
+        Animal a = animalSelecionado;
+
+        infoAnimal.setText(a.getNome() + "  ·  "
+                + TextoAnimal.especieERaca(a)
+                + "  ·  " + TextoAnimal.idade(a.getDataNascimento())
+                + "  ·  " + a.getStatus().getDescricao());
     }
 
-    // Busca o animal pelo ID informado.
+    /**
+     * Retorna o animal selecionado. O texto do campo NÃO é lido:
+     * o ID exibido é apenas informativo.
+     */
     private Optional<Animal> buscarAnimal() {
-
-        try {
-            return contexto.animalServico().buscarPorId(
-                    Long.parseLong(campoIdAnimal.getText().trim())
-            );
-
-        } catch (NumberFormatException e) {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(animalSelecionado);
     }
 
-    // Exibe mensagens de erro na tela.
+    /** Exibe mensagens de erro na tela. */
     private void erro(String texto) {
         mensagem.setTextFill(COR_ERRO);
         mensagem.setText(texto);
     }
 }
-

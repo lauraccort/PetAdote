@@ -40,12 +40,12 @@
 
             <VBox spacing="6.0">
                <children>
-                  <Label text="ID do Animal" textFill="#4a2a1a">
+                  <Label text="Animal escolhido" textFill="#4a2a1a">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="campoIdAnimal" promptText="Digite o ID ou código do animal escolhido" />
+                  <TextField fx:id="campoIdAnimal" editable="false" focusTraversable="false" promptText="Animal selecionado" />
                   <Label fx:id="infoAnimal" textFill="#8a6a58" wrapText="true" />
 
                   <Label text="Informações / Justificativa do Adotante" textFill="#4a2a1a">
