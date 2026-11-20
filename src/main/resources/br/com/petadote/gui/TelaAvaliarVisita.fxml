@@ -41,14 +41,14 @@
 
             <VBox spacing="3.0">
                <children>
-                  <Label text="ID do Processo" textFill="#4a2a1a">
+                  <Label text="Processo" textFill="#4a2a1a">
                      <font>
                         <Font name="System Bold" size="11.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="campoIdProcesso" promptText="Ex.: 1" />
+                  <TextField fx:id="campoIdProcesso" editable="false" focusTraversable="false" promptText="Processo selecionado" />
 
-                  <Label text="ID da Visita / Agendamento" textFill="#4a2a1a">
+                  <Label text="Visita selecionada" textFill="#4a2a1a">
                      <font>
                         <Font name="System Bold" size="11.0" />
                      </font>
@@ -56,10 +56,9 @@
                         <Insets top="1.0" />
                      </VBox.margin>
                   </Label>
-                  <TextField fx:id="campoIdVisita" promptText="Ex.: 1" />
+                  <TextField fx:id="campoIdVisita" editable="false" focusTraversable="false" promptText="Visita selecionada" />
                   <Label fx:id="infoVisita" textFill="#8a6a58" wrapText="true" />
 
-                  <!-- Situação do animal e status da visita lado a lado -->
                   <HBox spacing="12.0">
                      <VBox.margin>
                         <Insets top="1.0" />
@@ -102,7 +101,6 @@
 
             <Label fx:id="mensagem" textFill="#c0392b" wrapText="true" />
 
-            <!-- Botão de Ação Principal -->
             <Button fx:id="botaoConfirmar" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#salvarAvaliacao" style="-fx-background-color: #9c4f2a; -fx-background-radius: 6; -fx-cursor: hand;" text="Salvar Avaliação da Visita" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
@@ -112,7 +110,6 @@
                </padding>
             </Button>
 
-            <!-- Seção de Relatórios (lado a lado para o cartão caber na janela) -->
             <HBox spacing="6.0">
                <children>
                   <Button maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" mnemonicParsing="false" onAction="#gerarRelatorioAnimaisDisponiveis" styleClass="botao-secundario" text="Relatório de animais disponíveis" >
@@ -144,7 +141,6 @@
                </children>
             </HBox>
 
-            <!-- Voltar pequeno, no canto inferior esquerdo -->
             <Button onAction="#voltar" prefWidth="100.0" text="Voltar">
                <VBox.margin>
                   <Insets top="4.0" />

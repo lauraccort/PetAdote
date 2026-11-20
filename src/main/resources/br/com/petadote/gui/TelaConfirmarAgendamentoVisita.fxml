@@ -42,12 +42,12 @@
 
             <VBox spacing="6.0">
                <children>
-                  <Label text="ID da Visita / Agendamento" textFill="#4a2a1a">
+                  <Label text="Visita selecionada" textFill="#4a2a1a">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="campoIdVisita" promptText="Ex.: 1 (coluna Nº do painel de visitas)" />
+                  <TextField fx:id="campoIdVisita" editable="false" focusTraversable="false" promptText="Visita selecionada" />
                   <Label fx:id="infoVisita" textFill="#8a6a58" wrapText="true" />
 
                   <Label text="Status da Confirmação" textFill="#4a2a1a">
@@ -60,7 +60,6 @@
                   </Label>
                   <ComboBox fx:id="campoStatusVisita" maxWidth="1.7976931348623157E308" promptText="Selecione (Confirmada / Reagendada / Cancelada)" />
 
-                  <!-- Só aparece quando "Reagendada" é escolhido -->
                   <VBox fx:id="grupoNovaData" spacing="6.0">
                      <children>
                         <Label text="Nova data da visita" textFill="#4a2a1a">

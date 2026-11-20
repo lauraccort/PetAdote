@@ -35,12 +35,12 @@
 
             <VBox spacing="6.0">
                <children>
-                  <Label text="ID do Processo" textFill="#4a2a1a">
+                  <Label text="Processo" textFill="#4a2a1a">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="campoIdProcesso" promptText="Digite ou verifique o ID do processo" />
+                  <TextField fx:id="campoIdProcesso" editable="false" focusTraversable="false" promptText="Processo selecionado" />
                   <Label fx:id="infoProcesso" textFill="#8a6a58" wrapText="true" />
 
                   <Label text="Observações / Parecer Final" textFill="#4a2a1a">

@@ -32,7 +32,7 @@
                   </Label>
                </children>
             </HBox>
-            <Label text="Informe o ID ou código do abrigo que deseja remover do sistema" textFill="#8a6a58">
+            <Label text="Confirme o abrigo que deseja remover do sistema" textFill="#8a6a58">
                <VBox.margin>
                   <Insets bottom="6.0" />
                </VBox.margin>
@@ -40,12 +40,12 @@
 
             <VBox spacing="6.0">
                <children>
-                  <Label text="ID do Abrigo" textFill="#4a2a1a">
+                  <Label text="Abrigo selecionado" textFill="#4a2a1a">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="campoIdAbrigo" promptText="Ex.: 1" />
+                  <TextField fx:id="campoIdAbrigo" editable="false" focusTraversable="false" promptText="Abrigo selecionado" />
                   <Label fx:id="infoAbrigo" textFill="#8a6a58" wrapText="true" />
                </children>
             </VBox>
