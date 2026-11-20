@@ -1,7 +1,5 @@
-
 package br.com.petadote.gui;
 
-import br.com.petadote.Contexto;
 import br.com.petadote.model.ProcessoAdocao;
 import br.com.petadote.model.Visita;
 import br.com.petadote.servico.PetAdoteFachada;
@@ -21,6 +19,9 @@ import java.util.Optional;
 /**
  * REQ09: o abrigo confirma, reagenda ou cancela a visita pedida pelo adotante.
  * Só visitas confirmadas/reagendadas contam para o mínimo do REQ18.
+ *
+ * A visita vem sempre do Navegador (painel de visitas). O ID exibido é
+ * somente leitura e nunca é usado como fonte de verdade.
  */
 public class TelaConfirmarAgendamentoVisitaController {
 
@@ -45,7 +46,7 @@ public class TelaConfirmarAgendamentoVisitaController {
     @FXML private TextField campoObservacoes;
     @FXML private Label mensagem;
 
-    // Visita escolhida no painel; tem prioridade sobre a busca pelo número
+    /** Visita escolhida no painel. Fonte de verdade. */
     private VisitaDoProcesso visitaSelecionada;
 
     public TelaConfirmarAgendamentoVisitaController(
@@ -72,10 +73,7 @@ public class TelaConfirmarAgendamentoVisitaController {
                 campoStatusVisita.valueProperty().isEqualTo(REAGENDADA)
         );
 
-        campoIdVisita.textProperty().addListener(
-                (obs, anterior, texto) -> mostrarInfo()
-        );
-
+        // A visita vem do painel de visitas; o ID exibido é apenas informativo.
         visitaSelecionada = navegador.selecionado(VisitaDoProcesso.class)
                 .filter(vp -> vp.visita().getId() != null)
                 .orElse(null);
@@ -92,7 +90,7 @@ public class TelaConfirmarAgendamentoVisitaController {
         Optional<VisitaDoProcesso> encontrada = buscarVisita();
 
         if (encontrada.isEmpty()) {
-            erro("Informe o número de uma visita existente (coluna Nº do painel de visitas).");
+            erro("Nenhuma visita selecionada. Volte ao painel de visitas e escolha uma.");
             return;
         }
 
@@ -191,48 +189,26 @@ public class TelaConfirmarAgendamentoVisitaController {
     }
 
     private void mostrarInfo() {
-        Optional<VisitaDoProcesso> encontrada = buscarVisita();
-
-        if (campoIdVisita.getText().isBlank()) {
+        if (visitaSelecionada == null) {
             infoVisita.setText("");
-        } else if (encontrada.isEmpty()) {
-            infoVisita.setText("Visita não encontrada.");
-        } else {
-            ProcessoAdocao processo = encontrada.get().processo();
-            Visita visita = encontrada.get().visita();
-
-            infoVisita.setText(
-                    "Data: " + visita.getData().format(FORMATO)
-                            + "  ·  Animal: " + processo.getAnimal().getNome()
-                            + "  ·  Adotante: " + processo.getAdotante().getNome()
-                            + "  ·  " + (visita.isConcluida()
-                            ? "Realizada"
-                            : visita.getStatusAgendamento().getDescricao())
-            );
+            return;
         }
+
+        ProcessoAdocao processo = visitaSelecionada.processo();
+        Visita visita = visitaSelecionada.visita();
+
+        infoVisita.setText(
+                "Data: " + visita.getData().format(FORMATO)
+                        + "  ·  Animal: " + processo.getAnimal().getNome()
+                        + "  ·  Adotante: " + processo.getAdotante().getNome()
+                        + "  ·  " + (visita.isConcluida()
+                        ? "Realizada"
+                        : visita.getStatusAgendamento().getDescricao())
+        );
     }
 
     private Optional<VisitaDoProcesso> buscarVisita() {
-        long id;
-
-        try {
-            id = Long.parseLong(campoIdVisita.getText().trim());
-        } catch (NumberFormatException e) {
-            return Optional.empty();
-        }
-
-        // Usa a própria visita escolhida no painel quando o número bate,
-        // para não confundir com outra visita de mesmo número.
-        if (visitaSelecionada != null
-                && visitaSelecionada.visita().getId().equals(id)) {
-            return Optional.of(visitaSelecionada);
-        }
-
-        return VisitaDoProcesso.de(fachada.listarProcessos())
-                .filter(vp -> vp.visita().getId() != null
-                        && vp.visita().getId().equals(id))
-                .filter(AbrigoLogado::pode)
-                .findFirst();
+        return Optional.ofNullable(visitaSelecionada);
     }
 
     private void erro(String texto) {
@@ -240,4 +216,3 @@ public class TelaConfirmarAgendamentoVisitaController {
         mensagem.setText(texto);
     }
 }
-

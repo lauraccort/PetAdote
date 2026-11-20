@@ -17,6 +17,9 @@ import java.util.Optional;
  * Controller da TelaAvaliarProcessoAdocao.fxml (REQ07: avaliação prévia com parecer).
  * Parecer "Aprovado" registra a avaliação favorável e aprova o processo;
  * "Reprovado" registra a avaliação e nega o processo, liberando o animal.
+ *
+ * O processo vem sempre do Navegador. O ID exibido é somente leitura e
+ * nunca é usado como fonte de verdade.
  */
 public class TelaAvaliarProcessoAdocaoController {
 
@@ -34,6 +37,9 @@ public class TelaAvaliarProcessoAdocaoController {
     @FXML private TextField campoObservacoes;
     @FXML private Label mensagem;
 
+    /** Processo escolhido em "Solicitações pendentes". Fonte de verdade. */
+    private ProcessoAdocao processoSelecionado;
+
     public TelaAvaliarProcessoAdocaoController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
         this.fachada = fachada;
@@ -43,11 +49,17 @@ public class TelaAvaliarProcessoAdocaoController {
     private void initialize() {
         campoStatusAvaliacao.getItems().addAll(APROVADO, REPROVADO);
         Combos.mostrarDicaQuandoVazio(campoStatusAvaliacao);
-        // Mostra de quem é o processo enquanto o ID é digitado
-        campoIdProcesso.textProperty().addListener((obs, anterior, texto) -> mostrarInfo());
-        // Vindo de "Solicitações pendentes", já preenche o processo escolhido
-        navegador.selecionado(ProcessoAdocao.class)
-                .ifPresent(p -> campoIdProcesso.setText(String.valueOf(p.getId())));
+
+        // Vindo de "Solicitações pendentes", o processo já vem escolhido.
+        // O ID exibido é apenas informativo.
+        processoSelecionado = navegador.selecionado(ProcessoAdocao.class)
+                .filter(AbrigoLogado::pode)
+                .orElse(null);
+
+        if (processoSelecionado != null) {
+            campoIdProcesso.setText(String.valueOf(processoSelecionado.getId()));
+        }
+
         mostrarInfo();
     }
 
@@ -55,7 +67,7 @@ public class TelaAvaliarProcessoAdocaoController {
     private void salvarAvaliacao() {
         Optional<ProcessoAdocao> encontrado = buscarProcesso();
         if (encontrado.isEmpty()) {
-            erro("Informe o ID de um processo existente.");
+            erro("Nenhum processo selecionado. Volte e escolha um processo nas solicitações pendentes.");
             return;
         }
         ProcessoAdocao processo = encontrado.get();
@@ -73,7 +85,6 @@ public class TelaAvaliarProcessoAdocaoController {
             erro("Explique o motivo da reprovação em \"Observações e Justificativa\".");
             return;
         }
-
         // REQ07: registra a avaliação prévia antes de aprovar/negar o processo
         Parecer parecer = APROVADO.equals(decisao) ? Parecer.POSITIVO : Parecer.NEGATIVO;
         fachada.registrarAvaliacao(processo.getId(),
@@ -87,6 +98,7 @@ public class TelaAvaliarProcessoAdocaoController {
         }
 
         String nomes = processo.getAnimal().getNome() + " → " + processo.getAdotante().getNome();
+        processoSelecionado = null;
         campoIdProcesso.clear();
         campoStatusAvaliacao.setValue(null);
         campoObservacoes.clear();
@@ -102,30 +114,22 @@ public class TelaAvaliarProcessoAdocaoController {
     }
 
     private void mostrarInfo() {
-        Optional<ProcessoAdocao> processo = buscarProcesso();
-        if (campoIdProcesso.getText().isBlank()) {
+        if (processoSelecionado == null) {
             infoProcesso.setText("");
-        } else if (processo.isEmpty()) {
-            infoProcesso.setText("Processo não encontrado.");
-        } else {
-            ProcessoAdocao p = processo.get();
-            infoProcesso.setText("Animal: " + p.getAnimal().getNome()
-                    + "  ·  Adotante: " + p.getAdotante().getNome()
-                    + " (" + p.getAdotante().getQuantAnimal() + " animal(is) em casa)"
-                    + "  ·  Status: " + p.getStatus().getDescricao());
+            return;
         }
+
+        ProcessoAdocao p = processoSelecionado;
+        infoProcesso.setText("Animal: " + p.getAnimal().getNome()
+                + "  ·  Adotante: " + p.getAdotante().getNome()
+                + " (" + p.getAdotante().getQuantAnimal() + " animal(is) em casa)"
+                + "  ·  Status: " + p.getStatus().getDescricao());
     }
 
     private Optional<ProcessoAdocao> buscarProcesso() {
-        try {
-            return fachada.buscarProcesso(Long.parseLong(campoIdProcesso.getText().trim()))
-                    .filter(AbrigoLogado::pode);
-        } catch (NumberFormatException e) {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(processoSelecionado);
     }
 
-    /** Responsável pelo parecer: o abrigo do animal (não há usuário logado guardado ainda). */
     private static String responsavel(ProcessoAdocao processo) {
         return processo.getAnimal().getAbrigo() == null
                 ? "Abrigo" : processo.getAnimal().getAbrigo().getNome();

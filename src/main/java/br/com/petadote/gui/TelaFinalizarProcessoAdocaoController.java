@@ -14,6 +14,9 @@ import java.util.Optional;
  * Antes de concluir confere as regras REQ15 (avaliação favorável),
  * REQ17 (animal fora de tratamento) e REQ18 (2 visitas nos próximos 90 dias),
  * dizendo qual delas impediu a conclusão.
+ *
+ * O processo vem sempre do Navegador. O ID exibido é somente leitura e
+ * nunca é usado como fonte de verdade.
  */
 public class TelaFinalizarProcessoAdocaoController {
 
@@ -28,6 +31,9 @@ public class TelaFinalizarProcessoAdocaoController {
     @FXML private TextField campoObservacoes;
     @FXML private Label mensagem;
 
+    /** Processo escolhido na tela anterior. Fonte de verdade. */
+    private ProcessoAdocao processoSelecionado;
+
     public TelaFinalizarProcessoAdocaoController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
         this.fachada = fachada;
@@ -35,8 +41,15 @@ public class TelaFinalizarProcessoAdocaoController {
 
     @FXML
     private void initialize() {
-        // Mostra de quem é o processo enquanto o ID é digitado
-        campoIdProcesso.textProperty().addListener((obs, anterior, texto) -> mostrarInfo());
+        // O processo vem da tela anterior; o ID exibido é apenas informativo.
+        processoSelecionado = navegador.selecionado(ProcessoAdocao.class)
+                .filter(AbrigoLogado::pode)
+                .orElse(null);
+
+        if (processoSelecionado != null) {
+            campoIdProcesso.setText(String.valueOf(processoSelecionado.getId()));
+        }
+
         mostrarInfo();
     }
 
@@ -44,7 +57,7 @@ public class TelaFinalizarProcessoAdocaoController {
     private void finalizarProcesso() {
         Optional<ProcessoAdocao> encontrado = buscarProcesso();
         if (encontrado.isEmpty()) {
-            erro("Informe o ID de um processo existente.");
+            erro("Nenhum processo selecionado. Volte e escolha um processo na lista.");
             return;
         }
         ProcessoAdocao processo = encontrado.get();
@@ -62,6 +75,7 @@ public class TelaFinalizarProcessoAdocaoController {
             return;
         }
 
+        processoSelecionado = null;
         campoIdProcesso.clear();
         campoObservacoes.clear();
         mensagem.setTextFill(COR_SUCESSO);
@@ -106,28 +120,21 @@ public class TelaFinalizarProcessoAdocaoController {
     }
 
     private void mostrarInfo() {
-        Optional<ProcessoAdocao> processo = buscarProcesso();
-        if (campoIdProcesso.getText().isBlank()) {
+        if (processoSelecionado == null) {
             infoProcesso.setText("");
-        } else if (processo.isEmpty()) {
-            infoProcesso.setText("Processo não encontrado.");
-        } else {
-            ProcessoAdocao p = processo.get();
-            infoProcesso.setText("Animal: " + p.getAnimal().getNome()
-                    + "  ·  Adotante: " + p.getAdotante().getNome()
-                    + "  ·  Status: " + p.getStatus().getDescricao()
-                    + "  ·  Visitas aprovadas nos próx. 90 dias: " + p.contarVisitasNoPeriodo()
-                    + " de " + ProcessoAdocao.getMinVisitasPosAdocao());
+            return;
         }
+
+        ProcessoAdocao p = processoSelecionado;
+        infoProcesso.setText("Animal: " + p.getAnimal().getNome()
+                + "  ·  Adotante: " + p.getAdotante().getNome()
+                + "  ·  Status: " + p.getStatus().getDescricao()
+                + "  ·  Visitas aprovadas nos próx. 90 dias: " + p.contarVisitasNoPeriodo()
+                + " de " + ProcessoAdocao.getMinVisitasPosAdocao());
     }
 
     private Optional<ProcessoAdocao> buscarProcesso() {
-        try {
-            return fachada.buscarProcesso(Long.parseLong(campoIdProcesso.getText().trim()))
-                    .filter(AbrigoLogado::pode);
-        } catch (NumberFormatException e) {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(processoSelecionado);
     }
 
     private void erro(String texto) {

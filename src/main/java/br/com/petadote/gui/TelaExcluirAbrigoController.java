@@ -8,10 +8,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import java.util.Optional;
 
-/**
- * Controller da TelaExcluirAbrigo.fxml (Excluir abrigo).
- * Exclui pelo ID; REQ20 bloqueia a exclusão de abrigo que ainda tem animais.
- */
+
+//REQ20 bloqueia a exclusão de abrigo que ainda tem animais.
+
 public class TelaExcluirAbrigoController {
 
     private static final Color COR_ERRO = Color.web("#c0392b");
@@ -24,6 +23,8 @@ public class TelaExcluirAbrigoController {
     @FXML private Label infoAbrigo;
     @FXML private Label mensagem;
 
+    private Abrigo abrigoSelecionado;
+
     public TelaExcluirAbrigoController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
         this.fachada = fachada;
@@ -31,12 +32,14 @@ public class TelaExcluirAbrigoController {
 
     @FXML
     private void initialize() {
-        campoIdAbrigo.textProperty().addListener((obs, anterior, texto) -> {
-            mensagem.setText(""); // mensagem antiga não vale para o novo ID
-            mostrarInfo();
-        });
-        // Vindo da lista de abrigos com um abrigo selecionado, o ID já vem preenchido
-        navegador.selecionado(Abrigo.class).ifPresent(a -> campoIdAbrigo.setText(String.valueOf(a.getId())));
+
+        abrigoSelecionado = navegador.selecionado(Abrigo.class)
+                .orElse(null);
+
+        if (abrigoSelecionado != null) {
+            campoIdAbrigo.setText(String.valueOf(abrigoSelecionado.getId()));
+        }
+
         mostrarInfo();
     }
 
@@ -44,7 +47,7 @@ public class TelaExcluirAbrigoController {
     private void excluirAbrigo() {
         Optional<Abrigo> encontrado = buscarAbrigo();
         if (encontrado.isEmpty()) {
-            erro("Informe o ID de um abrigo existente.");
+            erro("Nenhum abrigo selecionado. Volte e escolha um abrigo na lista.");
             return;
         }
         Abrigo abrigo = encontrado.get();
@@ -58,6 +61,7 @@ public class TelaExcluirAbrigoController {
             erro("Não foi possível excluir este abrigo.");
             return;
         }
+        abrigoSelecionado = null;
         campoIdAbrigo.clear();
         mensagem.setTextFill(COR_SUCESSO);
         mensagem.setText("Abrigo " + abrigo.getNome() + " excluído.");
@@ -69,25 +73,19 @@ public class TelaExcluirAbrigoController {
     }
 
     private void mostrarInfo() {
-        Optional<Abrigo> abrigo = buscarAbrigo();
-        if (campoIdAbrigo.getText().isBlank()) {
+        if (abrigoSelecionado == null) {
             infoAbrigo.setText("");
-        } else if (abrigo.isEmpty()) {
-            infoAbrigo.setText("Abrigo não encontrado.");
-        } else {
-            Abrigo a = abrigo.get();
-            int n = a.getQuantidadeAnimais();
-            infoAbrigo.setText(a.getNome() + "  ·  " + a.getEndereco() + "  ·  "
-                    + (n == 0 ? "nenhum animal vinculado" : n + (n == 1 ? " animal vinculado" : " animais vinculados")));
+            return;
         }
+
+        Abrigo a = abrigoSelecionado;
+        int n = a.getQuantidadeAnimais();
+        infoAbrigo.setText(a.getNome() + "  ·  " + a.getEndereco() + "  ·  "
+                + (n == 0 ? "nenhum animal vinculado" : n + (n == 1 ? " animal vinculado" : " animais vinculados")));
     }
 
     private Optional<Abrigo> buscarAbrigo() {
-        try {
-            return fachada.buscarAbrigo(Long.parseLong(campoIdAbrigo.getText().trim()));
-        } catch (NumberFormatException e) {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(abrigoSelecionado);
     }
 
     private void erro(String texto) {

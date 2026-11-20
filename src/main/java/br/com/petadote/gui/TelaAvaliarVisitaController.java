@@ -1,4 +1,3 @@
-
 package br.com.petadote.gui;
 
 import br.com.petadote.model.ProcessoAdocao;
@@ -18,6 +17,9 @@ import java.util.Optional;
 /**
  * REQ10: o abrigo registra o resultado da visita (situação do animal e observações).
  * Também permite confirmar ou cancelar a visita (REQ09).
+ *
+ * A visita vem sempre do Navegador (painel de visitas). Os IDs exibidos são
+ * somente leitura e nunca são usados como fonte de verdade.
  */
 public class TelaAvaliarVisitaController {
 
@@ -41,6 +43,9 @@ public class TelaAvaliarVisitaController {
     @FXML private ComboBox<String> campoStatusVisita;
     @FXML private TextField campoObservacoes;
     @FXML private Label mensagem;
+
+    /** Visita escolhida no painel. Fonte de verdade. */
+    private VisitaDoProcesso visitaSelecionada;
 
     public TelaAvaliarVisitaController(
             Navegador navegador,
@@ -74,25 +79,21 @@ public class TelaAvaliarVisitaController {
                 infoVisita.textProperty().isNotEmpty()
         );
 
-        campoIdProcesso.textProperty().addListener(
-                (obs, a, b) -> atualizar()
-        );
+        // A visita vem do painel de visitas; os IDs exibidos são apenas informativos.
+        visitaSelecionada = navegador.selecionado(VisitaDoProcesso.class)
+                .orElse(null);
 
-        campoIdVisita.textProperty().addListener(
-                (obs, a, b) -> atualizar()
-        );
-
-        navegador.selecionado(VisitaDoProcesso.class).ifPresent(vp -> {
+        if (visitaSelecionada != null) {
             campoIdProcesso.setText(
-                    String.valueOf(vp.processo().getId())
+                    String.valueOf(visitaSelecionada.processo().getId())
             );
 
             campoIdVisita.setText(
-                    vp.visita().getId() == null
+                    visitaSelecionada.visita().getId() == null
                             ? ""
-                            : String.valueOf(vp.visita().getId())
+                            : String.valueOf(visitaSelecionada.visita().getId())
             );
-        });
+        }
 
         atualizar();
     }
@@ -102,12 +103,7 @@ public class TelaAvaliarVisitaController {
         Optional<VisitaDoProcesso> encontrada = buscarVisita();
 
         if (encontrada.isEmpty()) {
-            erro(campoIdVisita.getText().isBlank()
-                    ? "Informe o ID da visita."
-                    : "Visita não encontrada"
-                    + (campoIdProcesso.getText().isBlank()
-                    ? "."
-                    : " neste processo."));
+            erro("Nenhuma visita selecionada. Volte ao painel de visitas e escolha uma.");
             return;
         }
 
@@ -195,6 +191,7 @@ public class TelaAvaliarVisitaController {
             }
         }
 
+        visitaSelecionada = null;
         campoIdProcesso.clear();
         campoIdVisita.clear();
         campoStatusVisita.setValue(null);
@@ -228,52 +225,23 @@ public class TelaAvaliarVisitaController {
     private void atualizar() {
         mensagem.setText("");
 
-        Optional<VisitaDoProcesso> vp = buscarVisita();
-
-        if (campoIdVisita.getText().isBlank()) {
+        if (visitaSelecionada == null) {
             infoVisita.setText("");
-        } else if (vp.isEmpty()) {
-            infoVisita.setText(
-                    "Visita não encontrada"
-                            + (campoIdProcesso.getText().isBlank()
-                            ? "."
-                            : " neste processo.")
-            );
-        } else {
-            ProcessoAdocao processo = vp.get().processo();
-
-            infoVisita.setText(
-                    "Data: " + vp.get().visita().getData().format(FORMATO)
-                            + "  ·  " + processo.getAnimal().getNome()
-                            + " → " + processo.getAdotante().getNome()
-                            + "  ·  " + vp.get().status()
-            );
+            return;
         }
+
+        ProcessoAdocao processo = visitaSelecionada.processo();
+
+        infoVisita.setText(
+                "Data: " + visitaSelecionada.visita().getData().format(FORMATO)
+                        + "  ·  " + processo.getAnimal().getNome()
+                        + " → " + processo.getAdotante().getNome()
+                        + "  ·  " + visitaSelecionada.status()
+        );
     }
 
     private Optional<VisitaDoProcesso> buscarVisita() {
-        Long idVisita = numero(campoIdVisita.getText());
-
-        if (idVisita == null) {
-            return Optional.empty();
-        }
-
-        Long idProcesso = numero(campoIdProcesso.getText());
-
-        return VisitaDoProcesso.de(fachada.listarProcessos())
-                .filter(vp -> idVisita.equals(vp.visita().getId()))
-                .filter(vp -> idProcesso == null
-                        || idProcesso.equals(vp.processo().getId()))
-                .filter(AbrigoLogado::pode)
-                .findFirst();
-    }
-
-    private static Long numero(String texto) {
-        try {
-            return Long.parseLong(texto.trim());
-        } catch (NumberFormatException e) {
-            return null;
-        }
+        return Optional.ofNullable(visitaSelecionada);
     }
 
     private void erro(String texto) {
