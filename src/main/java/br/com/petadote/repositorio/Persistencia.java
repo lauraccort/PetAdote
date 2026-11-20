@@ -9,12 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-/**
- * Guarda os dados em UM arquivo (dados/petadote.dat) no lugar de um banco.
- * Os 4 repositorios sao gravados juntos, para que objetos compartilhados
- * (ex.: o mesmo Animal no abrigo e no repositorio de animais) continuem
- * sendo o mesmo objeto depois de ler o arquivo.
- */
+
 public final class Persistencia {
 
     private static final Path ARQUIVO = Path.of(System.getProperty("user.home"), ".petadote", "petadote.dat");
@@ -23,12 +18,7 @@ public final class Persistencia {
     private Persistencia() {
     }
 
-    /**
-     * Le o arquivo (se existir) e preenche os repositorios. Chamar ao iniciar.
-     *
-     * @return true se carregou dados do arquivo; false se ele nao existe
-     *         (primeira execucao) e os repositorios continuam vazios.
-     */
+
     public static synchronized boolean carregar() {
         if (!Files.exists(ARQUIVO)) {
             return false;
@@ -55,15 +45,12 @@ public final class Persistencia {
         }
     }
 
-    /**
-     * Enquanto estiver marcado, salvar() nao faz nada. Usado ao semear os dados
-     * de exemplo, para gravar o arquivo uma unica vez no final.
-     */
+
     public static synchronized void marcarCarregando(boolean valor) {
         carregando = valor;
     }
 
-    /** Grava o estado atual dos 4 repositorios. */
+
     public static synchronized void salvar() {
         if (carregando) {
             return;
@@ -84,7 +71,6 @@ public final class Persistencia {
                 });
             }
 
-            // grava num temporario e troca, para nao corromper se der erro
             Files.move(temporario, ARQUIVO, StandardCopyOption.REPLACE_EXISTING);
 
         } catch (IOException e) {
