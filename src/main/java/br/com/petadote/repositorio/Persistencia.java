@@ -12,7 +12,7 @@ import java.nio.file.StandardCopyOption;
 
 public final class Persistencia {
 
-    private static final Path ARQUIVO = Path.of(System.getProperty("user.home"), ".petadote", "petadote.dat");
+    private static final Path ARQUIVO = Path.of("dados", "petadote.dat");
     private static boolean carregando = false;
 
     private Persistencia() {
