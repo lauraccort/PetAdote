@@ -63,6 +63,17 @@ public class AbrigoServicoImpl implements IAbrigoServico {
         Abrigo abrigo = repositorio.buscarPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Abrigo não encontrado."));
 
+        if (nome == null || nome.isBlank() || endereco == null || endereco.isBlank()) {
+            throw new IllegalArgumentException("Informe o nome e o endereço do abrigo.");
+        }
+        if (capacidade <= 0) {
+            throw new IllegalArgumentException("A capacidade deve ser maior que zero.");
+        }
+        if (capacidade < abrigo.getQuantidadeAnimais()) {
+            throw new IllegalArgumentException(
+                    "A capacidade não pode ser menor que a ocupação atual.");
+        }
+
         abrigo.setNome(nome);
         abrigo.setEndereco(endereco);
         abrigo.setCapacidade(capacidade);

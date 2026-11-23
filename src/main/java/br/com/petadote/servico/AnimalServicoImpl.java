@@ -87,6 +87,13 @@ public class AnimalServicoImpl implements IAnimalServico {
                 .orElseThrow(() ->
                         new IllegalArgumentException("Animal não encontrado."));
 
+        if (nome == null || nome.isBlank()) {
+            throw new IllegalArgumentException("Informe o nome do animal.");
+        }
+        if (dataNascimento == null || dataNascimento.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Informe uma data de nascimento válida.");
+        }
+
         animal.setNome(nome);
         animal.setDataNascimento(dataNascimento);
 
