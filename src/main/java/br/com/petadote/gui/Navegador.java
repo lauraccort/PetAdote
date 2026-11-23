@@ -15,18 +15,11 @@ import java.util.Deque;
 import java.util.Optional;
 import java.util.Set;
 
-/**
- * Troca as telas da janela principal e cria os controllers.
- * Guarda o histórico de telas abertas para o botão "Voltar".
- */
+
 public class Navegador {
 
     public static final String TELA_INICIAL = "TelaLogin.fxml";
 
-    /**
-     * Telas de cartão pequeno (login e cadastro) crescem menos
-     * que as outras em tela cheia.
-     */
     private static final Set<String> TELAS_COMPACTAS =
             Set.of("TelaLogin.fxml", "TelaCadastro.fxml");
 
@@ -45,16 +38,11 @@ public class Navegador {
         this.contexto = contexto;
     }
 
-    /**
-     * Abre uma tela sem levar item selecionado.
-     */
     public void ir(String fxml) {
         ir(fxml, null);
     }
 
-    /**
-     * Abre uma tela levando o item escolhido na tela atual.
-     */
+
     public void ir(String fxml, Object selecionado) {
 
         this.selecionado = selecionado;
@@ -70,18 +58,14 @@ public class Navegador {
         mostrar(fxml);
     }
 
-    /**
-     * Recupera o item levado pela última navegação.
-     */
+
     public <T> Optional<T> selecionado(Class<T> tipo) {
         return tipo.isInstance(selecionado)
                 ? Optional.of(tipo.cast(selecionado))
                 : Optional.empty();
     }
 
-    /**
-     * Volta para a tela anterior.
-     */
+
     public void voltar() {
         if (historico.size() > 1) {
             historico.pop();
@@ -89,9 +73,7 @@ public class Navegador {
         }
     }
 
-    /**
-     * Volta para o login, descartando o histórico.
-     */
+
     public void sair() {
         contexto.encerrarSessao();
         historico.clear();
@@ -142,9 +124,7 @@ public class Navegador {
         }
     }
 
-    /**
-     * Cria o controller pedido pelo fx:controller do FXML.
-     */
+
     private Object criarController(Class<?> tipo) {
 
         if (tipo == TelaLoginController.class) {

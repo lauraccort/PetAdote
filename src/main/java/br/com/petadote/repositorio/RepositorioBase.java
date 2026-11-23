@@ -15,7 +15,7 @@ public abstract class RepositorioBase<T extends Entidade> implements IRepositori
             entidade.setId(sequencia.getAndIncrement());
         }
         banco.put(entidade.getId(), entidade);
-        Persistencia.salvar();          // NOVO: grava o arquivo
+        Persistencia.salvar();
         return entidade;
     }
 
@@ -32,7 +32,7 @@ public abstract class RepositorioBase<T extends Entidade> implements IRepositori
     @Override
     public boolean excluirPorId(Long id) {
         boolean removeu = banco.remove(id) != null;
-        Persistencia.salvar();          // NOVO: grava o arquivo
+        Persistencia.salvar();
         return removeu;
     }
 
