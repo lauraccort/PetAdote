@@ -12,8 +12,8 @@ import java.util.Optional;
  */
 public interface IAnimalServico {
 
-    /** REQ02: cadastra um animal. */
-    Animal cadastrar(Animal animal);
+    /** REQ02 e REQ19: cadastra um animal vinculado a um abrigo com vaga. */
+    Animal cadastrar(Long idAbrigo, Animal animal);
 
     /** REQ02: busca um animal pelo identificador. */
     Optional<Animal> buscarPorId(Long id);

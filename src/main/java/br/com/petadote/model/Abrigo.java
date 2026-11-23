@@ -85,11 +85,10 @@ public class Abrigo extends Entidade {
     }
 
     /**
-     * REQ20: abrigo só pode ser excluído se não possuir
-     * animais vinculados (os já adotados não contam).
+     * REQ20: todos os vínculos impedem a exclusão, inclusive os de animais adotados.
      */
     public boolean podeExcluir() {
-        return getQuantidadeAnimais() == 0;
+        return animais.isEmpty();
     }
 
     /** Animais que ainda estão no abrigo (todos, menos os adotados). */

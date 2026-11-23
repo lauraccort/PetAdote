@@ -56,10 +56,6 @@ public class PetAdoteFachada {
         return abrigoServico.atualizar(id, nome, endereco, capacidade);
     }
 
-    public boolean adicionarAnimalAoAbrigo(Long idAbrigo, Animal animal) {
-        return abrigoServico.adicionarAnimal(idAbrigo, animal);
-    }
-
     public boolean excluirAbrigo(Long id) {
         return abrigoServico.excluir(id);
     }
@@ -81,8 +77,8 @@ public class PetAdoteFachada {
     }
 
     // ---------- Animal ----------
-    public Animal cadastrarAnimal(Animal animal) {
-        return animalServico.cadastrar(animal);
+    public Animal cadastrarAnimal(Long idAbrigo, Animal animal) {
+        return animalServico.cadastrar(idAbrigo, animal);
     }
 
     public Optional<Animal> buscarAnimal(Long id) {

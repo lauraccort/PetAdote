@@ -153,20 +153,15 @@ public class TelaCadastroAnimalController {
         fio.start();
     }
 
-    /** Parte que já existia: salva o animal e vincula ao abrigo. */
     private void concluirCadastro(Animal animal, Abrigo abrigo, boolean semInfoRaca) {
         try {
-            Animal salvo = fachada.cadastrarAnimal(animal);
-            if (!fachada.adicionarAnimalAoAbrigo(abrigo.getId(), salvo)) {
-                erro("Não foi possível vincular o animal ao abrigo.");
-                return;
-            }
+            Animal salvo = fachada.cadastrarAnimal(abrigo.getId(), animal);
             limpar();
             mensagem.setTextFill(COR_SUCESSO);
             mensagem.setText(salvo.getNome() + " cadastrado no abrigo " + abrigo.getNome() + "."
                     + (semInfoRaca ? " (Não foi possível obter as informações da raça.)" : ""));
-        } catch (IllegalArgumentException e) {
-            erro(e.getMessage()); // ex.: data de nascimento no futuro
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            erro(e.getMessage());
         }
     }
 

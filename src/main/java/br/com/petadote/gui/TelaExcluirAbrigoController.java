@@ -52,9 +52,10 @@ public class TelaExcluirAbrigoController {
         }
         Abrigo abrigo = encontrado.get();
         if (!abrigo.podeExcluir()) { // REQ20
-            int n = abrigo.getQuantidadeAnimais();
+            int n = abrigo.getAnimais().size();
             erro("Não é possível excluir " + abrigo.getNome() + ": ainda há " + n
-                    + (n == 1 ? " animal vinculado" : " animais vinculados") + " a ele (REQ20).");
+                    + (n == 1 ? " animal vinculado" : " animais vinculados")
+                    + ". Animais já adotados também mantêm o vínculo (REQ20).");
             return;
         }
         if (!fachada.excluirAbrigo(abrigo.getId())) {
@@ -79,7 +80,7 @@ public class TelaExcluirAbrigoController {
         }
 
         Abrigo a = abrigoSelecionado;
-        int n = a.getQuantidadeAnimais();
+        int n = a.getAnimais().size();
         infoAbrigo.setText(a.getNome() + "  ·  " + a.getEndereco() + "  ·  "
                 + (n == 0 ? "nenhum animal vinculado" : n + (n == 1 ? " animal vinculado" : " animais vinculados")));
     }

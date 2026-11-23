@@ -11,11 +11,25 @@ public abstract class RepositorioBase<T extends Entidade> implements IRepositori
 
     @Override
     public T salvar(T entidade) {
-        if (entidade.getId() == null) {
+        boolean nova = entidade.getId() == null;
+        if (nova) {
             entidade.setId(sequencia.getAndIncrement());
         }
-        banco.put(entidade.getId(), entidade);
-        Persistencia.salvar();
+        Long id = entidade.getId();
+        T anterior = banco.put(id, entidade);
+        try {
+            Persistencia.salvar();
+        } catch (RuntimeException e) {
+            if (anterior == null) {
+                banco.remove(id);
+            } else {
+                banco.put(id, anterior);
+            }
+            if (nova) {
+                entidade.setId(null);
+            }
+            throw e;
+        }
         return entidade;
     }
 

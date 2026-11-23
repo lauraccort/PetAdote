@@ -1,7 +1,6 @@
 
 package br.com.petadote.servico;
 
-import br.com.petadote.model.Animal;
 import br.com.petadote.model.Abrigo;
 
 import java.util.List;
@@ -16,8 +15,6 @@ public interface IAbrigoServico {
     List<Abrigo> listarTodos();
 
     Abrigo atualizar(Long id, String nome, String endereco, int capacidade);
-
-    boolean adicionarAnimal(Long idAbrigo, Animal animal);
 
     boolean excluir(Long id);
 

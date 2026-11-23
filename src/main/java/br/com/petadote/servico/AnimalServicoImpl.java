@@ -2,10 +2,12 @@ package br.com.petadote.servico;
 
 import br.com.petadote.model.Abrigo;
 import br.com.petadote.model.Animal;
+import br.com.petadote.model.StatusAbrigo;
 import br.com.petadote.model.StatusAnimal;
 import br.com.petadote.model.StatusProcesso;
 import br.com.petadote.repositorio.IRepositorio;
 import br.com.petadote.repositorio.AnimalRepositorio;
+import br.com.petadote.repositorio.AbrigoRepositorio;
 import br.com.petadote.repositorio.ProcessoAdocaoRepositorio;
 
 import java.time.LocalDate;
@@ -27,10 +29,9 @@ public class AnimalServicoImpl implements IAnimalServico {
         return INSTANCIA;
     }
 
-    // REQ02: cadastra o animal (Cão, Gato ou Outra espécie);
-    // o vínculo com o abrigo é feito em AbrigoServicoImpl.adicionarAnimal.
+    // REQ02 e REQ19: grava o cadastro e o vínculo no mesmo arquivo.
     @Override
-    public Animal cadastrar(Animal animal) {
+    public synchronized Animal cadastrar(Long idAbrigo, Animal animal) {
         if (animal.getNome() == null || animal.getNome().isBlank()) {
             throw new IllegalArgumentException("Nome do animal é obrigatório.");
         }
@@ -41,7 +42,25 @@ public class AnimalServicoImpl implements IAnimalServico {
                     "Data de nascimento não pode ser futura.");
         }
 
-        return repositorio.salvar(animal);
+        if (animal.getId() != null || animal.getAbrigo() != null) {
+            throw new IllegalArgumentException("O animal já foi cadastrado ou vinculado a um abrigo.");
+        }
+
+        Abrigo abrigo = AbrigoRepositorio.getInstance().buscarPorId(idAbrigo)
+                .orElseThrow(() -> new IllegalArgumentException("Abrigo não encontrado."));
+        if (abrigo.getStatus() != StatusAbrigo.APROVADO) {
+            throw new IllegalArgumentException("O cadastro exige um abrigo aprovado.");
+        }
+        if (!abrigo.adicionarAnimal(animal)) {
+            throw new IllegalArgumentException("O abrigo atingiu sua capacidade.");
+        }
+
+        try {
+            return repositorio.salvar(animal);
+        } catch (RuntimeException e) {
+            abrigo.removerAnimal(animal);
+            throw e;
+        }
     }
 
     @Override
@@ -58,7 +77,7 @@ public class AnimalServicoImpl implements IAnimalServico {
     @Override
     public List<Animal> listarDisponiveis() {
         return repositorio.listarTodos().stream()
-                .filter(a -> a.getStatus() == StatusAnimal.DISPONIVEL)
+                .filter(Animal::podeIniciarProcesso)
                 .collect(Collectors.toList());
     }
 
