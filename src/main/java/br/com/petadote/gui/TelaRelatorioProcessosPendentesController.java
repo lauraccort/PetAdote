@@ -3,7 +3,6 @@ package br.com.petadote.gui;
 import br.com.petadote.Contexto;
 import br.com.petadote.model.Avaliacao;
 import br.com.petadote.model.ProcessoAdocao;
-import br.com.petadote.model.StatusProcesso;
 import br.com.petadote.model.Visita;
 import br.com.petadote.servico.PetAdoteFachada;
 import javafx.application.Platform;
@@ -22,18 +21,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
-/**
- * Controller da TelaRelatorioProcessosPendentes.fxml (REQ13: processos pendentes ha 15 dias).
- *
- * O filtro do servico (listarPendentesHa15Dias) considera apenas EM_AVALIACAO.
- * Como este controller nao pode alterar o servico, processos APROVADOS travados
- * sao buscados por listarTodos() e somados aqui, para o relatorio refletir a
- * situacao real de pendencias.
- */
+/** REQ13: exibe processos pendentes de avaliação há mais de 15 dias. */
 public class TelaRelatorioProcessosPendentesController {
 
     private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final int DIAS_LIMITE = 15;
 
     private final Navegador navegador;
     private final PetAdoteFachada fachada;
@@ -107,59 +98,18 @@ public class TelaRelatorioProcessosPendentesController {
     }
 
     private void carregar() {
-        List<ProcessoAdocao> pendentes = buscarPendentes();
+        List<ProcessoAdocao> pendentes = fachada.listarProcessosPendentes().stream()
+                .filter(AbrigoLogado::pode)
+                .sorted(Comparator.comparing(ProcessoAdocao::getDataAbertura))
+                .toList();
 
         tabela.setItems(FXCollections.observableArrayList(pendentes));
 
-        long emAvaliacao = pendentes.stream()
-                .filter(p -> p.getStatus() == StatusProcesso.EM_AVALIACAO)
-                .count();
-        long aprovados = pendentes.stream()
-                .filter(p -> p.getStatus() == StatusProcesso.APROVADO)
-                .count();
-
-        if (pendentes.isEmpty()) {
-            total.setText("Nenhum processo pendente há " + DIAS_LIMITE + " dias ou mais");
-        } else {
-            total.setText(pendentes.size() + " processo(s) pendente(s) há " + DIAS_LIMITE
-                    + " dias ou mais — " + emAvaliacao + " em avaliação, "
-                    + aprovados + " aprovado(s) aguardando conclusão");
-        }
-    }
-
-    /**
-     * Une o resultado do servico (EM_AVALIACAO) com os processos APROVADOS
-     * antigos, que o servico deixa de fora mas continuam pendentes na pratica.
-     * Sem duplicar: usa o id como chave.
-     */
-    private List<ProcessoAdocao> buscarPendentes() {
-        LocalDate limite = LocalDate.now().minusDays(DIAS_LIMITE);
-
-        java.util.Map<Long, ProcessoAdocao> porId = new java.util.LinkedHashMap<>();
-
-        for (ProcessoAdocao p : fachada.listarProcessosPendentes()) {
-            if (!AbrigoLogado.pode(p)) {
-                continue;
-            }
-            porId.put(p.getId(), p);
-        }
-
-        for (ProcessoAdocao p : fachada.listarProcessos()) {
-            if (!AbrigoLogado.pode(p)) {
-                continue;
-            }
-            if (p.getStatus() != StatusProcesso.APROVADO) {
-                continue;
-            }
-            if (p.getDataAbertura() == null || p.getDataAbertura().isAfter(limite)) {
-                continue;
-            }
-            porId.putIfAbsent(p.getId(), p);
-        }
-
-        return porId.values().stream()
-                .sorted(Comparator.comparing(ProcessoAdocao::getDataAbertura))
-                .toList();
+        total.setText(switch (pendentes.size()) {
+            case 0 -> "Nenhum processo pendente de avaliação há mais de 15 dias";
+            case 1 -> "1 processo pendente de avaliação há mais de 15 dias";
+            default -> pendentes.size() + " processos pendentes de avaliação há mais de 15 dias";
+        });
     }
 
     @FXML

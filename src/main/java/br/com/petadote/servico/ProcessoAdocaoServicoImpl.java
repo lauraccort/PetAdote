@@ -92,7 +92,7 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
                 .collect(Collectors.toList());
     }
 
-    // REQ13: lista processos pendentes de avaliação há pelo menos 15 dias.
+    // REQ13: lista processos pendentes de avaliação há mais de 15 dias.
     @Override
     public List<ProcessoAdocao> listarPendentesHa15Dias() {
 
@@ -101,7 +101,7 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         return processoRepositorio.listarTodos().stream()
                 .filter(p -> p.getStatus() == StatusProcesso.EM_AVALIACAO)
                 .filter(p -> p.getDataAbertura() != null
-                        && !p.getDataAbertura().isAfter(limite))
+                        && p.getDataAbertura().isBefore(limite))
                 .collect(Collectors.toList());
     }
 

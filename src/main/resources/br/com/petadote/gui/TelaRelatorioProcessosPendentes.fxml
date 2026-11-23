@@ -32,7 +32,7 @@
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </Label>
-                  <Label text="Relatório de processos pendentes " textFill="#4a2a1a" wrapText="true">
+                  <Label text="Relatório de processos pendentes de avaliação" textFill="#4a2a1a" wrapText="true">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
