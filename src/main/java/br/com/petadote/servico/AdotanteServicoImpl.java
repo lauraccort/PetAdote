@@ -18,7 +18,7 @@ public class AdotanteServicoImpl implements IAdotanteServico {
         return INSTANCIA;
     }
 
-    // REQ04: cadastra o adotante (nome e CPF com 11 dígitos obrigatórios).
+    // REQ04: valida nome, CPF, endereço e quantidade de animais do adotante.
     @Override
     public Adotante cadastrar(Adotante adotante) {
         if (adotante.getNome() == null || adotante.getNome().isBlank()) {
@@ -27,6 +27,12 @@ public class AdotanteServicoImpl implements IAdotanteServico {
         String cpf = adotante.getCpf() == null ? "" : adotante.getCpf().replaceAll("\\D", "");
         if (cpf.length() != 11) {
             throw new IllegalArgumentException("CPF deve conter 11 dígitos.");
+        }
+        if (adotante.getEndereco() == null || adotante.getEndereco().isBlank()) {
+            throw new IllegalArgumentException("Endereço do adotante é obrigatório.");
+        }
+        if (adotante.getQuantAnimal() < 0) {
+            throw new IllegalArgumentException("A quantidade de animais não pode ser negativa.");
         }
         ValidadorAcesso.validar(adotante.getEmail(), adotante.getSenha(),
                 repositorio.listarTodos().stream().map(Adotante::getEmail));

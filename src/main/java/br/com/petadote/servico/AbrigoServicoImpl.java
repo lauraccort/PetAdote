@@ -31,6 +31,10 @@ public class AbrigoServicoImpl implements IAbrigoServico {
             throw new IllegalArgumentException("Nome do abrigo é obrigatório.");
         }
 
+        if (abrigo.getEndereco() == null || abrigo.getEndereco().isBlank()) {
+            throw new IllegalArgumentException("Endereço do abrigo é obrigatório.");
+        }
+
         if (abrigo.getCapacidade() <= 0) {
             throw new IllegalArgumentException("Capacidade deve ser maior que zero.");
         }
