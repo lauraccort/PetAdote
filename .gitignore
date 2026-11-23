@@ -32,5 +32,5 @@ bin/
 .idea/
 *.iml
 target/
-### Dados locais gerados pelo app ###
-dados/
+### Arquivo temporário da gravação (dados/petadote.dat é compartilhado e versionado) ###
+dados/*.tmp

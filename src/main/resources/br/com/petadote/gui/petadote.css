@@ -82,3 +82,18 @@
 .button.botao-secundario:hover {
     -fx-background-color: #f3e4d8;
 }
+
+.button.botao-excluir-animal {
+    -fx-background-color: white;
+    -fx-border-color: #a12b25;
+    -fx-border-radius: 6;
+    -fx-text-fill: #a12b25;
+}
+
+.button.botao-excluir-animal:hover {
+    -fx-background-color: #fcecea;
+}
+
+.button.botao-excluir-animal:pressed {
+    -fx-background-color: #f7d8d4;
+}

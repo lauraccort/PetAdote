@@ -10,6 +10,8 @@ import br.com.petadote.servico.PetAdoteFachada;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -231,6 +233,41 @@ public class TelaListarAnimaisAbrigoController {
                             + "Verifique se o animal está em tratamento."
             );
         }
+    }
+
+    @FXML
+    private void excluirAnimal() {
+        Animal animal = tabelaAnimais.getSelectionModel().getSelectedItem();
+        if (animal == null) {
+            mensagem.setTextFill(COR_ERRO);
+            mensagem.setText("Selecione um animal na tabela.");
+            return;
+        }
+        if (!AbrigoLogado.pode(animal) || animal.getStatus() != StatusAnimal.DISPONIVEL) {
+            mensagem.setTextFill(COR_ERRO);
+            mensagem.setText("Selecione um animal disponível do seu abrigo.");
+            return;
+        }
+
+        ButtonType excluir = new ButtonType("Excluir");
+        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION,
+                "Deseja excluir " + animal.getNome() + "?", ButtonType.CANCEL, excluir);
+        confirmacao.initOwner(tabelaAnimais.getScene().getWindow());
+        confirmacao.setTitle("Excluir animal");
+        confirmacao.setHeaderText(null);
+        if (confirmacao.showAndWait().orElse(ButtonType.CANCEL) != excluir) {
+            return;
+        }
+
+        if (!fachada.excluirAnimal(animal.getId())) {
+            mensagem.setTextFill(COR_ERRO);
+            mensagem.setText("Só é possível excluir animais disponíveis sem histórico de adoção.");
+            return;
+        }
+
+        filtrar();
+        mensagem.setTextFill(COR_INFO);
+        mensagem.setText("Animal excluído com sucesso.");
     }
 
     @FXML

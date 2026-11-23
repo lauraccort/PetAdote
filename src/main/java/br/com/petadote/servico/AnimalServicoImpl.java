@@ -1,5 +1,6 @@
 package br.com.petadote.servico;
 
+import br.com.petadote.model.Abrigo;
 import br.com.petadote.model.Animal;
 import br.com.petadote.model.StatusAnimal;
 import br.com.petadote.model.StatusProcesso;
@@ -75,11 +76,20 @@ public class AnimalServicoImpl implements IAnimalServico {
 
     @Override
     public boolean excluir(Long id) {
-        Optional<Animal> animal = repositorio.buscarPorId(id);
+        Animal animal = repositorio.buscarPorId(id).orElse(null);
+        if (animal == null || animal.getStatus() != StatusAnimal.DISPONIVEL) {
+            return false;
+        }
 
-        if (animal.isEmpty()
-                || animal.get().getStatus() != StatusAnimal.DISPONIVEL
-                || animal.get().getAbrigo() != null) {
+        boolean temHistorico = ProcessoAdocaoRepositorio.getInstance().listarTodos().stream()
+                .anyMatch(processo -> processo.getAnimal() != null
+                        && id.equals(processo.getAnimal().getId()));
+        if (temHistorico) {
+            return false;
+        }
+
+        Abrigo abrigo = animal.getAbrigo();
+        if (abrigo != null && !abrigo.removerAnimal(animal)) {
             return false;
         }
 
