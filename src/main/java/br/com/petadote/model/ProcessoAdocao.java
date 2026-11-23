@@ -194,11 +194,39 @@ public class ProcessoAdocao extends Entidade {
         return contarVisitasSolicitadasNoPeriodo() < MIN_VISITAS_POS_ADOCAO;
     }
 
+    /**
+     * REQ18: impede perder uma visita obrigatória após a conclusão.
+     * Uma nova data nula representa cancelamento.
+     */
+    public boolean preservaMinimoAoAlterarVisita(Visita visita, LocalDate novaData) {
+        if (status != StatusProcesso.CONCLUIDO) {
+            return true;
+        }
+
+        LocalDate hoje = LocalDate.now();
+        LocalDate fim = fimPeriodoVisitas(hoje);
+        if (novaData != null && novaData.isBefore(fim)) {
+            return true;
+        }
+
+        List<Visita> aprovadasNoPeriodo = visitasNoPeriodo(fim, hoje)
+                .filter(Visita::isAprovadaPeloAbrigo)
+                .toList();
+        return !aprovadasNoPeriodo.contains(visita)
+                || aprovadasNoPeriodo.size() > MIN_VISITAS_POS_ADOCAO;
+    }
+
     private java.util.stream.Stream<Visita> visitasNoPeriodo() {
         LocalDate hoje = LocalDate.now();
-        LocalDate inicio = dataConclusao != null ? dataConclusao : hoje;
-        LocalDate fim = inicio.plusDays(PERIODO_VISITAS_DIAS);
+        return visitasNoPeriodo(fimPeriodoVisitas(hoje), hoje);
+    }
 
+    private LocalDate fimPeriodoVisitas(LocalDate hoje) {
+        LocalDate inicio = dataConclusao != null ? dataConclusao : hoje;
+        return inicio.plusDays(PERIODO_VISITAS_DIAS);
+    }
+
+    private java.util.stream.Stream<Visita> visitasNoPeriodo(LocalDate fim, LocalDate hoje) {
         return visitas.stream()
                 .filter(v -> !v.isCancelada())
                 .filter(v -> v.getData() != null)

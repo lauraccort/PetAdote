@@ -169,7 +169,9 @@ public class TelaAvaliarVisitaController {
                         visita.getId(),
                         observacoes)) {
 
-                    erro("Não foi possível cancelar esta visita.");
+                    erro(encontrada.get().processo().preservaMinimoAoAlterarVisita(visita, null)
+                            ? "Não foi possível cancelar esta visita."
+                            : "Confirme outra visita dentro do prazo antes de cancelar esta (REQ18).");
                     return;
                 }
 

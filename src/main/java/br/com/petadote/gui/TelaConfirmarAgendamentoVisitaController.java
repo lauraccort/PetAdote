@@ -130,7 +130,9 @@ public class TelaConfirmarAgendamentoVisitaController {
                         novaData,
                         obs)) {
 
-                    erro("Não foi possível reagendar esta visita.");
+                    erro(encontrada.get().processo().preservaMinimoAoAlterarVisita(visita, novaData)
+                            ? "Não foi possível reagendar esta visita."
+                            : "Escolha uma data dentro do prazo ou confirme outra visita dentro do prazo antes de reagendar (REQ18).");
                     return;
                 }
 
@@ -149,13 +151,13 @@ public class TelaConfirmarAgendamentoVisitaController {
                         visita.getId(),
                         obs)) {
 
-                    erro("Não foi possível cancelar esta visita.");
+                    erro(encontrada.get().processo().preservaMinimoAoAlterarVisita(visita, null)
+                            ? "Não foi possível cancelar esta visita."
+                            : "Confirme outra visita dentro do prazo antes de cancelar esta (REQ18).");
                     return;
                 }
 
-                resultado = "Visita " + visita.getId()
-                        + " cancelada. Ela não conta mais para as 2 visitas obrigatórias;"
-                        + " o adotante poderá pedir outra data.";
+                resultado = "Visita " + visita.getId() + " cancelada.";
             }
 
             default -> {

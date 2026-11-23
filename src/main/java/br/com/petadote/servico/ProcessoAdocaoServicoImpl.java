@@ -317,6 +317,10 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
             return false;
         }
 
+        if (!processo.preservaMinimoAoAlterarVisita(visita, null)) {
+            return false;
+        }
+
         boolean cancelou = visita.cancelar(observacao);
 
         if (cancelou) {
@@ -345,6 +349,10 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         Visita visita = localizarVisita(processo, idVisita);
 
         if (visita == null) {
+            return false;
+        }
+
+        if (!processo.preservaMinimoAoAlterarVisita(visita, novaData)) {
             return false;
         }
 
