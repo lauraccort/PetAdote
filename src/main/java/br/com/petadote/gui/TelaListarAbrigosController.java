@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import java.util.Comparator;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class TelaListarAbrigosController {
     @FXML private TableColumn<Abrigo, String> colAnimais;
     @FXML private TableColumn<Abrigo, String> colVagas;
     @FXML private Label total;
+    @FXML private Label mensagem;
 
     public TelaListarAbrigosController(Navegador navegador, PetAdoteFachada fachada) {
         this.navegador = navegador;
@@ -44,6 +46,10 @@ public class TelaListarAbrigosController {
         colAnimais.setCellValueFactory(c -> texto(c.getValue().getQuantidadeAnimais()));
         colVagas.setCellValueFactory(c -> texto(c.getValue().getCapacidade() - c.getValue().getQuantidadeAnimais()));
 
+        carregarAbrigos();
+    }
+
+    private void carregarAbrigos() {
         List<Abrigo> aprovados = fachada.listarAbrigos().stream()
                 .filter(a -> a.getStatus() == StatusAbrigo.APROVADO)
                 .sorted(Comparator.comparing(Abrigo::getNome, String.CASE_INSENSITIVE_ORDER))
@@ -52,6 +58,37 @@ public class TelaListarAbrigosController {
         int pendentes = fachada.listarAbrigosPendentes().size();
         total.setText((aprovados.size() == 1 ? "1 abrigo aprovado" : aprovados.size() + " abrigos aprovados")
                 + (pendentes == 0 ? "" : "  ·  " + pendentes + (pendentes == 1 ? " pedido pendente" : " pedidos pendentes")));
+    }
+
+    @FXML
+    private void editarAbrigo() {
+        Abrigo abrigo = tabela.getSelectionModel().getSelectedItem();
+        if (abrigo == null) {
+            mensagem.setText("Selecione um abrigo na tabela.");
+            return;
+        }
+
+        TextField nome = new TextField(abrigo.getNome());
+        TextField endereco = new TextField(abrigo.getEndereco());
+        TextField capacidade = new TextField(Integer.toString(abrigo.getCapacidade()));
+        DialogoEdicao dialogo = new DialogoEdicao(tabela.getScene().getWindow(), "Editar abrigo");
+        dialogo.adicionarCampo("Nome", nome);
+        dialogo.adicionarCampo("Endereço", endereco);
+        dialogo.adicionarCampo("Capacidade", capacidade);
+
+        if (dialogo.editar(() -> {
+            int vagas;
+            try {
+                vagas = Integer.parseInt(capacidade.getText().trim());
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Informe uma capacidade inteira.", e);
+            }
+            fachada.atualizarAbrigo(
+                    abrigo.getId(), nome.getText().trim(), endereco.getText().trim(), vagas);
+        })) {
+            carregarAbrigos();
+            mensagem.setText("Abrigo atualizado com sucesso.");
+        }
     }
 
     @FXML

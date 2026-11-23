@@ -86,6 +86,7 @@
             <children>
                <Button mnemonicParsing="false" onAction="#voltar" styleClass="botao-secundario" text="Voltar" />
                <Region HBox.hgrow="ALWAYS" />
+               <Button mnemonicParsing="false" onAction="#editarAnimal" styleClass="botao-secundario" text="Editar animal" />
                <Button mnemonicParsing="false" onAction="#abrirCadastroAnimal" text="Novo animal" />
             </children>
          </HBox>

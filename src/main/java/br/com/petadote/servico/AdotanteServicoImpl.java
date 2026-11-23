@@ -47,6 +47,10 @@ public class AdotanteServicoImpl implements IAdotanteServico {
     public Adotante atualizar(Long id, String nome, String endereco) {
         Adotante adotante = repositorio.buscarPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Adotante não encontrado."));
+        if (nome == null || nome.isBlank() || endereco == null || endereco.isBlank()) {
+            throw new IllegalArgumentException("Informe o nome e o endereço do adotante.");
+        }
+
         adotante.setNome(nome);
         adotante.setEndereco(endereco);
         return repositorio.salvar(adotante);

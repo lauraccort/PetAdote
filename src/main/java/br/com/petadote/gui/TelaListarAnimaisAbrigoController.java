@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -232,6 +233,31 @@ public class TelaListarAnimaisAbrigoController {
                     "Não foi possível registrar a alta. "
                             + "Verifique se o animal está em tratamento."
             );
+        }
+    }
+
+    @FXML
+    private void editarAnimal() {
+        Animal animal = tabelaAnimais.getSelectionModel().getSelectedItem();
+        if (animal == null || !AbrigoLogado.pode(animal)) {
+            mensagem.setTextFill(COR_ERRO);
+            mensagem.setText("Selecione um animal do seu abrigo.");
+            return;
+        }
+
+        TextField nome = new TextField(animal.getNome());
+        DatePicker nascimento = new DatePicker(animal.getDataNascimento());
+        nascimento.setEditable(false);
+        DialogoEdicao dialogo = new DialogoEdicao(
+                tabelaAnimais.getScene().getWindow(), "Editar animal");
+        dialogo.adicionarCampo("Nome", nome);
+        dialogo.adicionarCampo("Data de nascimento", nascimento);
+
+        if (dialogo.editar(() ->
+                fachada.atualizarAnimal(animal.getId(), nome.getText().trim(), nascimento.getValue()))) {
+            filtrar();
+            mensagem.setTextFill(COR_INFO);
+            mensagem.setText("Animal atualizado com sucesso.");
         }
     }
 

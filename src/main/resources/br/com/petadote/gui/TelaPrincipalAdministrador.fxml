@@ -61,5 +61,9 @@
    </HBox>
    <!-- espaço vazio que empurra o rodapé para baixo; o conteúdo da tela entra acima -->
    <Region VBox.vgrow="ALWAYS" />
-   <Button onAction="#sair" text="Sair" />
+   <HBox alignment="CENTER_LEFT" spacing="8.0">
+      <Button onAction="#sair" text="Sair" />
+      <Region HBox.hgrow="ALWAYS" />
+      <Button onAction="#abrirListarAdotantes" text="Adotantes" />
+   </HBox>
 </VBox>

@@ -65,6 +65,7 @@
                </columns>
             </TableView>
             <Label fx:id="total" textFill="#8a6a58" />
+            <Label fx:id="mensagem" textFill="#4a2a1a" wrapText="true" />
          </children>
       </VBox>
    </center>
@@ -77,6 +78,7 @@
             <Hyperlink onAction="#voltar" text="Voltar" />
             <Region HBox.hgrow="ALWAYS" />
             <Button onAction="#abrirAprovarCadastroAbrigo" prefWidth="200.0" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 14 10 14;" text="Aprovar cadastro" />
+            <Button onAction="#editarAbrigo" text="Editar abrigo" />
             <Button onAction="#abrirExcluirAbrigo" prefWidth="200.0" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 14 10 14;" text="Excluir abrigo" />
          </children>
       </HBox>

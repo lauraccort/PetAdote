@@ -24,6 +24,11 @@ public class TelaPrincipalAdministradorController {
     }
 
     @FXML
+    private void abrirListarAdotantes() {
+        navegador.ir("TelaListarAdotantes.fxml");
+    }
+
+    @FXML
     private void sair() {
         navegador.sair();
     }

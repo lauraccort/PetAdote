@@ -53,6 +53,8 @@
    <HBox alignment="CENTER_LEFT" spacing="8.0">
       <Button onAction="#voltar" text="Voltar" />
       <Region HBox.hgrow="ALWAYS" />
+      <Button fx:id="botaoEditar" onAction="#editarAdotante" text="Editar adotante" />
+      <Button fx:id="botaoExcluir" onAction="#excluirAdotante" text="Excluir adotante" />
       <Button onAction="#abrirHistoricoAdotante" text="Histórico do adotante" />
    </HBox>
 </VBox>
