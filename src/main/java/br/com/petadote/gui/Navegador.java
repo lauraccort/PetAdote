@@ -27,11 +27,11 @@ public class Navegador {
 
     private final Stage stage;
     private final Contexto contexto;
-    private final Deque<String> historico = new ArrayDeque<>();
-
-    private Object selecionado;
+    private final Deque<Entrada> historico = new ArrayDeque<>();
 
     private final MolduraEscalavel moldura = new MolduraEscalavel();
+
+    private record Entrada(String fxml, Object selecionado) {}
 
     public Navegador(Stage stage, Contexto contexto) {
         this.stage = stage;
@@ -45,21 +45,21 @@ public class Navegador {
 
     public void ir(String fxml, Object selecionado) {
 
-        this.selecionado = selecionado;
-
-        if (historico.contains(fxml)) {
-            while (!historico.peek().equals(fxml)) {
+        if (historico.stream().anyMatch(entrada -> entrada.fxml().equals(fxml))) {
+            while (!historico.peek().fxml().equals(fxml)) {
                 historico.pop();
             }
-        } else {
-            historico.push(fxml);
+            historico.pop();
         }
 
+        historico.push(new Entrada(fxml, selecionado));
         mostrar(fxml);
     }
 
 
     public <T> Optional<T> selecionado(Class<T> tipo) {
+        Entrada atual = historico.peek();
+        Object selecionado = atual == null ? null : atual.selecionado();
         return tipo.isInstance(selecionado)
                 ? Optional.of(tipo.cast(selecionado))
                 : Optional.empty();
@@ -69,7 +69,7 @@ public class Navegador {
     public void voltar() {
         if (historico.size() > 1) {
             historico.pop();
-            mostrar(historico.peek());
+            mostrar(historico.peek().fxml());
         }
     }
 
