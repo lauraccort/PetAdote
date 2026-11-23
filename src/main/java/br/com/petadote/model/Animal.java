@@ -29,7 +29,7 @@ public abstract class Animal extends Entidade {
      * REQ14: só pode iniciar processo se estiver DISPONIVEL.
      */
     public boolean podeIniciarProcesso() {
-        return status == StatusAnimal.DISPONIVEL;
+        return abrigo != null && status == StatusAnimal.DISPONIVEL;
     }
 
     /**

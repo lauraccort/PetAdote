@@ -1,7 +1,6 @@
 
 package br.com.petadote.servico;
 
-import br.com.petadote.model.Animal;
 import br.com.petadote.model.Abrigo;
 import br.com.petadote.model.StatusAbrigo;
 import br.com.petadote.repositorio.IRepositorio;
@@ -69,29 +68,6 @@ public class AbrigoServicoImpl implements IAbrigoServico {
         abrigo.setCapacidade(capacidade);
 
         return repositorio.salvar(abrigo);
-    }
-
-    // REQ02: vincula o animal ao abrigo.
-    // REQ19: Abrigo.adicionarAnimal recusa se a capacidade já foi atingida.
-    @Override
-    public boolean adicionarAnimal(Long idAbrigo, Animal animal) {
-        Optional<Abrigo> resultado = repositorio.buscarPorId(idAbrigo);
-
-        if (resultado.isEmpty()) {
-            return false;
-        }
-
-        Abrigo abrigo = resultado.get();
-
-        boolean adicionado = abrigo.adicionarAnimal(animal);
-
-        if (!adicionado) {
-            return false;
-        }
-
-        repositorio.salvar(abrigo);
-
-        return true;
     }
 
     @Override

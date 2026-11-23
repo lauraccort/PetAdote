@@ -72,8 +72,7 @@ public final class Contexto {
         Gato luna = new Gato("Luna", LocalDate.now().minusYears(1), "SRD");
 
         for (Animal a : new Animal[]{thor, mel, nina, luna}) {
-            fachada.cadastrarAnimal(a);
-            fachada.adicionarAnimalAoAbrigo(lar.getId(), a);
+            fachada.cadastrarAnimal(lar.getId(), a);
         }
 
         Adotante ana = novoAdotante("Ana Clara", "12345678900", "Rua A, 10 - Recife/PE", 0, "ana@petadote.com");
