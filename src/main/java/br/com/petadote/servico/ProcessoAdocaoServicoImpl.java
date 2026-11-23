@@ -38,7 +38,7 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         return INSTANCIA;
     }
 
-    // REQ06, REQ14 e REQ16:
+    // REQ06 e REQ14:
     // Abre um processo, verificando a disponibilidade do animal
     // e o limite de processos ativos do adotante.
     @Override
@@ -197,8 +197,8 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
         return negado;
     }
 
-    // REQ08, REQ15, REQ17 e REQ18:
-    // Conclui a adoção verificando aprovação, avaliação,
+    // REQ08 e REQ15 a REQ18:
+    // Conclui a adoção aplicando as regras de avaliação, acompanhamento,
     // condição do animal e quantidade mínima de visitas.
     @Override
     public boolean concluir(Long idProcesso) {

@@ -43,7 +43,7 @@ public class ProcessoAdocao extends Entidade {
     }
 
     /**
-     * REQ06 + REQ14 + REQ16: abre o processo com status
+     * REQ06 + REQ14: abre o processo com status
      * "Em Avaliação", desde que o animal esteja disponível
      * e o adotante não tenha excedido o limite de processos ativos.
      */
@@ -126,7 +126,7 @@ public class ProcessoAdocao extends Entidade {
     }
 
     /**
-     * REQ08 + REQ15 + REQ17 + REQ18: conclui o processo,
+     * REQ08 + REQ15 a REQ18: conclui o processo,
      * alterando o status do animal para "Adotado".
      */
     public boolean concluirProcesso() {
@@ -138,6 +138,11 @@ public class ProcessoAdocao extends Entidade {
             return false; // REQ15
         }
 
+        LocalDate hoje = LocalDate.now();
+        if (!adotante.podeConcluirNovoProcesso(hoje)) {
+            return false; // REQ16
+        }
+
         if (!animal.podeConcluirAdocao()) {
             return false; // REQ17
         }
@@ -147,10 +152,18 @@ public class ProcessoAdocao extends Entidade {
         }
 
         this.status = StatusProcesso.CONCLUIDO;
-        this.dataConclusao = LocalDate.now();
+        this.dataConclusao = hoje;
         this.animal.setStatus(StatusAnimal.ADOTADO); // REQ08
 
         return true;
+    }
+
+    /** Acompanhamento ativo desde a conclusão até completar 90 dias. */
+    boolean temAcompanhamentoAtivoEm(LocalDate data) {
+        return status == StatusProcesso.CONCLUIDO
+                && dataConclusao != null
+                && !data.isBefore(dataConclusao)
+                && data.isBefore(dataConclusao.plusDays(PERIODO_VISITAS_DIAS));
     }
 
     /** REQ18: ao menos 2 visitas aprovadas pelo abrigo nos 90 dias seguintes. */

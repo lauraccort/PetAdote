@@ -1,5 +1,6 @@
 package br.com.petadote.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  */
 public class Adotante extends Entidade {
     private static final long serialVersionUID = 1L;
+    private static final int LIMITE_ACOMPANHAMENTOS_ATIVOS = 3;
 
     private String nome;
     private String cpf;
@@ -38,10 +40,19 @@ public class Adotante extends Entidade {
                 .count();
     }
 
-    /**
-     * REQ16: limita a 3 os processos ATIVOS simultâneos
-     * (Em Avaliação + Aprovado).
-     */
+    /** REQ16: verifica se há vaga para iniciar outro acompanhamento pós-adoção. */
+    public boolean podeConcluirNovoProcesso() {
+        return podeConcluirNovoProcesso(LocalDate.now());
+    }
+
+    boolean podeConcluirNovoProcesso(LocalDate data) {
+        long acompanhamentosAtivos = processos.stream()
+                .filter(processo -> processo.temAcompanhamentoAtivoEm(data))
+                .count();
+        return acompanhamentosAtivos < LIMITE_ACOMPANHAMENTOS_ATIVOS;
+    }
+
+    /** Limita as solicitações em andamento (Em Avaliação + Aprovado). */
     public boolean podeIniciarNovoProcesso() {
         long ativos = processos.stream()
                 .filter(p -> p.getStatus() == StatusProcesso.EM_AVALIACAO

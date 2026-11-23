@@ -150,6 +150,9 @@ public class TelaFinalizarProcessoAdocaoController {
         if (!processo.avaliacaoFavoravel()) {
             return "É preciso ao menos uma avaliação com parecer favorável (REQ15).";
         }
+        if (!processo.getAdotante().podeConcluirNovoProcesso()) {
+            return "O adotante já tem três adoções em acompanhamento pós-adoção (REQ16).";
+        }
         if (!processo.getAnimal().podeConcluirAdocao()) {
             return processo.getAnimal().getNome() + " está em tratamento veterinário; a adoção não pode ser concluída agora (REQ17).";
         }
