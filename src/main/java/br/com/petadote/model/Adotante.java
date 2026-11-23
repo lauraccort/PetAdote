@@ -11,8 +11,6 @@ import java.util.List;
 public class Adotante extends Entidade {
     private static final long serialVersionUID = 1L;
 
-    private static final int LIMITE_PROCESSOS_ATIVOS = 3;
-
     private String nome;
     private String cpf;
     private String endereco;
@@ -41,14 +39,15 @@ public class Adotante extends Entidade {
     }
 
     /**
-     * REQ16: limita a 3 os processos ativos do adotante, isto é, em avaliação,
-     * aprovados ou concluídos. Só os negados deixam de contar.
+     * REQ16: limita a 3 os processos ATIVOS simultâneos
+     * (Em Avaliação + Aprovado).
      */
     public boolean podeIniciarNovoProcesso() {
         long ativos = processos.stream()
-                .filter(p -> p.getStatus() != StatusProcesso.NEGADO)
+                .filter(p -> p.getStatus() == StatusProcesso.EM_AVALIACAO
+                        || p.getStatus() == StatusProcesso.APROVADO)
                 .count();
-        return ativos < LIMITE_PROCESSOS_ATIVOS;
+        return ativos < 3;
     }
 
     public void adicionarProcesso(ProcessoAdocao processo) {
