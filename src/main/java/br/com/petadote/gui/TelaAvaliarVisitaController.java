@@ -10,7 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
@@ -132,13 +131,6 @@ public class TelaAvaliarVisitaController {
 
                 if (situacao == null) {
                     erro("Selecione a situação do animal.");
-                    return;
-                }
-
-                // Não dá para registrar o resultado de uma visita que ainda não aconteceu
-                if (visita.getData() != null && visita.getData().isAfter(LocalDate.now())) {
-                    erro("Esta visita está marcada para " + visita.getData().format(FORMATO)
-                            + "; o resultado só pode ser registrado a partir desse dia.");
                     return;
                 }
 

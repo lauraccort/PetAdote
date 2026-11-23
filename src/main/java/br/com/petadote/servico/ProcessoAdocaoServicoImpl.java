@@ -383,10 +383,20 @@ public class ProcessoAdocaoServicoImpl implements IProcessoAdocaoServico {
             throw new IllegalArgumentException("Visita não encontrada.");
         }
 
-        if (visita.isCancelada() || visita.isConcluida()) {
-            throw new IllegalStateException(
-                    "Não é possível registrar o resultado desta visita."
-            );
+        if (processo.getStatus() != StatusProcesso.CONCLUIDO) {
+            throw new IllegalStateException("Conclua a adoção antes de registrar o resultado da visita.");
+        }
+        if (visita.isConcluida()) {
+            throw new IllegalStateException("O resultado desta visita já foi registrado.");
+        }
+        if (!visita.isAprovadaPeloAbrigo()) {
+            throw new IllegalStateException("O resultado exige uma visita confirmada ou reagendada pelo abrigo.");
+        }
+        if (visita.getData() == null || visita.getData().isAfter(LocalDate.now())) {
+            throw new IllegalStateException("Registre o resultado a partir da data marcada para a visita.");
+        }
+        if (situacao == null || situacao.isBlank()) {
+            throw new IllegalArgumentException("Informe a situação do animal.");
         }
 
         visita.registrarResultado(situacao, observacoes);
